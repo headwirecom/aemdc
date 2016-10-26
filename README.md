@@ -1,2 +1,2 @@
 # aemcompanion
-aemcompanion
+AEM Companion
