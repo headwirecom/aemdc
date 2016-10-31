@@ -7,29 +7,52 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
+  public static final String AEMC_HELP_FILE_PATH = "help.txt";
+  public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
+  public static final String CONFIG_FILENAME = "config.properties";
+  public static final String CONFIG_FILEPATH = AEMC_FILES_FOLDER + "/" + CONFIG_FILENAME;
+  public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { "xml", "js", "java", "css" };
+
+  // configuration constants
+  public static final String CONFIGPROP_SOURCE_OSGI_FOLDER = "SOURCE_OSGI_FOLDER";
+  public static final String CONFIGPROP_SOURCE_TEMPLATES_FOLDER = "SOURCE_TEMPLATES_FOLDER";
+  public static final String CONFIGPROP_SOURCE_COMPONENTS_FOLDER = "SOURCE_COMPONENTS_FOLDER";
+  public static final String CONFIGPROP_TARGET_OSGI_FOLDER = "TARGET_OSGI_FOLDER";
+  public static final String CONFIGPROP_TARGET_TEMPLATES_FOLDER = "TARGET_TEMPLATES_FOLDER";
+  public static final String CONFIGPROP_TARGET_COMPONENTS_FOLDER = "TARGET_COMPONENTS_FOLDER";
+  public static final String CONFIGPROP_TARGET_PROJECT_JCR_PATH = "TARGET_PROJECT_JCR_PATH";
+  public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES = "EXISTING_DESTINATION_RESOURCES";
+  public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
+
+  // configuration constants values
+  public static final String EXISTING_DESTINATION_RESOURCES_WARN = "WARN";
+  public static final String EXISTING_DESTINATION_RESOURCES_DELETE = "DELETE";
+  public static final String EXISTING_DESTINATION_RESOURCES_MERGE = "MERGE";
+
+  // params constants
   public static final String PARAM_TYPE = "type";
-  public static final String PARAM_PROJECT_NAME = "projectName";
   public static final String PARAM_TEMPLATE_NAME = "templateName";
+  public static final String PARAM_TARGET_NAME = "targetName";
   public static final String PARAM_SOURCE_PATH = "sourcePath";
   public static final String PARAM_TARGET_PATH = "targetPath";
-  public static final String PARAM_FILETEXT = "fileText";
 
-  public static final String PARAM_PROP_JCR_TITLE = "jcr:title";
-
-  public static final String TYPE_TEMPLATE = "template";
-  public static final String TYPE_COMPONENT = "component";
+  public static final String TYPE_TEMPLATE = "temp";
+  public static final String TYPE_COMPONENT = "comp";
   public static final String TYPE_OSGI = "osgi";
 
-  // public static final String PATH_PLACEHOLDERS_ROOT = "/src/main/resources/placeholders";
-  public static final String PATH_PLACEHOLDERS_ROOT = "placeholders";
-  public static final String PATH_JCR_ROOT = "src/main/content/jcr_root";
-  public static final String PATH_APPS = "/apps";
-  public static final String PATH_TEMPLATES = "/templates";
-  public static final String PATH_COMPONENTS = "/components";
+  // arguments constants
+  public static final String PARAM_RUNMODE = "runmode";
+  public static final String PARAM_PROP_JCR_TITLE = "jcr:title";
+  public static final String PARAM_PROP_JCR_DESCRIPTION = "jcr:description";
+  public static final String PARAM_PROP_RANKING = "ranking";
+  public static final String PARAM_PROP_SLING_RESOURCE_TYPE = "sling:resourceType";
+  public static final String PARAM_PROP_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
 
-  public static final String PLACEHOLDER_YOUR_PROJECT_NAME = "your-project-name";
-  public static final String PLACEHOLDER_YOUR_TEMPLATE_NAME = "your-template-name";
+  public static final String PLACEHOLDERS_PROPS_SET_COMMON = "common";
+  public static final String PLACEHOLDERS_PROPS_SET_PREFIX = "ph_";
 
-  public static final String FILE_NAME_TEMPLATE = ".content.xml";
+  // default values
+  public static final String DEFAULT_RANKING = "{Long}90";
+  public static final String DEFAULT_SLING_RESOURCE_SUPER_TYPE = "foundation/components/page";
 
 }

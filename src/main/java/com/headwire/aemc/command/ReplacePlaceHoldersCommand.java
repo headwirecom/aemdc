@@ -1,14 +1,17 @@
 package com.headwire.aemc.command;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.headwire.aemc.companion.Constants;
-import com.headwire.aemc.replacer.TextReplacer;
+import com.headwire.aemc.companion.Resource;
+import com.headwire.aemc.util.TextReplacer;
 
 
 /**
@@ -17,34 +20,67 @@ import com.headwire.aemc.replacer.TextReplacer;
  */
 public class ReplacePlaceHoldersCommand implements Command {
 
-  Map<String, String> params;
+  private static final Logger LOG = LoggerFactory.getLogger(ReplacePlaceHoldersCommand.class);
 
-  public ReplacePlaceHoldersCommand(final Map<String, String> params) {
-    this.params = params;
+  private final Resource resource;
+
+  /**
+   * Constructor
+   *
+   * @param resource
+   *          - resource
+   */
+  public ReplacePlaceHoldersCommand(final Resource resource) {
+    this.resource = resource;
   }
 
   @Override
-  public void execute() {
-    final String sourceFilePath = params.get(Constants.PARAM_SOURCE_PATH);
-    System.out.println("Replacing place holders... in the " + sourceFilePath);
+  public void execute() throws IOException {
+    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
+    LOG.info("Replacing place holders in the directory/file [" + targetPath + "] ...");
+
+    final File dest = new File(targetPath);
+
+    if (!dest.exists()) {
+      final String message = "Can't replace place holders. Directory/file " + dest + " doesn't exist.";
+      LOG.error(message);
+      throw new IllegalStateException(message);
+    }
+
+    if (dest.isDirectory()) {
+      // get file list recursive with defined extentions
+      final Collection<File> fileList = FileUtils.listFiles(dest, resource.getExtentions(), true);
+      final Iterator<File> iter = fileList.iterator();
+      while (iter.hasNext()) {
+        final File nextFile = iter.next();
+
+        // replace place holders
+        replacePlaceHolders(nextFile);
+      }
+    } else {
+      replacePlaceHolders(dest);
+    }
+  }
+
+  /**
+   * Replace place holders in file
+   *
+   * @param destFile
+   *          - destination file
+   * @throws IOException
+   *           - IOException
+   */
+  private void replacePlaceHolders(final File destFile) throws IOException {
     try {
+      String fileText = FileUtils.readFileToString(destFile, Constants.ENCODING);
+      fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
+      FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
 
-      // final File sourceFile = new File(sourceFilePath);
-      // String fileText = FileUtils.readFileToString(sourceFile, Constants.ENCODING);
-
-      final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(sourceFilePath);
-      final StringWriter writer = new StringWriter();
-      IOUtils.copy(in, writer, Constants.ENCODING);
-      String fileText = writer.toString();
-
-      fileText = TextReplacer.replaceTextPlaceHolders(fileText, params);
-      params.put(Constants.PARAM_FILETEXT, fileText);
-
-      System.out.println("Replaced file text:");
-      System.out.println(fileText);
+      LOG.info("Place holders replaced in the file [" + destFile + "]");
 
     } catch (final IOException e) {
-      System.out.println("Can't read from source file [" + sourceFilePath + "] : " + e);
+      LOG.error("Can't replace place holders in the file [" + destFile + "]");
+      throw new IOException(e);
     }
   }
 }

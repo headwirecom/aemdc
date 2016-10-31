@@ -1,11 +1,11 @@
 package com.headwire.aemc.menu;
 
-import java.util.Map;
+import java.io.IOException;
 
-import com.headwire.aemc.command.CreateCommand;
-import com.headwire.aemc.command.Menu;
+import com.headwire.aemc.command.CommandMenu;
+import com.headwire.aemc.command.CreateDirCommand;
 import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
-import com.headwire.aemc.companion.Constants;
+import com.headwire.aemc.companion.Resource;
 
 
 /**
@@ -15,8 +15,7 @@ import com.headwire.aemc.companion.Constants;
 public class TemplateRunner implements BasisRunner {
 
   // Invoker
-  private final Menu menu = new Menu();
-  public Map<String, String> params;
+  private final CommandMenu menu = new CommandMenu();
 
   /**
    * Constructor
@@ -24,29 +23,21 @@ public class TemplateRunner implements BasisRunner {
    * @param params
    *          - params
    */
-  public TemplateRunner(final Map<String, String> params) {
-    this.params = params;
-
-    params.put(Constants.PARAM_SOURCE_PATH, Constants.PATH_PLACEHOLDERS_ROOT + Constants.PATH_APPS + "/"
-        + Constants.PLACEHOLDER_YOUR_PROJECT_NAME + Constants.PATH_TEMPLATES + "/"
-        + Constants.PLACEHOLDER_YOUR_TEMPLATE_NAME + "/" + Constants.FILE_NAME_TEMPLATE);
-
-    params.put(Constants.PARAM_TARGET_PATH, Constants.PATH_JCR_ROOT + Constants.PATH_APPS + "/"
-        + params.get(Constants.PARAM_PROJECT_NAME) + Constants.PATH_TEMPLATES + "/"
-        + params.get(Constants.PARAM_TEMPLATE_NAME) + "/" + Constants.FILE_NAME_TEMPLATE);
-
+  public TemplateRunner(final Resource resource) {
     // Creates Invoker object, command object and configure them
-    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(params));
-    menu.setCommand("Create", new CreateCommand(params));
+    menu.setCommand("CreateDir", new CreateDirCommand(resource));
+    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
   }
 
   /**
    * Run commands
+   *
+   * @throws IOException
    */
   @Override
-  public void run() {
+  public void run() throws IOException {
     // Invoker invokes command
+    menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
-    menu.runCommand("Create");
   }
 }
