@@ -58,15 +58,17 @@ Where [-options] includes usual for java command options.
 	    OR
 	    Component name under /components used to create a target conponent (ex. component1)
 	    OR
-	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID)
+	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml)
 	targetname:
 	    Target template name (ex. homepage).
 	    Target component name (ex. my-teaser).
-	    Osgi service PID file name (ex. org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myaemproject).
+	    Osgi service PID file name (ex. org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myaemproject.xml).
 	args:
 	    runmode=<value>
 	    <property name>=<property value>
 	                Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage)    
+	    <properties set>:<property name>=<property value>
+	                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2)    
 
 
 
