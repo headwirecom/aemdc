@@ -14,12 +14,18 @@ public class Constants {
   public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { "xml", "js", "java", "css" };
 
   // configuration constants
-  public static final String CONFIGPROP_SOURCE_OSGI_FOLDER = "SOURCE_OSGI_FOLDER";
   public static final String CONFIGPROP_SOURCE_TEMPLATES_FOLDER = "SOURCE_TEMPLATES_FOLDER";
   public static final String CONFIGPROP_SOURCE_COMPONENTS_FOLDER = "SOURCE_COMPONENTS_FOLDER";
-  public static final String CONFIGPROP_TARGET_OSGI_FOLDER = "TARGET_OSGI_FOLDER";
+  public static final String CONFIGPROP_SOURCE_OSGI_FOLDER = "SOURCE_OSGI_FOLDER";
+  public static final String CONFIGPROP_SOURCE_MODELS_FOLDER = "SOURCE_MODELS_FOLDER";
+  public static final String CONFIGPROP_SOURCE_SERVICES_FOLDER = "SOURCE_SERVICES_FOLDER";
+  public static final String CONFIGPROP_SOURCE_SERVLETS_FOLDER = "SOURCE_SERVLETS_FOLDER";
   public static final String CONFIGPROP_TARGET_TEMPLATES_FOLDER = "TARGET_TEMPLATES_FOLDER";
   public static final String CONFIGPROP_TARGET_COMPONENTS_FOLDER = "TARGET_COMPONENTS_FOLDER";
+  public static final String CONFIGPROP_TARGET_OSGI_FOLDER = "TARGET_OSGI_FOLDER";
+  public static final String CONFIGPROP_TARGET_MODELS_FOLDER = "TARGET_MODELS_FOLDER";
+  public static final String CONFIGPROP_TARGET_SERVICES_FOLDER = "TARGET_SERVICES_FOLDER";
+  public static final String CONFIGPROP_TARGET_SERVLETS_FOLDER = "TARGET_SERVLETS_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_JCR_PATH = "TARGET_PROJECT_JCR_PATH";
   public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES = "EXISTING_DESTINATION_RESOURCES";
   public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
@@ -39,6 +45,9 @@ public class Constants {
   public static final String TYPE_TEMPLATE = "temp";
   public static final String TYPE_COMPONENT = "comp";
   public static final String TYPE_OSGI = "osgi";
+  public static final String TYPE_MODEL = "model";
+  public static final String TYPE_SERVICE = "service";
+  public static final String TYPE_SERVLET = "servlet";
 
   // arguments constants
   public static final String PARAM_RUNMODE = "runmode";

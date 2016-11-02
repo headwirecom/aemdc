@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemc.menu.BasisRunner;
+import com.headwire.aemc.menu.JavaClassRunner;
 import com.headwire.aemc.menu.OsgiRunner;
 import com.headwire.aemc.menu.TemplateRunner;
 import com.headwire.aemc.util.Utils;
@@ -99,6 +100,21 @@ public class RunnableCompanion {
           resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
         }
         runner = new OsgiRunner(resource);
+        break;
+      case Constants.TYPE_MODEL:
+        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER));
+        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_MODELS_FOLDER));
+        runner = new JavaClassRunner(resource);
+        break;
+      case Constants.TYPE_SERVICE:
+        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
+        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
+        runner = new JavaClassRunner(resource);
+        break;
+      case Constants.TYPE_SERVLET:
+        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER));
+        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVLETS_FOLDER));
+        runner = new JavaClassRunner(resource);
         break;
       default:
         LOG.info(Utils.getHelpText());

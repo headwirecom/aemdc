@@ -9,18 +9,29 @@ type:
     temp        Template to be created.
     comp        Component to be created.
     osgi        Osgi config to be created.
+    model       Model java class to be created.
+    servlet     Servlet java class to be created.
+    service     Service java class to be created.
 name:
-    Template name under /templates used to create a target template (ex. template1)
+    Template name under /templates used to create a target template (ex. contentpage)
     OR
-    Component name under /components used to create a target conponent (ex. component1)
+    Component name under /components used to create a target conponent (ex. title)
     OR
     Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml)
+    OR
+    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java)
+    OR
+    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java)
+    OR
+    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java)
 targetname:
     Target template name (ex. homepage).
     Target component name (ex. my-teaser).
     Osgi service PID file name (ex. org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myaemproject.xml).
+    Model/Service/Servlet java class file name (ex. SampleSlingModel.java).
 args:
     runmode=<value>
+                Runmode used in the osgi config folder definition (ex. "author.int" runmode will used to create "config.author.int" folder for osgi service configuration)    
     <property name>=<property value>
                 Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage)    
     <properties set>:<property name>=<property value>

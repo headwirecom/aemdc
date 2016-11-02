@@ -41,7 +41,7 @@ Clone the aemc-files from GitHub
 	
 	https://github.com/headwirecom/aemc-files.git
 
-Copy '/aemc-files/aemc-placeholders' to your apps.ui project and modify for you needs.
+Copy '/aemc-files/aemc-placeholders' to your apps.ui or core bundles project and modify for you needs.
 
 To run
 
@@ -53,22 +53,33 @@ Where [-options] includes usual for java command options.
 	    temp        Template to be created.
 	    comp        Component to be created.
 	    osgi        Osgi config to be created.
+	    model       Model java class to be created.
+	    servlet     Servlet java class to be created.
+	    service     Service java class to be created.
 	name:
-	    Template name under /templates used to create a target template (ex. template1)
+	    Template name under /templates used to create a target template (ex. contentpage)
 	    OR
-	    Component name under /components used to create a target conponent (ex. component1)
+	    Component name under /components used to create a target conponent (ex. title)
 	    OR
 	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml)
+	    OR
+	    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java)
+	    OR
+	    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java)
+	    OR
+	    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java)
 	targetname:
 	    Target template name (ex. homepage).
 	    Target component name (ex. my-teaser).
 	    Osgi service PID file name (ex. org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myaemproject.xml).
+	    Model/Service/Servlet java class file name (ex. SampleSlingModel.java).
 	args:
 	    runmode=<value>
+	                Runmode used in the osgi config folder definition (ex. "author.int" runmode will used to create "config.author.int" folder for osgi service configuration)    
 	    <property name>=<property value>
 	                Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage)    
 	    <properties set>:<property name>=<property value>
-	                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2)    
+	                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2)
 
 
 
@@ -88,7 +99,7 @@ A target files will be created and placeholders will be replaced with arguments
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
 
 Standalone call.
-Go to your "ui.apps" project. Copy aemcompanion-1.0.0-jar-with-dependencies.jar there or set the classpath to "aemcompanion-1.0.0-jar-with-dependencies.jar" directory. 
+Go to your "ui.apps" or "core" project. Copy aemcompanion-1.0.0-jar-with-dependencies.jar there or set the classpath to "aemcompanion-1.0.0-jar-with-dependencies.jar" directory. 
 
 	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
 	
@@ -97,3 +108,12 @@ Go to your "ui.apps" project. Copy aemcompanion-1.0.0-jar-with-dependencies.jar 
 	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar comp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
 	
 	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar osgi osgi.1.PID.xml com.day.cq.wcm.mobile.core.impl.MobileEmulatorProvider-medianewsletterconfig.xml runmode=author.prod ph_1_1:mobile.resourceTypes=[my-aem-project/components/medianewsletter]  ph_1_1:README="Use these configuration settings to indicate which resource types should be supported by the mobile emulators."
+
+	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar model SampleSlingModel.java MySampleSlingModel.java
+	
+	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar service SampleService.java MySampleService.java
+	
+	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar service impl/SampleServiceImpl.java impl/MySampleServiceImpl.java
+	
+	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar servlet impl/SampleSafeMethodsServlet.java impl/MySampleSafeMethodsServlet.java
+	
