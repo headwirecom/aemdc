@@ -37,8 +37,8 @@ public class RunnableCompanion {
   public static void main(final String[] args) throws IOException {
 
     // check for mandatory arguments
-    if (args == null || args.length < 3) {
-      LOG.info(HelpUtil.getHelpText());
+    if (args == null || args.length < 3 || Constants.PARAM_HELP.equals(args[0])) {
+      LOG.info(HelpUtil.getHelpText(args));
       return;
     }
 
@@ -75,7 +75,7 @@ public class RunnableCompanion {
         runner = new ServletRunner(resource);
         break;
       default:
-        LOG.info(HelpUtil.getHelpText());
+        LOG.info(HelpUtil.getHelpText(args));
         return;
     }
 

@@ -11,7 +11,7 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
-  public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
+  // public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
   public static final String CONFIG_FILENAME = "aemc-config.properties";
   public static final String FILE_EXT_XML = "xml";
   public static final String FILE_EXT_JS = "js";
@@ -34,8 +34,8 @@ public class Constants {
   public static final String CONFIGPROP_TARGET_SERVLETS_FOLDER = "TARGET_SERVLETS_FOLDER";
   public static final String CONFIGPROP_TARGET_JAVA_SOURCE_FOLDER = "TARGET_JAVA_SOURCE_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_JCR_PATH = "TARGET_PROJECT_JCR_PATH";
-  public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES = "EXISTING_DESTINATION_RESOURCES";
   public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
+  public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT = "EXISTING_DESTINATION_RESOURCES_REPLACEMENT";
 
   // configuration constants values
   public static final String EXISTING_DESTINATION_RESOURCES_WARN = "WARN";
@@ -43,11 +43,12 @@ public class Constants {
   public static final String EXISTING_DESTINATION_RESOURCES_MERGE = "MERGE";
 
   // params constants
+  public static final String PARAM_HELP = "help";
   public static final String PARAM_TYPE = "type";
   public static final String PARAM_TEMPLATE_NAME = "templateName";
   public static final String PARAM_TARGET_NAME = "targetName";
-  public static final String PARAM_SOURCE_PATH = "sourcePath";
-  public static final String PARAM_TARGET_PATH = "targetPath";
+  // public static final String PARAM_SOURCE_PATH = "sourcePath";
+  // public static final String PARAM_TARGET_PATH = "targetPath";
 
   public static final String TYPE_TEMPLATE = "temp";
   public static final String TYPE_TEMPLATE_FULL = "template";

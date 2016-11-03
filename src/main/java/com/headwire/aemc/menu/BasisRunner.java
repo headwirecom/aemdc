@@ -73,10 +73,10 @@ public abstract class BasisRunner {
 
     // Set overwriting methods from config file
     if (Constants.EXISTING_DESTINATION_RESOURCES_WARN
-        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES))) {
+        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT))) {
       resource.setToWarnDestDir(true);
     } else if (Constants.EXISTING_DESTINATION_RESOURCES_DELETE
-        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES))) {
+        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT))) {
       resource.setToDeleteDestDir(true);
     }
   }
