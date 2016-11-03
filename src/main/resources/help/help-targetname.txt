@@ -1,0 +1,5 @@
+targetname:
+    Target template name (ex. homepage).
+    Target component name (ex. my-teaser).
+    Osgi service PID file name (ex. org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myaemproject.xml).
+    Model/Service/Servlet java class file name (ex. SampleSlingModel.java).

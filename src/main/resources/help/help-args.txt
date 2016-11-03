@@ -1,0 +1,7 @@
+args:
+    runmode=<value>
+                Runmode used in the osgi config folder definition (ex. "author.int" runmode will used to create "config.author.int" folder for osgi service configuration).    
+    <property name>=<property value>
+                Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage). 
+    <properties set>:<property name>=<property value>
+                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2).

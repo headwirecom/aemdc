@@ -1,0 +1,7 @@
+type:
+    temp        Template to be created.
+    comp        Component to be created.
+    osgi        Osgi config to be created.
+    model       Model java class to be created.
+    servlet     Servlet java class to be created.
+    service     Service java class to be created.
