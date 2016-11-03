@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.headwire.aemc.command.CommandMenu;
-import com.headwire.aemc.command.CreateDirCommand;
+import com.headwire.aemc.command.CreateFileCommand;
 import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemc.companion.Constants;
 import com.headwire.aemc.companion.Resource;
@@ -12,10 +12,10 @@ import com.headwire.aemc.util.Utils;
 
 
 /**
- * Template creator
+ * Java Service creator
  *
  */
-public class TemplateRunner extends BasisRunner {
+public class ServiceRunner extends BasisRunner {
 
   // Invoker
   private final CommandMenu menu = new CommandMenu();
@@ -27,20 +27,21 @@ public class TemplateRunner extends BasisRunner {
    *          - params
    * @throws IOException
    */
-  public TemplateRunner(final Resource resource) throws IOException {
+  public ServiceRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
     final Properties configProps = Utils.getConfigProperties(true);
 
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER));
-    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER));
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
 
     checkConfiguration(configProps, resource);
 
-    // Set global config properties in the resource
+    // Set all other config properties in the resource
     setGlobalConfigProperties(configProps, resource);
+    setJavaConfigProperties(configProps, resource);
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand("CreateDir", new CreateDirCommand(resource));
+    menu.setCommand("CreateFile", new CreateFileCommand(resource));
     menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
   }
 
@@ -52,7 +53,8 @@ public class TemplateRunner extends BasisRunner {
   @Override
   public void run() throws IOException {
     // Invoker invokes command
-    menu.runCommand("CreateDir");
+    menu.runCommand("CreateFile");
     menu.runCommand("ReplacePlaceHolders");
   }
+
 }

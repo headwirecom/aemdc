@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +74,14 @@ public class ReplacePlaceHoldersCommand implements Command {
   private void replacePlaceHolders(final File destFile) throws IOException {
     try {
       String fileText = FileUtils.readFileToString(destFile, Constants.ENCODING);
-      fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
+
+      final String extention = FilenameUtils.getExtension(destFile.getName());
+      if (Constants.FILE_EXT_XML.equals(extention)) {
+        fileText = TextReplacer.replaceXmlPlaceHolders(fileText, resource);
+      } else if (Constants.FILE_EXT_JAVA.equals(extention)) {
+        fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
+      }
+
       FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
 
       LOG.info("Place holders replaced in the file [" + destFile + "]");

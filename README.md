@@ -2,9 +2,11 @@
 AEM Companion
 
 # Using placeholders
-In the templates (xml,js,java,css) you can define placeholders similar to the argument keys
+Clone the aemc-files from GitHub and modify the templates from aemc-files for you needs. 
+	
+	https://github.com/headwirecom/aemc-files.git
 
-Examples of used placeholders in the /aemc-files/aemc-placeholders/apps/project/templates/contentpage/.content.xml
+In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemc-files/aemc-placeholders/apps/project/templates/contentpage/.content.xml
 
 	{{ jcr:title }}
 	{{ jcr:description }}
@@ -27,7 +29,7 @@ Source code of  .content.xml
         sling:resourceType="{{ sling:resourceType }}"/>
     </jcr:root>
 
-To replace the placeholders used above your arguments in the command line must be
+To replace the placeholders used above your arguments in the command line must be like this
 	
 	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage jcr:title='my title' jcr:description='my description' ranking={Long}10 sling:resourceType=my-aem-project/components/mycontentpage ph_1_1:property1=value1 ph_1_1:property2=value2 ph_1_2:property3=value3
 
@@ -37,11 +39,10 @@ where "ph\_1\_2":
 	- "_2" in the placeholders prefix means the offset for the property position in the modified file. 2 means 2*4 = 8 blank spaces from left.
 
 # Running
-Clone the aemc-files from GitHub
-	
-	https://github.com/headwirecom/aemc-files.git
 
-Copy '/aemc-files/aemc-placeholders' to your apps.ui or core bundles project and modify for you needs.
+Please create a configuration file in the root of your AEM project and modify configuration for your needs. For example
+ 
+	/my-aem-project/aemc-config.properties
 
 To run
 
@@ -50,8 +51,8 @@ To run
 Where [-options] includes usual for java command options.
 
 	type:
-	    temp        Template to be created.
-	    comp        Component to be created.
+	    temp(late)  Template to be created.
+	    comp(onent) Component to be created.
 	    osgi        Osgi config to be created.
 	    model       Model java class to be created.
 	    servlet     Servlet java class to be created.

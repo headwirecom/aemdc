@@ -18,6 +18,8 @@ public class Resource {
   private String[] extentions;
   private boolean toDeleteDestDir;
   private boolean toWarnDestDir;
+  private String javaClassName;
+  private String javaClassPackage;
   private Map<String, Map<String, String>> jcrProperties;
 
   /**
@@ -183,6 +185,36 @@ public class Resource {
    */
   public void setJcrProperties(final Map<String, Map<String, String>> jcrProperties) {
     this.jcrProperties = jcrProperties;
+  }
+
+  /**
+   * @return the javaClassName
+   */
+  public String getJavaClassName() {
+    return javaClassName;
+  }
+
+  /**
+   * @param javaClassName
+   *          the javaClassName to set
+   */
+  public void setJavaClassName(final String javaClassName) {
+    this.javaClassName = javaClassName;
+  }
+
+  /**
+   * @return the javaClassPackage
+   */
+  public String getJavaClassPackage() {
+    return javaClassPackage;
+  }
+
+  /**
+   * @param javaClassPackage
+   *          the javaClassPackage to set
+   */
+  public void setJavaClassPackage(final String javaClassPackage) {
+    this.javaClassPackage = javaClassPackage;
   }
 
 }

@@ -54,7 +54,7 @@ public class Utils {
     InputStream input = null;
 
     try {
-      input = new FileInputStream(Constants.CONFIG_FILEPATH);
+      input = new FileInputStream(Constants.CONFIG_FILENAME);
 
       // load a properties file from class path, inside static method
       props.load(input);
@@ -78,7 +78,8 @@ public class Utils {
 
     } catch (final IOException e) {
       LOG.error(
-          "Sorry, unable to find or read properties from configuration file under [" + Constants.CONFIG_FILEPATH + "]");
+          "Sorry, unable to find or read properties from configuration file [" + Constants.CONFIG_FILENAME
+              + "] in the root of your project.");
       throw new IOException(e);
     } finally {
       if (input != null) {

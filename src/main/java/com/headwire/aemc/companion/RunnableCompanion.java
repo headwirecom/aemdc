@@ -3,15 +3,16 @@ package com.headwire.aemc.companion;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemc.menu.BasisRunner;
-import com.headwire.aemc.menu.JavaClassRunner;
+import com.headwire.aemc.menu.ComponentRunner;
+import com.headwire.aemc.menu.ModelRunner;
 import com.headwire.aemc.menu.OsgiRunner;
+import com.headwire.aemc.menu.ServiceRunner;
+import com.headwire.aemc.menu.ServletRunner;
 import com.headwire.aemc.menu.TemplateRunner;
 import com.headwire.aemc.util.Utils;
 
@@ -50,71 +51,28 @@ public class RunnableCompanion {
     // Set JCR Properties from arguments
     resource.setJcrProperties(convertArgsToMaps(args, 3));
 
-    // Get Config Properties from config file
-    final Properties configProps = Utils.getConfigProperties(true);
-
-    // Set target project jcr path from config file
-    final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_JCR_PATH);
-    resource.setTargetProjectJcrPath(targetProjectJcrPath);
-
-    // Set extentions from config file
-    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
-    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
-    if (StringUtils.isNotBlank(extentionsAsString)) {
-      extentions = extentionsAsString.split(",");
-    }
-    resource.setExtentions(extentions);
-
-    // Set overwriting methods from config file
-    if (Constants.EXISTING_DESTINATION_RESOURCES_WARN
-        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES))) {
-      resource.setToWarnDestDir(true);
-    } else if (Constants.EXISTING_DESTINATION_RESOURCES_DELETE
-        .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES))) {
-      resource.setToDeleteDestDir(true);
-    }
-
     // Set source and destination paths from config file
     BasisRunner runner;
     switch (resource.getType()) {
       case Constants.TYPE_TEMPLATE:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER));
-        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER));
+      case Constants.TYPE_TEMPLATE_FULL:
         runner = new TemplateRunner(resource);
         break;
       case Constants.TYPE_COMPONENT:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER));
-        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER));
-        // runner = new ComponentRunner(resource);
-        runner = new TemplateRunner(resource);
+      case Constants.TYPE_COMPONENT_FULL:
+        runner = new ComponentRunner(resource);
         break;
       case Constants.TYPE_OSGI:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
-        // config.runmode to the target path
-        final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDERS_PROPS_SET_COMMON);
-        final String runmode = commonJcrProps.get(Constants.PARAM_RUNMODE);
-        if (StringUtils.isNotBlank(runmode)) {
-          resource
-              .setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER) + "." + runmode);
-        } else {
-          resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
-        }
         runner = new OsgiRunner(resource);
         break;
       case Constants.TYPE_MODEL:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER));
-        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_MODELS_FOLDER));
-        runner = new JavaClassRunner(resource);
+        runner = new ModelRunner(resource);
         break;
       case Constants.TYPE_SERVICE:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
-        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
-        runner = new JavaClassRunner(resource);
+        runner = new ServiceRunner(resource);
         break;
       case Constants.TYPE_SERVLET:
-        resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER));
-        resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVLETS_FOLDER));
-        runner = new JavaClassRunner(resource);
+        runner = new ServletRunner(resource);
         break;
       default:
         LOG.info(Utils.getHelpText());

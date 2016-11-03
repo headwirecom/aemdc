@@ -31,7 +31,7 @@ public class TextReplacer {
   }
 
   /**
-   * Replace place holders in the text
+   * Replace place holders in the text files (java, css, jsp)
    *
    * @param text
    *          the text
@@ -42,6 +42,30 @@ public class TextReplacer {
    *           - IOException
    */
   public static String replaceTextPlaceHolders(final String text, final Resource resource) throws IOException {
+
+    // {{ java-class }}
+    final String javaClassName = resource.getJavaClassName();
+    String result = text.replace(Constants.PLACEHOLDER_JAVA_CLASS, javaClassName);
+
+    // {{ java-package }}
+    final String javaPackage = resource.getJavaClassPackage();
+    result = result.replace(Constants.PLACEHOLDER_JAVA_PACKAGE, javaPackage);
+
+    return result;
+  }
+
+  /**
+   * Replace place holders in the XML text
+   *
+   * @param text
+   *          the text
+   * @param resource
+   *          the resource
+   * @return result text
+   * @throws IOException
+   *           - IOException
+   */
+  public static String replaceXmlPlaceHolders(final String text, final Resource resource) throws IOException {
     // Jcr Properties Sets to set
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
     final Iterator<Entry<String, Map<String, String>>> iter = jcrPropsSets.entrySet().iterator();
@@ -53,16 +77,16 @@ public class TextReplacer {
       final String propsSetKey = propsSet.getKey();
       // LOG.info("propsSetKey=" + propsSetKey);
       if (Constants.PLACEHOLDERS_PROPS_SET_COMMON.equals(propsSetKey)) {
-        result = replaceCommonTextPlaceHolders(result, resource, propsSet.getValue());
+        result = replaceCommonXmlPlaceHolders(result, resource, propsSet.getValue());
       } else {
-        result = replaceTextPlaceHoldersSets(result, resource, propsSet.getValue(), propsSetKey);
+        result = replaceXmlPlaceHoldersSets(result, resource, propsSet.getValue(), propsSetKey);
       }
     }
     return result;
   }
 
   /**
-   * Replace common place holders in the text
+   * Replace common place holders in the XML text
    *
    * @param text
    *          the text
@@ -74,7 +98,7 @@ public class TextReplacer {
    * @throws IOException
    *           - IOException
    */
-  public static String replaceCommonTextPlaceHolders(final String text, final Resource resource,
+  public static String replaceCommonXmlPlaceHolders(final String text, final Resource resource,
       final Map<String, String> jcrProperties) throws IOException {
     // jcr:tile
     String jcrTitle = jcrProperties.get(Constants.PARAM_PROP_JCR_TITLE);
@@ -127,7 +151,7 @@ public class TextReplacer {
   }
 
   /**
-   * Replace place holders sets in the text
+   * Replace place holders sets in the XML text
    *
    * @param text
    *          the text
@@ -141,7 +165,7 @@ public class TextReplacer {
    * @throws IOException
    *           - IOException
    */
-  public static String replaceTextPlaceHoldersSets(final String text, final Resource resource,
+  public static String replaceXmlPlaceHoldersSets(final String text, final Resource resource,
       final Map<String, String> jcrProperties, final String propsSetKey) throws IOException {
 
     final StringBuilder phValue = new StringBuilder();
