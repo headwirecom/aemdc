@@ -3,11 +3,9 @@ package com.headwire.aemc.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +13,18 @@ import com.headwire.aemc.companion.Constants;
 
 
 /**
- * Runnable Companion Main Class
+ * Config Util
  *
  * @author Marat Saitov, 25.10.2016
  */
-public class Utils {
+public class ConfigUtil {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ConfigUtil.class);
 
   /**
    * Constructor
    */
-  private Utils() {
+  private ConfigUtil() {
   }
 
   /**
@@ -92,27 +90,5 @@ public class Utils {
       }
     }
     return props;
-  }
-
-  /**
-   * Read help text from helper file.
-   *
-   * @return help text
-   * @throws IOException
-   *           - IOException
-   */
-  public static String getHelpText() throws IOException {
-    final InputStream in = Thread.currentThread().getContextClassLoader()
-        .getResourceAsStream(Constants.AEMC_HELP_FILE_PATH);
-    final StringWriter writer = new StringWriter();
-    String helpText = "\n";
-    try {
-      IOUtils.copy(in, writer, Constants.ENCODING);
-      helpText += writer.toString();
-    } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text");
-      throw new IOException(e);
-    }
-    return helpText;
   }
 }

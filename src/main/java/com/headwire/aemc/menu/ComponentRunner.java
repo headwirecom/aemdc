@@ -8,7 +8,7 @@ import com.headwire.aemc.command.CreateDirCommand;
 import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemc.companion.Constants;
 import com.headwire.aemc.companion.Resource;
-import com.headwire.aemc.util.Utils;
+import com.headwire.aemc.util.ConfigUtil;
 
 
 /**
@@ -29,7 +29,7 @@ public class ComponentRunner extends BasisRunner {
    */
   public ComponentRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
-    final Properties configProps = Utils.getConfigProperties(true);
+    final Properties configProps = ConfigUtil.getConfigProperties(true);
 
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER));
     resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER));

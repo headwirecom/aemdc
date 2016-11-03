@@ -125,7 +125,7 @@ public class TextReplacer {
     String slingResourceType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_TYPE);
     if (StringUtils.isBlank(slingResourceType)) {
       // Get Config Properties from config file
-      final Properties configProps = Utils.getConfigProperties();
+      final Properties configProps = ConfigUtil.getConfigProperties();
 
       // get target components folder
       final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);

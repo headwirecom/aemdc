@@ -14,7 +14,7 @@ import com.headwire.aemc.menu.OsgiRunner;
 import com.headwire.aemc.menu.ServiceRunner;
 import com.headwire.aemc.menu.ServletRunner;
 import com.headwire.aemc.menu.TemplateRunner;
-import com.headwire.aemc.util.Utils;
+import com.headwire.aemc.util.HelpUtil;
 
 
 /**
@@ -38,7 +38,7 @@ public class RunnableCompanion {
 
     // check for mandatory arguments
     if (args == null || args.length < 3) {
-      LOG.info(Utils.getHelpText());
+      LOG.info(HelpUtil.getHelpText());
       return;
     }
 
@@ -75,7 +75,7 @@ public class RunnableCompanion {
         runner = new ServletRunner(resource);
         break;
       default:
-        LOG.info(Utils.getHelpText());
+        LOG.info(HelpUtil.getHelpText());
         return;
     }
 

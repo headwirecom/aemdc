@@ -11,7 +11,6 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
-  public static final String AEMC_HELP_FILE_PATH = "help.txt";
   public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
   public static final String CONFIG_FILENAME = "aemc-config.properties";
   public static final String FILE_EXT_XML = "xml";

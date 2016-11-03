@@ -11,7 +11,7 @@ import com.headwire.aemc.command.CreateFileCommand;
 import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemc.companion.Constants;
 import com.headwire.aemc.companion.Resource;
-import com.headwire.aemc.util.Utils;
+import com.headwire.aemc.util.ConfigUtil;
 
 
 /**
@@ -32,7 +32,7 @@ public class OsgiRunner extends BasisRunner {
    */
   public OsgiRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
-    final Properties configProps = Utils.getConfigProperties(true);
+    final Properties configProps = ConfigUtil.getConfigProperties(true);
 
     // set target folder patch
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
