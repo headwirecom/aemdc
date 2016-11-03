@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.headwire.aemc.companion.Constants;
 import com.headwire.aemc.companion.Resource;
+import com.headwire.aemc.util.ConfigUtil;
 
 
 /**
@@ -64,11 +65,7 @@ public abstract class BasisRunner {
     resource.setTargetProjectJcrPath(targetProjectJcrPath);
 
     // Set extentions from config file
-    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
-    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
-    if (StringUtils.isNotBlank(extentionsAsString)) {
-      extentions = extentionsAsString.split(",");
-    }
+    final String[] extentions = ConfigUtil.getConfigExtensions(configProps);
     resource.setExtentions(extentions);
 
     // Set overwriting methods from config file

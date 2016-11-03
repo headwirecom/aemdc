@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class ConfigUtil {
   }
 
   /**
-   * Read properties form configuration file
+   * Read properties from configuration file
    *
    * @param show
    *          - show configuration properties
@@ -90,5 +91,21 @@ public class ConfigUtil {
       }
     }
     return props;
+  }
+
+  /**
+   * Read extentions property from configuration file
+   *
+   * @param configProps
+   *          - configuration properties
+   * @return file extentions
+   */
+  public static String[] getConfigExtensions(final Properties configProps) {
+    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
+    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
+    if (StringUtils.isNotBlank(extentionsAsString)) {
+      extentions = extentionsAsString.split(",");
+    }
+    return extentions;
   }
 }

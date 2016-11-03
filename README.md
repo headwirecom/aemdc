@@ -59,15 +59,10 @@ Where [-options] includes usual for java command options.
 	    service     Service java class to be created.
 	name:
 	    Template name under /templates used to create a target template (ex. contentpage)
-	    OR
 	    Component name under /components used to create a target conponent (ex. title)
-	    OR
 	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml)
-	    OR
 	    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java)
-	    OR
 	    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java)
-	    OR
 	    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java)
 	targetname:
 	    Target template name (ex. homepage).
