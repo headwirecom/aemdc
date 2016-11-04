@@ -52,6 +52,7 @@ public class Constants {
   // public static final String PARAM_SOURCE_PATH = "sourcePath";
   // public static final String PARAM_TARGET_PATH = "targetPath";
 
+  public static final String TYPE_CONFIG_PROPS = "config";
   public static final String TYPE_TEMPLATE = "temp";
   public static final String TYPE_TEMPLATE_FULL = "template";
   public static final String TYPE_COMPONENT = "comp";

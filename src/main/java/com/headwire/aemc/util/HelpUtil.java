@@ -7,6 +7,8 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -53,7 +55,15 @@ public class HelpUtil {
     // no args or help
     if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
       addCompleteHelp = true;
+
     } else if (Constants.PARAM_HELP.equals(args[0])) {
+      // help + config
+      if (Constants.TYPE_CONFIG_PROPS.equals(args[1])) {
+        // show current config properties
+        ConfigUtil.getConfigProperties(true);
+      }
+
+      // help + arg
       if (args.length == 2) {
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
           helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
@@ -64,17 +74,25 @@ public class HelpUtil {
           addCompleteHelp = true;
         }
       }
+
+      // help + arg + arg
       if (args.length == 3) {
+        // help + <type> + <name>
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
-          helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
           helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
           helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
           helpText += getTextFromFile(AEMC_HELP_FILE_END);
+          // show all placeholders
           helpText += getPlaceHolders(args[1], args[2]);
+          helpText += getTextFromFile(AEMC_HELP_FILE_END);
         } else {
           addCompleteHelp = true;
         }
+      } else {
+        // in all other cases
+        addCompleteHelp = true;
       }
+
     } else {
       // not help and args.length < 3
       addCompleteHelp = true;
@@ -140,52 +158,29 @@ public class HelpUtil {
    */
   private static String getPlaceHolders(final String type, final String name) throws IOException {
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties(true);
-    String placeHolders = "";
-    final String templateSrcPath;
-
-    switch (type) {
-      case Constants.TYPE_TEMPLATE:
-      case Constants.TYPE_TEMPLATE_FULL:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER) + "/" + name;
-        break;
-      case Constants.TYPE_COMPONENT:
-      case Constants.TYPE_COMPONENT_FULL:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER) + "/" + name;
-        break;
-      case Constants.TYPE_OSGI:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER) + "/" + name;
-        break;
-      case Constants.TYPE_MODEL:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER) + "/" + name;
-        break;
-      case Constants.TYPE_SERVICE:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER) + "/" + name;
-        break;
-      case Constants.TYPE_SERVLET:
-        templateSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER) + "/" + name;
-        break;
-      default:
-        throw new IllegalStateException("Unknown template type " + type);
-    }
-
+    final Properties configProps = ConfigUtil.getConfigProperties();
+    final String templateSrcPath = ConfigUtil.getTypeSourceFolder(configProps, type) + "/" + name;
     final File dir = new File(templateSrcPath);
+
+    String placeHolders = "";
 
     if (!dir.exists()) {
       placeHolders = "Can't get place holders. Directory/file " + dir + " doesn't exist.";
     } else {
+      placeHolders = "Found next placeholders: \n";
+
       if (dir.isDirectory()) {
-        // get file list recursive with defined extentions
+        // get files list recursive only with predefined extentions
         final String[] extentions = ConfigUtil.getConfigExtensions(configProps);
         final Collection<File> fileList = FileUtils.listFiles(dir, extentions, true);
         final Iterator<File> iter = fileList.iterator();
         while (iter.hasNext()) {
           final File nextFile = iter.next();
-
-          // replace place holders
+          // find place holders
           placeHolders += findPlaceHolders(nextFile);
         }
       } else {
+        // find place holders
         placeHolders += findPlaceHolders(dir);
       }
     }
@@ -196,23 +191,27 @@ public class HelpUtil {
   /**
    * Find place holders in file
    *
-   * @param destFile
-   *          - destination file
+   * @param file
+   *          - file to find placeholders there
+   * @return
    * @throws IOException
    *           - IOException
    */
   private static String findPlaceHolders(final File file) throws IOException {
     String placeHolders = "";
     try {
-      placeHolders = FileUtils.readFileToString(file, Constants.ENCODING);
-
-      // TODO: parse text to find placeholders
-
+      final String text = FileUtils.readFileToString(file, Constants.ENCODING);
+      final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
+      final Matcher matcher = pattern.matcher(text);
+      // find placeholders
+      while (matcher.find()) {
+        placeHolders += matcher.group();
+        placeHolders += "\n";
+      }
     } catch (final IOException e) {
       LOG.error("Can't get place holders from " + file);
       throw new IOException(e);
     }
-
     return placeHolders;
   }
 }

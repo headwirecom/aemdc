@@ -59,20 +59,23 @@ public class ConfigUtil {
       props.load(input);
 
       if (show) {
-        LOG.info("=========================================================================");
-        LOG.info("Properties from configuration file:");
-        LOG.info("=========================================================================");
-      }
-      final Enumeration<?> e = props.propertyNames();
-      while (e.hasMoreElements()) {
-        final String key = (String) e.nextElement();
-        final String value = props.getProperty(key);
-        if (show) {
-          LOG.info(key + "=" + value);
+        final StringBuilder configText = new StringBuilder();
+        configText.append("\n");
+        configText.append(
+            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        configText.append("Properties from configuration file:\n");
+        configText.append(
+            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        final Enumeration<?> e = props.propertyNames();
+        while (e.hasMoreElements()) {
+          final String key = (String) e.nextElement();
+          final String value = props.getProperty(key);
+          configText.append(key + "=" + value);
+          configText.append("\n");
         }
-      }
-      if (show) {
-        LOG.info("=========================================================================");
+        configText.append(
+            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        LOG.info(configText.toString());
       }
 
     } catch (final IOException e) {
@@ -107,5 +110,43 @@ public class ConfigUtil {
       extentions = extentionsAsString.split(",");
     }
     return extentions;
+  }
+
+  /**
+   * Get template type source folder path.
+   *
+   * @param configProps
+   *          - configuration properties
+   * @param type
+   *          - template type
+   * @return type source folder
+   */
+  public static String getTypeSourceFolder(final Properties configProps, final String type) {
+    String typeSrcPath = "";
+    switch (type) {
+      case Constants.TYPE_TEMPLATE:
+      case Constants.TYPE_TEMPLATE_FULL:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER);
+        break;
+      case Constants.TYPE_COMPONENT:
+      case Constants.TYPE_COMPONENT_FULL:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER);
+        break;
+      case Constants.TYPE_OSGI:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER);
+        break;
+      case Constants.TYPE_MODEL:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER);
+        break;
+      case Constants.TYPE_SERVICE:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER);
+        break;
+      case Constants.TYPE_SERVLET:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER);
+        break;
+      default:
+        throw new IllegalStateException("Unknown <type> argument: " + type);
+    }
+    return typeSrcPath;
   }
 }
