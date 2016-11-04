@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -75,10 +76,14 @@ public class ReplacePlaceHoldersCommand implements Command {
     try {
       String fileText = FileUtils.readFileToString(destFile, Constants.ENCODING);
 
+      final List<String> allExtList = resource.getExtentionsList();
       final String extention = FilenameUtils.getExtension(destFile.getName());
+
       if (Constants.FILE_EXT_XML.equals(extention)) {
         fileText = TextReplacer.replaceXmlPlaceHolders(fileText, resource);
       } else if (Constants.FILE_EXT_JAVA.equals(extention)) {
+        fileText = TextReplacer.replaceJavaPlaceHolders(fileText, resource);
+      } else if (allExtList.contains(extention)) {
         fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
       }
 

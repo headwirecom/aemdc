@@ -1,5 +1,7 @@
 package com.headwire.aemc.companion;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -123,6 +125,14 @@ public class Resource {
    */
   public String[] getExtentions() {
     return extentions;
+  }
+
+  /**
+   * @return the extentions as list
+   */
+  public List<String> getExtentionsList() {
+    final List<String> extAsList = Arrays.asList(extentions);
+    return extAsList;
   }
 
   /**

@@ -31,26 +31,55 @@ public class TextReplacer {
   }
 
   /**
-   * Replace place holders in the text files (java, css, jsp)
+   * Replace place holders in the java files
    *
    * @param text
    *          the text
    * @param resource
    *          the resource
    * @return result text
-   * @throws IOException
-   *           - IOException
    */
-  public static String replaceTextPlaceHolders(final String text, final Resource resource) throws IOException {
+  public static String replaceJavaPlaceHolders(final String text, final Resource resource) {
+    String result = text;
 
     // {{ java-class }}
     final String javaClassName = resource.getJavaClassName();
-    String result = text.replace(Constants.PLACEHOLDER_JAVA_CLASS, javaClassName);
+    result = result.replace(Constants.PLACEHOLDER_JAVA_CLASS, javaClassName);
 
     // {{ java-package }}
     final String javaPackage = resource.getJavaClassPackage();
     result = result.replace(Constants.PLACEHOLDER_JAVA_PACKAGE, javaPackage);
 
+    // all other placeholders
+    result = replaceTextPlaceHolders(result, resource);
+
+    return result;
+  }
+
+  /**
+   * Replace place holders in all other files (jsp, js, css)
+   *
+   * @param text
+   *          the text
+   * @param resource
+   *          the resource
+   * @return result text
+   */
+  public static String replaceTextPlaceHolders(final String text, final Resource resource) {
+    String result = text;
+
+    // get Jcr Properties Sets
+    final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
+
+    // get COMMON Properties Set
+    final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDERS_PROPS_SET_COMMON);
+    final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
+    while (iter.hasNext()) {
+      // replace all other placeholders
+      final Entry<String, String> prop = iter.next();
+      result = result.replace("{{ " + prop.getKey() + " }}", prop.getValue());
+      // LOG.info("{{ " + prop.getKey() + " }} replaced with \"" + prop.getValue() + "\"");
+    }
     return result;
   }
 
@@ -66,11 +95,11 @@ public class TextReplacer {
    *           - IOException
    */
   public static String replaceXmlPlaceHolders(final String text, final Resource resource) throws IOException {
-    // Jcr Properties Sets to set
+    String result = text;
+
+    // get Jcr Properties Sets
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
     final Iterator<Entry<String, Map<String, String>>> iter = jcrPropsSets.entrySet().iterator();
-
-    String result = text;
 
     while (iter.hasNext()) {
       final Entry<String, Map<String, String>> propsSet = iter.next();
@@ -162,11 +191,9 @@ public class TextReplacer {
    * @param propsSetKey
    *          key value of properties set
    * @return result text
-   * @throws IOException
-   *           - IOException
    */
   public static String replaceXmlPlaceHoldersSets(final String text, final Resource resource,
-      final Map<String, String> jcrProperties, final String propsSetKey) throws IOException {
+      final Map<String, String> jcrProperties, final String propsSetKey) {
 
     final StringBuilder phValue = new StringBuilder();
 

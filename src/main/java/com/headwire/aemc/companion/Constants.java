@@ -14,10 +14,12 @@ public class Constants {
   // public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
   public static final String CONFIG_FILENAME = "aemc-config.properties";
   public static final String FILE_EXT_XML = "xml";
-  public static final String FILE_EXT_JS = "js";
   public static final String FILE_EXT_JAVA = "java";
+  public static final String FILE_EXT_JSP = "jsp";
+  public static final String FILE_EXT_JS = "js";
   public static final String FILE_EXT_CSS = "css";
-  public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { FILE_EXT_XML, FILE_EXT_JS, FILE_EXT_JAVA, FILE_EXT_CSS };
+  public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { FILE_EXT_XML, FILE_EXT_JAVA, FILE_EXT_JSP, FILE_EXT_JS,
+      FILE_EXT_CSS };
 
   // configuration constants
   public static final String CONFIGPROP_SOURCE_TEMPLATES_FOLDER = "SOURCE_TEMPLATES_FOLDER";
