@@ -29,6 +29,7 @@ public class HelpUtil {
   public static final String AEMC_HELP_FOLDER = "help";
   public static final String AEMC_HELP_FILE_START = "help-start.txt";
   public static final String AEMC_HELP_FILE_END = "help-end.txt";
+  public static final String AEMC_HELP_FILE_CONFIG = "help-config.txt";
   public static final String AEMC_HELP_FILE_TYPE = "help-type.txt";
   public static final String AEMC_HELP_FILE_NAME = "help-name.txt";
   public static final String AEMC_HELP_FILE_TARGET_NAME = "help-targetname.txt";
@@ -50,7 +51,6 @@ public class HelpUtil {
   public static String getHelpText(final String[] args) throws IOException {
     boolean addCompleteHelp = false;
     String helpText = "\n";
-    helpText += getTextFromFile(AEMC_HELP_FILE_START);
 
     // no args or help
     if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
@@ -61,11 +61,11 @@ public class HelpUtil {
       if (Constants.TYPE_CONFIG_PROPS.equals(args[1])) {
         // show current config properties
         ConfigUtil.getConfigProperties(true);
-      }
 
-      // help + arg
-      if (args.length == 2) {
+      } else if (args.length == 2) {
+        // help + arg
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
+          helpText += getTextFromFile(AEMC_HELP_FILE_START);
           helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
           helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
           helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
@@ -73,12 +73,12 @@ public class HelpUtil {
         } else {
           addCompleteHelp = true;
         }
-      }
 
-      // help + arg + arg
-      if (args.length == 3) {
+      } else if (args.length == 3) {
+        // help + arg + arg
         // help + <type> + <name>
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
+          helpText += getTextFromFile(AEMC_HELP_FILE_START);
           helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
           helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
           helpText += getTextFromFile(AEMC_HELP_FILE_END);
@@ -100,6 +100,8 @@ public class HelpUtil {
 
     // get complete help
     if (addCompleteHelp) {
+      helpText += getTextFromFile(AEMC_HELP_FILE_START);
+      helpText += getTextFromFile(AEMC_HELP_FILE_CONFIG);
       helpText += getTextFromFile(AEMC_HELP_FILE_TYPE);
       helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
       helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
