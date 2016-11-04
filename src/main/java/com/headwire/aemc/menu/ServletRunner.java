@@ -29,7 +29,7 @@ public class ServletRunner extends BasisRunner {
    */
   public ServletRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties(true);
+    final Properties configProps = ConfigUtil.getConfigProperties();
 
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER));
     resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVLETS_FOLDER));

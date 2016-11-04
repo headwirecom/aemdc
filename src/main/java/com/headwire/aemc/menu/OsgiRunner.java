@@ -32,7 +32,7 @@ public class OsgiRunner extends BasisRunner {
    */
   public OsgiRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties(true);
+    final Properties configProps = ConfigUtil.getConfigProperties();
 
     // set target folder patch
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
