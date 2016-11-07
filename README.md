@@ -1,10 +1,10 @@
 # aemcompanion
-AEM Companion
+AEM Companion allow to create AEM templates, components, osgi configurations, java models, services and servlets from predefined templates.
 
 # Using placeholders
-Clone the aemc-files from GitHub and modify the templates from aemc-files for you needs. 
+Clone the aemc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemc-files for you needs. 
 	
-	https://github.com/headwirecom/aemc-files.git
+	git clone https://github.com/headwirecom/aemc-files.git ../aemc-files
 
 In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemc-files/aemc-placeholders/apps/project/templates/contentpage/.content.xml
 
@@ -40,16 +40,18 @@ where "ph\_1\_2":
 
 # Running
 
-Please create a configuration file in the root of your AEM project and modify configuration for your needs. For example
+Please create a configuration file in the root of your AEM maven project and modify configuration for your needs. For example
  
 	/my-aem-project/aemc-config.properties
 
 To run
 
-	java [-options] -jar aemc.jar <type> <name> <targetname> [args...]
-
+	java [-options] -jar aemc.jar [help [config]] <type> <name> <targetname> [args...]
+	
 Where [-options] includes usual for java command options.
 
+	help config:
+	    Shows current configuration properties.
 	type:
 	    temp(late)  Template to be created.
 	    comp(onent) Component to be created.
@@ -58,12 +60,12 @@ Where [-options] includes usual for java command options.
 	    servlet     Servlet java class to be created.
 	    service     Service java class to be created.
 	name:
-	    Template name under /templates used to create a target template (ex. contentpage)
-	    Component name under /components used to create a target conponent (ex. title)
-	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml)
-	    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java)
-	    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java)
-	    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java)
+	    Template name under /templates used to create a target template (ex. contentpage).
+	    Component name under /components used to create a target conponent (ex. title).
+	    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml).
+	    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java).
+	    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java).
+	    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java).
 	targetname:
 	    Target template name (ex. homepage).
 	    Target component name (ex. my-teaser).
@@ -71,12 +73,11 @@ Where [-options] includes usual for java command options.
 	    Model/Service/Servlet java class file name (ex. SampleSlingModel.java).
 	args:
 	    runmode=<value>
-	                Runmode used in the osgi config folder definition (ex. "author.int" runmode will used to create "config.author.int" folder for osgi service configuration)    
+	                Runmode used in the osgi config folder definition (ex. "author.int" runmode will used to create "config.author.int" folder for osgi service configuration).    
 	    <property name>=<property value>
-	                Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage)    
+	                Properties used in the template/component/osgi definition (ex. sling:resourceType=/apps/my-aem-project/components/contentpage). 
 	    <properties set>:<property name>=<property value>
-	                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2)
-
+	                Properties used in the template/component/osgi and belongs to one set definition (ex. ph_1_2:property1=value1 ph_1_2:property2=value2).                
 
 
 # Development
