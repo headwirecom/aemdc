@@ -1,5 +1,5 @@
 # aemcompanion
-AEM Companion allow to create AEM templates, components, osgi configurations, java models, services and servlets from predefined templates.
+AEM Companion allows to create AEM templates, components, osgi configurations, java models, services and servlets from predefined templates.
 
 # Using placeholders
 Clone the aemc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemc-files for you needs. 
