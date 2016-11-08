@@ -29,71 +29,72 @@ public class ConfigUtil {
   }
 
   /**
-   * Read properties form configuration file
+   * Get properties from configuration file
    *
    * @return configuration properties
    * @throws IOException
    *           - IOException
    */
   public static Properties getConfigProperties() throws IOException {
-    return getConfigProperties(false);
-  }
-
-  /**
-   * Read properties from configuration file
-   *
-   * @param show
-   *          - show configuration properties
-   * @return configuration properties
-   * @throws IOException
-   *           - IOException
-   */
-  public static Properties getConfigProperties(final boolean show) throws IOException {
     final Properties props = new Properties();
     InputStream input = null;
 
     try {
       input = new FileInputStream(Constants.CONFIG_FILENAME);
-
-      // load a properties file from class path, inside static method
+      // load a properties file from class path
       props.load(input);
 
-      if (show) {
-        final StringBuilder configText = new StringBuilder();
-        configText.append("\n");
-        configText.append(
-            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        configText.append("Properties from configuration file:\n");
-        configText.append(
-            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        final Enumeration<?> e = props.propertyNames();
-        while (e.hasMoreElements()) {
-          final String key = (String) e.nextElement();
-          final String value = props.getProperty(key);
-          configText.append(key + "=" + value);
-          configText.append("\n");
-        }
-        configText.append(
-            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        LOG.info(configText.toString());
-      }
-
     } catch (final IOException e) {
-      LOG.error(
-          "Sorry, unable to find or read properties from configuration file [" + Constants.CONFIG_FILENAME
-              + "] in the root of your project.");
+      LOG.error("Sorry, unable to find or read properties from configuration file [{}] in the root of your project.",
+          Constants.CONFIG_FILENAME);
       throw new IOException(e);
     } finally {
       if (input != null) {
         try {
           input.close();
         } catch (final IOException e) {
-          LOG.error("Sorry, unable to close input stream from configuration file. ");
+          LOG.error("Sorry, unable to close input stream from configuration file {}.", Constants.CONFIG_FILENAME);
           throw new IOException(e);
         }
       }
     }
     return props;
+  }
+
+  /**
+   * Get properties from configuration file as text
+   *
+   * @return configuration properties as text
+   * @throws IOException
+   */
+  public static String getConfigPropertiesAsText() throws IOException {
+    final Properties props = getConfigProperties();
+    final String configText = getConfigPropertiesAsText(props);
+    return configText;
+  }
+
+  /**
+   * Get properties from configuration file as text
+   *
+   * @param props
+   *          - configuration properties
+   * @return configuration properties as text
+   */
+  public static String getConfigPropertiesAsText(final Properties props) {
+    final StringBuilder configText = new StringBuilder();
+    configText.append("Properties from configuration file \"");
+    configText.append(Constants.CONFIG_FILENAME);
+    configText.append("\":\n");
+    final Enumeration<?> e = props.propertyNames();
+    while (e.hasMoreElements()) {
+      final String key = (String) e.nextElement();
+      final String value = props.getProperty(key);
+      configText.append(key);
+      configText.append("=");
+      configText.append(value);
+      configText.append("\n");
+    }
+    return configText.toString();
   }
 
   /**
