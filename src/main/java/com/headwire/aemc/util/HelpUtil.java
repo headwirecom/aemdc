@@ -6,9 +6,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -189,11 +188,11 @@ public class HelpUtil {
         while (iter.hasNext()) {
           final File nextFile = iter.next();
           // find place holders
-          placeHolders.append(findPlaceHolders(nextFile));
+          placeHolders.append(getPlaceHolders(nextFile));
         }
       } else {
         // find place holders
-        placeHolders.append(findPlaceHolders(dir));
+        placeHolders.append(getPlaceHolders(dir));
       }
     }
 
@@ -201,7 +200,7 @@ public class HelpUtil {
   }
 
   /**
-   * Find place holders in file
+   * Get all placeholders from the file
    *
    * @param file
    *          - file to find placeholders there
@@ -209,15 +208,17 @@ public class HelpUtil {
    * @throws IOException
    *           - IOException
    */
-  private static String findPlaceHolders(final File file) throws IOException {
+  private static String getPlaceHolders(final File file) throws IOException {
     final StringBuilder placeHolders = new StringBuilder();
     try {
       final String text = FileUtils.readFileToString(file, Constants.ENCODING);
-      final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
-      final Matcher matcher = pattern.matcher(text);
       // find placeholders
-      while (matcher.find()) {
-        placeHolders.append(matcher.group());
+      final List<String> phList = TextReplacer.findTextPlaceHolders(text);
+      final Iterator<String> iter = phList.iterator();
+      while (iter.hasNext()) {
+        // add offset for help
+        placeHolders.append("    ");
+        placeHolders.append(iter.next());
         placeHolders.append("\n");
       }
     } catch (final IOException e) {

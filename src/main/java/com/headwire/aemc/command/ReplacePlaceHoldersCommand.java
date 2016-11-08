@@ -87,6 +87,11 @@ public class ReplacePlaceHoldersCommand implements Command {
         fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
       }
 
+      // replace the rest placeholders with default values
+      if (allExtList.contains(extention)) {
+        fileText = TextReplacer.replacePlaceHoldersByDefault(fileText);
+      }
+
       FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
 
       LOG.info("Place holders replaced in the file [{}]", destFile);

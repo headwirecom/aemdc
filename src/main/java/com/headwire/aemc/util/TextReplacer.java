@@ -3,10 +3,14 @@ package com.headwire.aemc.util;
 import java.io.IOException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -78,7 +82,7 @@ public class TextReplacer {
       // replace all other placeholders
       final Entry<String, String> prop = iter.next();
       result = result.replace("{{ " + prop.getKey() + " }}", prop.getValue());
-      LOG.debug("{{ {} }} replaced with '{}'", prop.getKey(), prop.getValue());
+      LOG.debug("'{{ {} }}' replacing with '{}'", prop.getKey(), prop.getValue());
     }
     return result;
   }
@@ -104,7 +108,9 @@ public class TextReplacer {
     while (iter.hasNext()) {
       final Entry<String, Map<String, String>> propsSet = iter.next();
       final String propsSetKey = propsSet.getKey();
+
       LOG.debug("propsSetKey={}", propsSetKey);
+
       if (Constants.PLACEHOLDERS_PROPS_SET_COMMON.equals(propsSetKey)) {
         result = replaceCommonXmlPlaceHolders(result, resource, propsSet.getValue());
       } else {
@@ -180,6 +186,29 @@ public class TextReplacer {
   }
 
   /**
+   * Replace all place holders with default values.
+   *
+   * @param text
+   *          the text
+   * @return result text
+   */
+  public static String replacePlaceHoldersByDefault(final String text) {
+    String result = text;
+
+    // get all placeholders
+    final List<String> restPlaceHolders = TextReplacer.findTextPlaceHolders(text);
+
+    // replace all other placeholders
+    final Iterator<String> iter = restPlaceHolders.iterator();
+    while (iter.hasNext()) {
+      final String placeHolder = iter.next();
+      result = result.replace(placeHolder, "");
+      LOG.debug("'{}' replacing with ''", placeHolder);
+    }
+    return result;
+  }
+
+  /**
    * Replace place holders sets in the XML text
    *
    * @param text
@@ -225,6 +254,24 @@ public class TextReplacer {
     final String result = text.replace("{{ " + propsSetKey + " }}", phValue.toString());
     LOG.debug("PropsSet {} replaced by {}", propsSetKey, phValue.toString());
     return result;
+  }
+
+  /**
+   * Find place holders in text
+   *
+   * @param text
+   *          - text to find placeholders there
+   * @return list of place holders
+   */
+  public static List<String> findTextPlaceHolders(final String text) {
+    final List<String> phList = new ArrayList<String>();
+    final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
+    final Matcher matcher = pattern.matcher(text);
+    // find placeholders
+    while (matcher.find()) {
+      phList.add(matcher.group());
+    }
+    return phList;
   }
 
   /**
