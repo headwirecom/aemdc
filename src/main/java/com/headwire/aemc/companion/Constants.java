@@ -11,7 +11,6 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
-  // public static final String AEMC_FILES_FOLDER = "aemc-placeholders";
   public static final String CONFIG_FILENAME = "aemc-config.properties";
   public static final String FILE_EXT_XML = "xml";
   public static final String FILE_EXT_JAVA = "java";
@@ -49,8 +48,6 @@ public class Constants {
   public static final String PARAM_TYPE = "type";
   public static final String PARAM_TEMPLATE_NAME = "templateName";
   public static final String PARAM_TARGET_NAME = "targetName";
-  // public static final String PARAM_SOURCE_PATH = "sourcePath";
-  // public static final String PARAM_TARGET_PATH = "targetPath";
 
   public static final String TYPE_CONFIG_PROPS = "config";
   public static final String TYPE_TEMPLATE = "temp";

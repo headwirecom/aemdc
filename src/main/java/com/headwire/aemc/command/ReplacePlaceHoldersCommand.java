@@ -39,7 +39,7 @@ public class ReplacePlaceHoldersCommand implements Command {
   @Override
   public void execute() throws IOException {
     final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
-    LOG.info("Replacing place holders in the directory/file [" + targetPath + "] ...");
+    LOG.debug("Replacing place holders in the directory/file [{}] ...", targetPath);
 
     final File dest = new File(targetPath);
 
@@ -89,10 +89,10 @@ public class ReplacePlaceHoldersCommand implements Command {
 
       FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
 
-      LOG.info("Place holders replaced in the file [" + destFile + "]");
+      LOG.info("Place holders replaced in the file [{}]", destFile);
 
     } catch (final IOException e) {
-      LOG.error("Can't replace place holders in the file [" + destFile + "]");
+      LOG.error("Can't replace place holders in the file [{}]", destFile);
       throw new IOException(e);
     }
   }

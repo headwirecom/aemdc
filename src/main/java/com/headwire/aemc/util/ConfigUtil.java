@@ -82,9 +82,9 @@ public class ConfigUtil {
    */
   public static String getConfigPropertiesAsText(final Properties props) {
     final StringBuilder configText = new StringBuilder();
-    configText.append("Properties from configuration file \"");
+    configText.append("Properties from configuration file [");
     configText.append(Constants.CONFIG_FILENAME);
-    configText.append("\":\n");
+    configText.append("]:\n");
     final Enumeration<?> e = props.propertyNames();
     while (e.hasMoreElements()) {
       final String key = (String) e.nextElement();

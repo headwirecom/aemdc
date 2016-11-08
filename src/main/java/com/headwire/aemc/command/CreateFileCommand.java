@@ -37,7 +37,7 @@ public class CreateFileCommand implements Command {
     final File srcFile = new File(sourcePath);
     final File targetFile = new File(targetPath);
 
-    LOG.info("Coping file from [" + sourcePath + "] to [" + targetPath + "] ...");
+    LOG.info("Coping file from [{}] to [{}] ...", sourcePath, targetPath);
 
     // copy directory
     copyFile(srcFile, targetFile);
@@ -62,10 +62,10 @@ public class CreateFileCommand implements Command {
       }
 
       FileUtils.copyFile(srcFile, destFile);
-      LOG.info("File " + destFile + " created.");
+      LOG.info("File {} created.", destFile);
 
     } catch (final IOException e) {
-      LOG.error("Can't copy source file [" + srcFile + "] to destination file [" + destFile + "]");
+      LOG.error("Can't copy source file [{}] to destination file [{}]", srcFile, destFile);
       throw new IOException(e);
     }
   }

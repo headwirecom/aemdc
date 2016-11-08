@@ -78,7 +78,7 @@ public class TextReplacer {
       // replace all other placeholders
       final Entry<String, String> prop = iter.next();
       result = result.replace("{{ " + prop.getKey() + " }}", prop.getValue());
-      // LOG.info("{{ " + prop.getKey() + " }} replaced with \"" + prop.getValue() + "\"");
+      LOG.debug("{{ {} }} replaced with '{}'", prop.getKey(), prop.getValue());
     }
     return result;
   }
@@ -104,7 +104,7 @@ public class TextReplacer {
     while (iter.hasNext()) {
       final Entry<String, Map<String, String>> propsSet = iter.next();
       final String propsSetKey = propsSet.getKey();
-      // LOG.info("propsSetKey=" + propsSetKey);
+      LOG.debug("propsSetKey={}", propsSetKey);
       if (Constants.PLACEHOLDERS_PROPS_SET_COMMON.equals(propsSetKey)) {
         result = replaceCommonXmlPlaceHolders(result, resource, propsSet.getValue());
       } else {
@@ -220,11 +220,10 @@ public class TextReplacer {
       phValue.append(getCrxXMLValue(value));
       phValue.append("\"");
       first = false;
-      // LOG.info("key=" + key + ", value=" + value);
     }
 
-    // LOG.info("phValue=" + phValue.toString());
     final String result = text.replace("{{ " + propsSetKey + " }}", phValue.toString());
+    LOG.debug("PropsSet {} replaced by {}", propsSetKey, phValue.toString());
     return result;
   }
 
