@@ -68,7 +68,7 @@ public class CreateDirCommand implements Command {
       }
 
       FileUtils.copyDirectory(srcDir, destDir);
-      LOG.info("Directory {} created.", destDir);
+      LOG.debug("Directory {} created.", destDir);
 
     } catch (final IOException e) {
       LOG.error("Can't create destination directory [{}] from source directory [{}]", srcDir, destDir);
