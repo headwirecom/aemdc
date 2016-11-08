@@ -37,7 +37,7 @@ public class CreateDirCommand implements Command {
     final File srcDir = new File(sourcePath);
     final File targetDir = new File(targetPath);
 
-    LOG.info("Coping files from [" + sourcePath + "] to [" + targetPath + "] ...");
+    LOG.info("Coping files from [{}] to [{}] ...", sourcePath, targetPath);
 
     // copy directory
     copyDirectory(srcDir, targetDir);
@@ -68,10 +68,10 @@ public class CreateDirCommand implements Command {
       }
 
       FileUtils.copyDirectory(srcDir, destDir);
-      LOG.info("Directory " + destDir + " created.");
+      LOG.info("Directory {} created.", destDir);
 
     } catch (final IOException e) {
-      LOG.error("Can't create destination directory [" + srcDir + "] from source directory [" + destDir + "]");
+      LOG.error("Can't create destination directory [{}] from source directory [{}]", srcDir, destDir);
       throw new IOException(e);
     }
   }

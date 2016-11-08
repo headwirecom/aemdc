@@ -42,6 +42,16 @@ public class HelpUtil {
   }
 
   /**
+   * Shows help text.
+   *
+   * @throws IOException
+   *           - IOException
+   */
+  public static void showHelp(final String[] args) throws IOException {
+    LOG.info(getHelpText(args));
+  }
+
+  /**
    * Build help text from helper files.
    *
    * @return help text
@@ -50,7 +60,8 @@ public class HelpUtil {
    */
   public static String getHelpText(final String[] args) throws IOException {
     boolean addCompleteHelp = false;
-    String helpText = "\n";
+    final StringBuilder helpText = new StringBuilder();
+    helpText.append("\n");
 
     // no args or help
     if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
@@ -60,16 +71,16 @@ public class HelpUtil {
       // help + config
       if (Constants.TYPE_CONFIG_PROPS.equals(args[1])) {
         // show current config properties
-        ConfigUtil.getConfigProperties(true);
+        helpText.append(ConfigUtil.getConfigPropertiesAsText());
 
       } else if (args.length == 2) {
         // help + arg
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
-          helpText += getTextFromFile(AEMC_HELP_FILE_START);
-          helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
-          helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
-          helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
-          helpText += getTextFromFile(AEMC_HELP_FILE_END);
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_START));
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_NAME));
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_ARGS));
+          // helpText.append(getTextFromFile(AEMC_HELP_FILE_END));
         } else {
           addCompleteHelp = true;
         }
@@ -78,13 +89,13 @@ public class HelpUtil {
         // help + arg + arg
         // help + <type> + <name>
         if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
-          helpText += getTextFromFile(AEMC_HELP_FILE_START);
-          helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
-          helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
-          helpText += getTextFromFile(AEMC_HELP_FILE_END);
-          // show all placeholders
-          helpText += getPlaceHolders(args[1], args[2]);
-          helpText += getTextFromFile(AEMC_HELP_FILE_END);
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_START));
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(AEMC_HELP_FILE_ARGS));
+          // helpText.append(getTextFromFile(AEMC_HELP_FILE_END));
+          // get all placeholders
+          helpText.append(getPlaceHolders(args[1], args[2]));
+          // helpText.append(getTextFromFile(AEMC_HELP_FILE_END));
         } else {
           addCompleteHelp = true;
         }
@@ -100,16 +111,16 @@ public class HelpUtil {
 
     // get complete help
     if (addCompleteHelp) {
-      helpText += getTextFromFile(AEMC_HELP_FILE_START);
-      helpText += getTextFromFile(AEMC_HELP_FILE_CONFIG);
-      helpText += getTextFromFile(AEMC_HELP_FILE_TYPE);
-      helpText += getTextFromFile(AEMC_HELP_FILE_NAME);
-      helpText += getTextFromFile(AEMC_HELP_FILE_TARGET_NAME);
-      helpText += getTextFromFile(AEMC_HELP_FILE_ARGS);
-      helpText += getTextFromFile(AEMC_HELP_FILE_END);
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_START));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_CONFIG));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_TYPE));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_NAME));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_TARGET_NAME));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_ARGS));
+      // helpText.append(getTextFromFile(AEMC_HELP_FILE_END));
     }
 
-    return helpText;
+    return helpText.toString();
   }
 
   /**
@@ -125,26 +136,26 @@ public class HelpUtil {
     final InputStream in = Thread.currentThread().getContextClassLoader()
         .getResourceAsStream(AEMC_HELP_FOLDER + "/" + fileName);
     final StringWriter writer = new StringWriter();
-    String helpText = "";
+    final StringBuilder helpText = new StringBuilder();
 
     try {
       IOUtils.copy(in, writer, Constants.ENCODING);
-      helpText += writer.toString();
+      helpText.append(writer.toString());
     } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text from file " + fileName);
+      LOG.error("Sorry, can't show you help text from file {}", fileName);
       throw new IOException(e);
     } finally {
       if (in != null) {
         try {
           in.close();
         } catch (final IOException e) {
-          LOG.error("Sorry, unable to close input stream from help file " + fileName);
+          LOG.error("Sorry, unable to close input stream from help file {}", fileName);
           throw new IOException(e);
         }
       }
     }
-    helpText += "\n";
-    return helpText;
+    helpText.append("\n");
+    return helpText.toString();
   }
 
   /**
@@ -164,12 +175,12 @@ public class HelpUtil {
     final String templateSrcPath = ConfigUtil.getTypeSourceFolder(configProps, type) + "/" + name;
     final File dir = new File(templateSrcPath);
 
-    String placeHolders = "";
+    final StringBuilder placeHolders = new StringBuilder();
 
     if (!dir.exists()) {
-      placeHolders = "Can't get place holders. Directory/file " + dir + " doesn't exist.";
+      placeHolders.append("Can't get place holders. Directory/file " + templateSrcPath + " doesn't exist.");
     } else {
-      placeHolders = "Found next placeholders: \n";
+      placeHolders.append("Found next placeholders: \n");
 
       if (dir.isDirectory()) {
         // get files list recursive only with predefined extentions
@@ -179,15 +190,15 @@ public class HelpUtil {
         while (iter.hasNext()) {
           final File nextFile = iter.next();
           // find place holders
-          placeHolders += findPlaceHolders(nextFile);
+          placeHolders.append(findPlaceHolders(nextFile));
         }
       } else {
         // find place holders
-        placeHolders += findPlaceHolders(dir);
+        placeHolders.append(findPlaceHolders(dir));
       }
     }
 
-    return placeHolders;
+    return placeHolders.toString();
   }
 
   /**
@@ -200,20 +211,20 @@ public class HelpUtil {
    *           - IOException
    */
   private static String findPlaceHolders(final File file) throws IOException {
-    String placeHolders = "";
+    final StringBuilder placeHolders = new StringBuilder();
     try {
       final String text = FileUtils.readFileToString(file, Constants.ENCODING);
       final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
       final Matcher matcher = pattern.matcher(text);
       // find placeholders
       while (matcher.find()) {
-        placeHolders += matcher.group();
-        placeHolders += "\n";
+        placeHolders.append(matcher.group());
+        placeHolders.append("\n");
       }
     } catch (final IOException e) {
-      LOG.error("Can't get place holders from " + file);
+      LOG.error("Can't get place holders from {}", file);
       throw new IOException(e);
     }
-    return placeHolders;
+    return placeHolders.toString();
   }
 }

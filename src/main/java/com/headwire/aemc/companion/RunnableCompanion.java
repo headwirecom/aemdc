@@ -38,7 +38,7 @@ public class RunnableCompanion {
 
     // check for mandatory arguments
     if (args == null || args.length < 3 || Constants.PARAM_HELP.equals(args[0])) {
-      LOG.info(HelpUtil.getHelpText(args));
+      HelpUtil.showHelp(args);
       return;
     }
 
@@ -75,7 +75,7 @@ public class RunnableCompanion {
         runner = new ServletRunner(resource);
         break;
       default:
-        LOG.info(HelpUtil.getHelpText(args));
+        HelpUtil.showHelp(args);
         return;
     }
 
@@ -110,11 +110,11 @@ public class RunnableCompanion {
         }
         final String ph_key = key.substring(pos + 1);
         jcrPropsSet.put(ph_key, value);
-        // LOG.info("ph_key=" + ph_key + ", value=" + value);
         jcrPropAllSets.put(phSetKey, jcrPropsSet);
+        LOG.debug("ph_key={}, value={}", ph_key, value);
       } else {
         jcrPropsCommon.put(key, value);
-        // LOG.info("key=" + key + ", value=" + value);
+        LOG.debug("key={}, value={}", key, value);
       }
     }
     jcrPropAllSets.put(Constants.PLACEHOLDERS_PROPS_SET_COMMON, jcrPropsCommon);
