@@ -1,2 +1,5 @@
-help config:
-    Shows current configuration properties.
+help:
+    ""            This help text.
+    config        Shows current configuration properties.
+    <type>        Shows list of possible templates.
+    <type> <name> Shows list of possible place holders.    

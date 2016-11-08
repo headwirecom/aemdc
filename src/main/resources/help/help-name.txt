@@ -1,7 +1,7 @@
 name:
-    Template name under /templates used to create a target template (ex. contentpage).
-    Component name under /components used to create a target conponent (ex. title).
-    Osgi file name under /config used to create a target osgi config (ex. osgi.1.PID.xml).
-    Model file name under /models java package used to create a target model java class (ex. SampleSlingModel.java).
-    Service file name under /services java package used to create a target service java class (ex. SampleService.java or impl/SampleServiceImpl.java).
-    Servlet file name under /servlets java package used to create a target servlet java class (ex. impl/SampleSafeMethodsServlet.java).
+    Source AEM template name under ../templates folder.
+    Source AEM component name under ../components folder.
+    Source OSGI file name under ../config folder.
+    Source model file name under ../models java package.
+    Source service file name under ../services java package.
+    Source servlet file name under ../servlets java package.
