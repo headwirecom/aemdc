@@ -48,7 +48,7 @@ public class HelpUtil {
    *           - IOException
    */
   public static void showHelp(final String[] args) throws IOException {
-    LOG.info(getHelpText(args));
+    System.out.print(getHelpText(args));
   }
 
   /**
@@ -61,7 +61,6 @@ public class HelpUtil {
   public static String getHelpText(final String[] args) throws IOException {
     boolean addCompleteHelp = false;
     final StringBuilder helpText = new StringBuilder();
-    helpText.append("\n");
 
     // no args or help
     if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
