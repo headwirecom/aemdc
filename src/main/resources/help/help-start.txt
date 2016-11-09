@@ -1,5 +1,2 @@
 Usage:
   java [-options] -jar aemc.jar [help [config]] <type> <name> <targetname> [args...]
-
--options:
-    Includes usual for java command options.

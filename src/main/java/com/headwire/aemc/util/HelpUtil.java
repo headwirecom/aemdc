@@ -28,6 +28,7 @@ public class HelpUtil {
   public static final String AEMC_HELP_FOLDER = "help";
   public static final String AEMC_HELP_FILE_START = "help-start.txt";
   public static final String AEMC_HELP_FILE_END = "help-end.txt";
+  public static final String AEMC_HELP_FILE_OPTIONS = "help-options.txt";
   public static final String AEMC_HELP_FILE_CONFIG = "help-config.txt";
   public static final String AEMC_HELP_FILE_TYPE = "help-type.txt";
   public static final String AEMC_HELP_FILE_NAME = "help-name.txt";
@@ -110,6 +111,7 @@ public class HelpUtil {
     // get complete help
     if (addCompleteHelp) {
       helpText.append(getTextFromFile(AEMC_HELP_FILE_START));
+      helpText.append(getTextFromFile(AEMC_HELP_FILE_OPTIONS));
       helpText.append(getTextFromFile(AEMC_HELP_FILE_CONFIG));
       helpText.append(getTextFromFile(AEMC_HELP_FILE_TYPE));
       helpText.append(getTextFromFile(AEMC_HELP_FILE_NAME));
