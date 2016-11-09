@@ -167,7 +167,7 @@ public class TextReplacer {
       final int pos = targetCompFolder.indexOf(resource.getTargetProjectJcrPath());
       if (pos == -1) {
         throw new IllegalStateException("The /apps root path from " + Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER
-            + " is different to " + Constants.CONFIGPROP_TARGET_PROJECT_JCR_PATH);
+            + " is different to " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
       }
 
       // set like "/apps/my-aem-project/components/contentpage";

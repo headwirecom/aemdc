@@ -3,7 +3,10 @@ package com.headwire.aemc.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,13 +39,16 @@ public class ConfigUtil {
    *           - IOException
    */
   public static Properties getConfigProperties() throws IOException {
-    final Properties props = new Properties();
+    Properties props = new Properties();
     InputStream input = null;
 
     try {
       input = new FileInputStream(Constants.CONFIG_FILENAME);
       // load a properties file from class path
       props.load(input);
+
+      // replace path place holders
+      props = replacePathPlaceHolders(props);
 
     } catch (final IOException e) {
       LOG.error("Sorry, unable to find or read properties from configuration file [{}] in the root of your project.",
@@ -62,6 +68,51 @@ public class ConfigUtil {
   }
 
   /**
+   * Replace path placeholders in the configuration properties path values.
+   *
+   * @param configProps
+   *          - configuration properties
+   * @return initialized configuration properties
+   */
+  private static Properties replacePathPlaceHolders(final Properties configProps) {
+    final Properties newProps = new Properties();
+
+    // source path placeholder values
+    final String sourceFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER);
+    final String sourceUIFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER);
+    final String sourceJavaFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER);
+
+    // target path placeholder values
+    final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+    final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    final String targetJavaFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+    final String targetJavaPackage = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE);
+
+    LOG.debug("Configuration properties path replacing... ");
+
+    final Enumeration<?> e = configProps.propertyNames();
+    while (e.hasMoreElements()) {
+      final String key = (String) e.nextElement();
+      String value = configProps.getProperty(key);
+
+      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_FOLDER + "}}", sourceFolder);
+      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_UI_FOLDER + "}}", sourceUIFolder);
+      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_JAVA_FOLDER + "}}", sourceJavaFolder);
+
+      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_UI_FOLDER + "}}", targetUIFolder);
+      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_PROJECT_ROOT + "}}", targetProjectRoot);
+      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_JAVA_FOLDER + "}}", targetJavaFolder);
+      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_JAVA_PACKAGE + "}}", targetJavaPackage);
+
+      // add with replaced path values
+      newProps.put(key, value);
+
+      LOG.debug("Replaced {}={}", key, value);
+    }
+    return newProps;
+  }
+
+  /**
    * Get properties from configuration file as text
    *
    * @return configuration properties as text
@@ -78,22 +129,29 @@ public class ConfigUtil {
    *
    * @param props
    *          - configuration properties
-   * @return configuration properties as text
+   * @return sorted configuration properties as text
    */
   public static String getConfigPropertiesAsText(final Properties props) {
+    // get sorted list
+    final List<String> sortedKeys = new ArrayList<String>();
+    for (final String key : props.stringPropertyNames()) {
+      sortedKeys.add(key);
+    }
+    Collections.sort(sortedKeys);
+
     final StringBuilder configText = new StringBuilder();
     configText.append("Properties from configuration file [");
     configText.append(Constants.CONFIG_FILENAME);
     configText.append("]:\n");
-    final Enumeration<?> e = props.propertyNames();
-    while (e.hasMoreElements()) {
-      final String key = (String) e.nextElement();
+
+    for (final String key : sortedKeys) {
       final String value = props.getProperty(key);
       configText.append(key);
       configText.append("=");
       configText.append(value);
       configText.append("\n");
     }
+
     return configText.toString();
   }
 

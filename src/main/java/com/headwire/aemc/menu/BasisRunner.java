@@ -30,19 +30,19 @@ public abstract class BasisRunner {
 
     if (Constants.TYPE_APPS_UI_LIST.contains(resource.getType())) {
       // get target project jcr path
-      final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_JCR_PATH);
+      final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
       final int pos = targetPath.indexOf(targetProjectJcrPath);
       if (pos == -1) {
-        throw new IllegalStateException("The target project jcr path " + Constants.CONFIGPROP_TARGET_PROJECT_JCR_PATH
+        throw new IllegalStateException("The target project jcr path " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT
             + " is different to " + targetPath + " in the config file.");
       }
     } else if (Constants.TYPE_CORE_LIST.contains(resource.getType())) {
       // get target java source folder
-      final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_SOURCE_FOLDER);
+      final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
       final int pos = targetPath.indexOf(targetJavaSrcFolder);
       if (pos == -1) {
         throw new IllegalStateException(
-            "The target java source folder " + Constants.CONFIGPROP_TARGET_JAVA_SOURCE_FOLDER
+            "The target java source folder " + Constants.CONFIGPROP_TARGET_JAVA_FOLDER
                 + " is different to " + targetPath + " in the config file.");
       }
     } else {
@@ -61,7 +61,7 @@ public abstract class BasisRunner {
    */
   public void setGlobalConfigProperties(final Properties configProps, final Resource resource) throws IOException {
     // Set target project jcr path from config file
-    final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_JCR_PATH);
+    final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
     resource.setTargetProjectJcrPath(targetProjectJcrPath);
 
     // Set extentions from config file
@@ -92,7 +92,7 @@ public abstract class BasisRunner {
     // set java class package
     final String javaClassFileName = FilenameUtils.getName(resource.getTargetName());
     final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
-    final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_SOURCE_FOLDER);
+    final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
 
     // cut java file name, replace "/" with "."
     String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
