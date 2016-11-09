@@ -46,6 +46,7 @@ public class Constants {
   // configuration constants: others
   public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
   public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT = "EXISTING_DESTINATION_RESOURCES_REPLACEMENT";
+  public static final String CONFIGPROP_LOG_LEVEL = "LOG_LEVEL";
 
   // configuration constants values
   public static final String EXISTING_DESTINATION_RESOURCES_WARN = "WARN";

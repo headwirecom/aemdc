@@ -3,6 +3,7 @@ package com.headwire.aemc.companion;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,10 @@ import com.headwire.aemc.menu.OsgiRunner;
 import com.headwire.aemc.menu.ServiceRunner;
 import com.headwire.aemc.menu.ServletRunner;
 import com.headwire.aemc.menu.TemplateRunner;
+import com.headwire.aemc.util.ConfigUtil;
 import com.headwire.aemc.util.HelpUtil;
+
+import ch.qos.logback.classic.Level;
 
 
 /**
@@ -35,6 +39,9 @@ public class RunnableCompanion {
    *           - IOException
    */
   public static void main(final String[] args) throws IOException {
+
+    // set log level
+    setLogLevel();
 
     // check for mandatory arguments
     if (args == null || args.length < 3 || Constants.PARAM_HELP.equals(args[0])) {
@@ -120,5 +127,40 @@ public class RunnableCompanion {
     jcrPropAllSets.put(Constants.PLACEHOLDERS_PROPS_SET_COMMON, jcrPropsCommon);
 
     return jcrPropAllSets;
+  }
+
+  /**
+   * Set log level based on the LOG_LEVEL configuration param.
+   * Possible values: ALL/TRACE/DEBUG/INFO/WARN/ERROR/OFF
+   *
+   * @throws IOException
+   *           - IOException
+   */
+  private static void setLogLevel() throws IOException {
+    final ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory
+        .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+
+    // set default INFO log level to avoid logging from ConfigUtil
+    rootLogger.setLevel(Level.INFO);
+
+    // Get Config Properties from config file
+    final Properties configProps = ConfigUtil.getConfigProperties();
+    final String logLevel = configProps.getProperty(Constants.CONFIGPROP_LOG_LEVEL);
+
+    if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.ALL);
+    } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.TRACE);
+    } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.DEBUG);
+    } else if (Level.INFO.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.INFO);
+    } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.WARN);
+    } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.ERROR);
+    } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
+      rootLogger.setLevel(Level.OFF);
+    }
   }
 }

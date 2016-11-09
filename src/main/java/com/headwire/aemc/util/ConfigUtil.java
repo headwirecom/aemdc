@@ -88,12 +88,14 @@ public class ConfigUtil {
     final String targetJavaFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
     final String targetJavaPackage = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE);
 
-    LOG.debug("Configuration properties path replacing... ");
+    LOG.debug("Configuration properties path placeholders replacing... ");
 
     final Enumeration<?> e = configProps.propertyNames();
     while (e.hasMoreElements()) {
       final String key = (String) e.nextElement();
       String value = configProps.getProperty(key);
+
+      LOG.debug("Original {}={}", key, value);
 
       value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_FOLDER + "}}", sourceFolder);
       value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_UI_FOLDER + "}}", sourceUIFolder);

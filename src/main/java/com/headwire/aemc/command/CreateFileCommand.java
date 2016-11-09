@@ -37,7 +37,7 @@ public class CreateFileCommand implements Command {
     final File srcFile = new File(sourcePath);
     final File targetFile = new File(targetPath);
 
-    LOG.info("Coping file from [{}] to [{}] ...", sourcePath, targetPath);
+    LOG.debug("Coping file from [{}] to [{}] ...", sourcePath, targetPath);
 
     // copy directory
     copyFile(srcFile, targetFile);
