@@ -69,87 +69,131 @@ public class HelpUtil {
    *           - IOException
    */
   public static String getHelpText(final String[] args) throws IOException {
-    boolean addCompleteHelp = false;
-    final StringBuilder helpText = new StringBuilder();
+    String helpText = "";
 
     // no args or help
     if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
-      addCompleteHelp = true;
+      helpText = getCompleteHelpText();
 
     } else if (Constants.PARAM_HELP.equals(args[0])) {
-      // help + config
-      if (Constants.TYPE_CONFIG_PROPS.equals(args[1])) {
-        // show current config properties
-        helpText.append(ConfigUtil.getConfigPropertiesAsText());
+      String type = "";
+      String name = "";
 
-      } else if (args.length == 2) {
-        // help + <type>
-        if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
-          helpText.append(getTextFromFile(HELP_FILE_START));
-          helpText.append(getTextFromFile(HELP_FILE_NAME));
-          helpText.append(getTextFromFile(getTypeHelpFolder(args[1]) + "/" + HELP_FILE_NAME));
-          helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-          helpText.append(getTextFromFile(getTypeHelpFolder(args[1]) + "/" + HELP_FILE_TARGET_NAME));
-          helpText.append(getTextFromFile(HELP_FILE_ARGS));
-          helpText.append(getTextFromFile(getTypeHelpFolder(args[1]) + "/" + HELP_FILE_ARGS));
-          // get all available templates
-          helpText.append(getTemplates(args[1]));
-        } else {
-          addCompleteHelp = true;
-        }
-
-      } else if (args.length == 3) {
-        // help + <type> + <name>
-        if (Constants.TYPE_APPS_UI_LIST.contains(args[1]) || Constants.TYPE_CORE_LIST.contains(args[1])) {
-          helpText.append(getTextFromFile(HELP_FILE_START));
-          helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-          helpText.append(getTextFromFile(getTypeHelpFolder(args[1]) + "/" + HELP_FILE_TARGET_NAME));
-          helpText.append(getTextFromFile(HELP_FILE_ARGS));
-          helpText.append(getTextFromFile(getTypeHelpFolder(args[1]) + "/" + HELP_FILE_ARGS));
-          // get all placeholders
-          helpText.append(getPlaceHolders(args[1], args[2]));
-        } else {
-          addCompleteHelp = true;
-        }
-
-      } else {
-        // in all other cases
-        addCompleteHelp = true;
+      if (args.length > 1) {
+        type = args[1];
       }
+      if (args.length > 2) {
+        name = args[2];
+      }
+      helpText = getSpecificHelpText(type, name);
 
     } else {
       // not help and args.length < 3
-      addCompleteHelp = true;
+      String type = "";
+      String name = "";
+
+      if (args.length > 0) {
+        type = args[0];
+      }
+      if (args.length > 1) {
+        name = args[1];
+      }
+      helpText = getSpecificHelpText(type, name);
     }
 
     // get complete help
-    if (addCompleteHelp) {
-      helpText.append(getTextFromFile(HELP_FILE_START));
-      helpText.append(getTextFromFile(HELP_FILE_OPTIONS));
-      helpText.append(getTextFromFile(HELP_FILE_CONFIG));
-      helpText.append(getTextFromFile(HELP_FILE_TYPE));
+    if (StringUtils.isBlank(helpText)) {
+      helpText = getCompleteHelpText();
+    }
 
-      // name option
-      helpText.append(getTextFromFile(HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_NAME));
-      helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_NAME));
+    return helpText;
+  }
 
-      // targetname option
-      helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-      helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+  /**
+   * Get complete help text from helper files.
+   *
+   * @return help text
+   * @throws IOException
+   *           - IOException
+   */
+  public static String getCompleteHelpText() throws IOException {
+    final StringBuilder helpText = new StringBuilder();
 
-      // args option
-      helpText.append(getTextFromFile(HELP_FILE_ARGS));
-      helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_ARGS));
+    // get complete help
+    helpText.append(getTextFromFile(HELP_FILE_START));
+    helpText.append(getTextFromFile(HELP_FILE_OPTIONS));
+    helpText.append(getTextFromFile(HELP_FILE_CONFIG));
+    helpText.append(getTextFromFile(HELP_FILE_TYPE));
+
+    // name option
+    helpText.append(getTextFromFile(HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_NAME));
+
+    // targetname option
+    helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+
+    // args option
+    helpText.append(getTextFromFile(HELP_FILE_ARGS));
+    helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_ARGS));
+
+    return helpText.toString();
+  }
+
+  /**
+   * Get template type specific help text.
+   *
+   * @param type
+   *          - template type
+   * @param name
+   *          - template name
+   * @return type specific help text
+   * @throws IOException
+   *           - IOException
+   */
+  public static String getSpecificHelpText(final String type, final String name) throws IOException {
+    final StringBuilder helpText = new StringBuilder();
+
+    // config type
+    if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
+      // show current config properties
+      helpText.append(ConfigUtil.getConfigPropertiesAsText());
+
+    } else if (StringUtils.isNotBlank(type) && StringUtils.isBlank(name)) {
+      // if only <type>
+      if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)) {
+        helpText.append(getTextFromFile(HELP_FILE_START));
+        helpText.append(getTextFromFile(HELP_FILE_NAME));
+        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_NAME));
+        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
+        helpText.append(getTextFromFile(HELP_FILE_ARGS));
+        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
+        // get all available templates
+        helpText.append(getTemplates(type));
+      }
+
+    } else if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(name)) {
+      // if <type> + <name>
+      if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)) {
+        helpText.append(getTextFromFile(HELP_FILE_START));
+        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
+        helpText.append(getTextFromFile(HELP_FILE_ARGS));
+        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
+        // get all placeholders
+        helpText.append(getPlaceHolders(type, name));
+      }
     }
 
     return helpText.toString();
