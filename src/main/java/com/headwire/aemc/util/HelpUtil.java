@@ -287,7 +287,7 @@ public class HelpUtil {
       templs.append("Can't get available templates. Directory " + searchPath + " doesn't exist.");
     } else {
       if (dir.isDirectory()) {
-        templs.append("Found next template names: \n");
+        templs.append("available names: \n");
 
         // find available templates
         final Collection<File> fileList = findTemplates(dir, type);
