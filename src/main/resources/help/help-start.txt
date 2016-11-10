@@ -1,2 +1,2 @@
 Usage:
-  java [-options] -jar aemc.jar [help [config]] <type> <name> <targetname> [args...]
+  java [-options] -jar aemdc.jar [help [config]] <type> <name> <targetname> [args...]

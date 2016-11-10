@@ -1,4 +1,4 @@
-package com.headwire.aemc.companion;
+package com.headwire.aemdc.companion;
 
 import java.util.Arrays;
 import java.util.List;

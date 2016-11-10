@@ -1,4 +1,4 @@
-package com.headwire.aemc.menu;
+package com.headwire.aemdc.menu;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -6,9 +6,9 @@ import java.util.Properties;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.headwire.aemc.companion.Constants;
-import com.headwire.aemc.companion.Resource;
-import com.headwire.aemc.util.ConfigUtil;
+import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**

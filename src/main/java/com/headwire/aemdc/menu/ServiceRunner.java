@@ -1,21 +1,21 @@
-package com.headwire.aemc.menu;
+package com.headwire.aemdc.menu;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import com.headwire.aemc.command.CommandMenu;
-import com.headwire.aemc.command.CreateFileCommand;
-import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
-import com.headwire.aemc.companion.Constants;
-import com.headwire.aemc.companion.Resource;
-import com.headwire.aemc.util.ConfigUtil;
+import com.headwire.aemdc.command.CommandMenu;
+import com.headwire.aemdc.command.CreateFileCommand;
+import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
+import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Java Model creator
+ * Java Service creator
  *
  */
-public class ModelRunner extends BasisRunner {
+public class ServiceRunner extends BasisRunner {
 
   // Invoker
   private final CommandMenu menu = new CommandMenu();
@@ -27,12 +27,12 @@ public class ModelRunner extends BasisRunner {
    *          - params
    * @throws IOException
    */
-  public ModelRunner(final Resource resource) throws IOException {
+  public ServiceRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER));
-    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_MODELS_FOLDER));
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
 
     checkConfiguration(configProps, resource);
 
@@ -56,4 +56,5 @@ public class ModelRunner extends BasisRunner {
     menu.runCommand("CreateFile");
     menu.runCommand("ReplacePlaceHolders");
   }
+
 }

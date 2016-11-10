@@ -1,4 +1,4 @@
-package com.headwire.aemc.companion;
+package com.headwire.aemdc.companion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
-  public static final String CONFIG_FILENAME = "aemc-config.properties";
+  public static final String CONFIG_FILENAME = "aemdc-config.properties";
   public static final String FILE_EXT_XML = "xml";
   public static final String FILE_EXT_JAVA = "java";
   public static final String FILE_EXT_JSP = "jsp";

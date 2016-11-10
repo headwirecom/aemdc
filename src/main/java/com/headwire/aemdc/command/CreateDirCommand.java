@@ -1,4 +1,4 @@
-package com.headwire.aemc.command;
+package com.headwire.aemdc.command;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemc.companion.Resource;
+import com.headwire.aemdc.companion.Resource;
 
 
 /**

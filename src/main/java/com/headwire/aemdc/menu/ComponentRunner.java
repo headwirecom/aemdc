@@ -1,14 +1,14 @@
-package com.headwire.aemc.menu;
+package com.headwire.aemdc.menu;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import com.headwire.aemc.command.CommandMenu;
-import com.headwire.aemc.command.CreateDirCommand;
-import com.headwire.aemc.command.ReplacePlaceHoldersCommand;
-import com.headwire.aemc.companion.Constants;
-import com.headwire.aemc.companion.Resource;
-import com.headwire.aemc.util.ConfigUtil;
+import com.headwire.aemdc.command.CommandMenu;
+import com.headwire.aemdc.command.CreateDirCommand;
+import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
+import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**

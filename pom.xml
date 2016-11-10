@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.headwire.aemc</groupId>
-	<artifactId>aemcompanion</artifactId>
+	<groupId>com.headwire.aemdc</groupId>
+	<artifactId>aemdc</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>AEM Companion</name>
-	<description>Create templates, components, models, osgi, etc ... AEM Maven project structure.</description>
+	<name>AEM Developer Companion</name>
+	<description>Create AEM templates, components, models, osgi, etc ... inside of AEM Maven project structure.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -182,7 +182,7 @@
 							<manifest>
 								<addClasspath>true</addClasspath>
 								<classpathPrefix>lib/</classpathPrefix>
-								<mainClass>com.headwire.aemc.companion.RunnableCompanion</mainClass>
+								<mainClass>com.headwire.aemdc.companion.RunnableCompanion</mainClass>
 							</manifest>
 						</archive>
 					</configuration>
@@ -218,7 +218,7 @@
 					<configuration>
 						<archive>
 							<manifest>
-								<mainClass>com.headwire.aemc.companion.RunnableCompanion</mainClass>
+								<mainClass>com.headwire.aemdc.companion.RunnableCompanion</mainClass>
 							</manifest>
 						</archive>
 						<descriptorRefs>

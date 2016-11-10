@@ -1,12 +1,12 @@
-# aemcompanion
-AEM Companion allows to create AEM templates, components, osgi configurations, java models, services and servlets from predefined templates.
+# aemdc
+AEM Developer Companion allows to create AEM templates, components, osgi configurations, java models, services and servlets from predefined templates.
 
 # Using placeholders
-Clone the aemc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemc-files for you needs. 
+Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemdc-files for you needs. 
 	
-	git clone https://github.com/headwirecom/aemc-files.git ../aemc-files
+	git clone https://github.com/headwirecom/aemdc-files.git ../aemdc-files
 
-In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemc-files/aemc-placeholders/apps/project/templates/contentpage/.content.xml
+In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemdc-files/aemdc-placeholders/apps/project/templates/contentpage/.content.xml
 
 	{{ jcr:title }}
 	{{ jcr:description }}
@@ -31,7 +31,7 @@ Source code of  .content.xml
 
 To replace the placeholders used above your arguments in the command line must be like this
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage jcr:title='my title' jcr:description='my description' ranking={Long}10 sling:resourceType=my-aem-project/components/mycontentpage ph_1_1:property1=value1 ph_1_1:property2=value2 ph_1_2:property3=value3
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage jcr:title='my title' jcr:description='my description' ranking={Long}10 sling:resourceType=my-aem-project/components/mycontentpage ph_1_1:property1=value1 ph_1_1:property2=value2 ph_1_2:property3=value3
 
 where "ph\_1\_2":
 
@@ -42,11 +42,11 @@ where "ph\_1\_2":
 
 Please create a configuration file in the root of your AEM maven project and modify configuration for your needs. For example
  
-	/my-aem-project/aemc-config.properties
+	/my-aem-project/aemdc-config.properties
 
 To run
 
-	java [-options] -jar aemc.jar [help [config]] <type> <name> <targetname> [args...]
+	java [-options] -jar aemdc.jar [help [config]] <type> <name> <targetname> [args...]
 	
 Where [-options] includes usual for java command options.
 
@@ -88,7 +88,7 @@ To compile:
 
 In the compile target folder with dependencies under /lib call:
 
-	java -jar aemcompanion-1.0.0.jar temp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2=my-test-value2  ph_1_2:singlePropExample2_1=my-test-value2_1
+	java -jar aemdc-1.0.0.jar temp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2=my-test-value2  ph_1_2:singlePropExample2_1=my-test-value2_1
 
 A target files will be created and placeholders will be replaced with arguments 
 
@@ -96,21 +96,21 @@ A target files will be created and placeholders will be replaced with arguments
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
 
 Standalone call.
-Go to your "ui.apps" or "core" project. Copy aemcompanion-1.0.0-jar-with-dependencies.jar there or set the classpath to "aemcompanion-1.0.0-jar-with-dependencies.jar" directory. 
+Go to your "ui.apps" or "core" project. Copy aemdc-1.0.0-jar-with-dependencies.jar there or set the classpath to "aemdc-1.0.0-jar-with-dependencies.jar" directory. 
 
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar temp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar comp title mytitle 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar comp title mytitle 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar comp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar comp contentpage mycontentpage 'jcr:title=my title' 'ph_1_1:singlePropExample1_1=my test&value' ph_1_1:singlePropExample1_2={Boolean}true  ph_1_2:singlePropExample2_1=[/content/my-aem-project,/content/my-aem-project/en/index]
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar osgi osgi.1.PID.xml com.day.cq.wcm.mobile.core.impl.MobileEmulatorProvider-medianewsletterconfig.xml runmode=author.prod ph_1_1:mobile.resourceTypes=[my-aem-project/components/medianewsletter]  ph_1_1:README="Use these configuration settings to indicate which resource types should be supported by the mobile emulators."
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar osgi osgi.1.PID.xml com.day.cq.wcm.mobile.core.impl.MobileEmulatorProvider-medianewsletterconfig.xml runmode=author.prod ph_1_1:mobile.resourceTypes=[my-aem-project/components/medianewsletter]  ph_1_1:README="Use these configuration settings to indicate which resource types should be supported by the mobile emulators."
 
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar model SampleSlingModel.java MySampleSlingModel.java
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar model SampleSlingModel.java MySampleSlingModel.java
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar service SampleService.java MySampleService.java
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar service SampleService.java MySampleService.java
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar service impl/SampleServiceImpl.java impl/MySampleServiceImpl.java
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar service impl/SampleServiceImpl.java impl/MySampleServiceImpl.java
 	
-	java -jar aemcompanion-1.0.0-jar-with-dependencies.jar servlet impl/SampleSafeMethodsServlet.java impl/MySampleSafeMethodsServlet.java
+	java -jar aemdc-1.0.0-jar-with-dependencies.jar servlet impl/SampleSafeMethodsServlet.java impl/MySampleSafeMethodsServlet.java
 	

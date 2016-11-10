@@ -1,4 +1,4 @@
-package com.headwire.aemc.companion;
+package com.headwire.aemdc.companion;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,15 +8,15 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemc.menu.BasisRunner;
-import com.headwire.aemc.menu.ComponentRunner;
-import com.headwire.aemc.menu.ModelRunner;
-import com.headwire.aemc.menu.OsgiRunner;
-import com.headwire.aemc.menu.ServiceRunner;
-import com.headwire.aemc.menu.ServletRunner;
-import com.headwire.aemc.menu.TemplateRunner;
-import com.headwire.aemc.util.ConfigUtil;
-import com.headwire.aemc.util.HelpUtil;
+import com.headwire.aemdc.menu.BasisRunner;
+import com.headwire.aemdc.menu.ComponentRunner;
+import com.headwire.aemdc.menu.ModelRunner;
+import com.headwire.aemdc.menu.OsgiRunner;
+import com.headwire.aemdc.menu.ServiceRunner;
+import com.headwire.aemdc.menu.ServletRunner;
+import com.headwire.aemdc.menu.TemplateRunner;
+import com.headwire.aemdc.util.ConfigUtil;
+import com.headwire.aemdc.util.HelpUtil;
 
 import ch.qos.logback.classic.Level;
 

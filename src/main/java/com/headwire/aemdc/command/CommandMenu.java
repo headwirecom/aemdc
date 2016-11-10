@@ -1,4 +1,4 @@
-package com.headwire.aemc.command;
+package com.headwire.aemdc.command;
 
 import java.io.IOException;
 import java.util.HashMap;

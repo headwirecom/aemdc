@@ -1,4 +1,4 @@
-package com.headwire.aemc.util;
+package com.headwire.aemdc.util;
 
 import java.io.IOException;
 import java.text.CharacterIterator;
@@ -16,8 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemc.companion.Constants;
-import com.headwire.aemc.companion.Resource;
+import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
 
 
 /**
