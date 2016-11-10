@@ -147,20 +147,20 @@ public class RunnableCompanion {
     final Properties configProps = ConfigUtil.getConfigProperties();
     final String logLevel = configProps.getProperty(Constants.CONFIGPROP_LOG_LEVEL);
 
-    if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.ALL);
-    } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.TRACE);
-    } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.DEBUG);
-    } else if (Level.INFO.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.INFO);
-    } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.WARN);
-    } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.ERROR);
-    } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
-      rootLogger.setLevel(Level.OFF);
+    if (!Level.INFO.toString().equalsIgnoreCase(logLevel)) {
+      if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.ALL);
+      } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.TRACE);
+      } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.DEBUG);
+      } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.WARN);
+      } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.ERROR);
+      } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
+        rootLogger.setLevel(Level.OFF);
+      }
     }
   }
 }
