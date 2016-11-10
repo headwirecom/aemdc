@@ -6,7 +6,7 @@ Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project
 	
 	git clone https://github.com/headwirecom/aemdc-files.git ../aemdc-files
 
-In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemdc-files/aemdc-placeholders/apps/project/templates/contentpage/.content.xml
+In the XML templates you can define placeholders with similar names as the arguments keys. In the java classes the java class name and java package can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemdc-files/placeholders/apps/project/templates/contentpage/.content.xml
 
 	{{ jcr:title }}
 	{{ jcr:description }}
