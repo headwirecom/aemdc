@@ -1,7 +1,1 @@
 args:
-    runmode=<value>
-        Osgi config folder definition runmode.    
-    <property name>=<property value>
-        Properties used in the template/component/osgi definition. 
-    <properties set>:<property name>=<property value>
-        Properties placeholder set used in the template/component/osgi definition.

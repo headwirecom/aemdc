@@ -1,5 +1,1 @@
 targetname:
-    Target AEM template name.
-    Target AEM component name.
-    Target osgi service PID file name.
-    Target model/service/servlet java class file name.

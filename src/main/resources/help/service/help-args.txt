@@ -1,0 +1,2 @@
+    <placeholder name>=<value>
+        Placeholder used in the service java class file.

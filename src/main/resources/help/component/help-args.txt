@@ -1,0 +1,4 @@
+    <placeholder name>=<value>
+        Placeholder used in the component definition. 
+    <properties placeholder set name>:<property name>=<property value>
+        Properties placeholder set used in the component definition.

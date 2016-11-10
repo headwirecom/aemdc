@@ -1,7 +1,1 @@
 name:
-    Source AEM template name under ../templates folder.
-    Source AEM component name under ../components folder.
-    Source OSGI file name under ../config folder.
-    Source model file name under ../models java package.
-    Source service file name under ../services java package.
-    Source servlet file name under ../servlets java package.
