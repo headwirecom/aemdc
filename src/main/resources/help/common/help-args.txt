@@ -1,0 +1,6 @@
+    runmode=<value>
+        Osgi config folder definition runmode.    
+    <placeholder name>=<value>
+        Placeholder used in all template files. 
+    <properties placeholder set name>:<property name>=<property value>
+        Properties placeholder set used in the template xml files.
