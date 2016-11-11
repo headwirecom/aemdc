@@ -94,7 +94,7 @@ public class ReplacePlaceHoldersCommand implements Command {
 
       FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
 
-      LOG.info("Place holders replaced in the file [{}]", destFile);
+      LOG.debug("Place holders replaced in the file [{}]", destFile);
 
     } catch (final IOException e) {
       LOG.error("Can't replace place holders in the file [{}]", destFile);

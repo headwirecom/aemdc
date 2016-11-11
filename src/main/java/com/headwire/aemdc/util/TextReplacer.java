@@ -164,7 +164,9 @@ public class TextReplacer {
 
       // get target components folder
       final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
-      final int pos = targetCompFolder.indexOf(resource.getTargetProjectJcrPath());
+      // Set target project root jcr path from config file
+      final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+      final int pos = targetCompFolder.indexOf(targetProjectRoot);
       if (pos == -1) {
         throw new IllegalStateException("The /apps root path from " + Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER
             + " is different to " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT);

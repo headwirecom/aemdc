@@ -23,22 +23,26 @@ public class Constants {
   // configuration constants: source folders
   public static final String CONFIGPROP_SOURCE_FOLDER = "SOURCE_FOLDER";
   public static final String CONFIGPROP_SOURCE_UI_FOLDER = "SOURCE_UI_FOLDER";
+  public static final String CONFIGPROP_SOURCE_PROJECT_ROOT = "SOURCE_PROJECT_ROOT";
   public static final String CONFIGPROP_SOURCE_JAVA_FOLDER = "SOURCE_JAVA_FOLDER";
   public static final String CONFIGPROP_SOURCE_TEMPLATES_FOLDER = "SOURCE_TEMPLATES_FOLDER";
   public static final String CONFIGPROP_SOURCE_COMPONENTS_FOLDER = "SOURCE_COMPONENTS_FOLDER";
   public static final String CONFIGPROP_SOURCE_OSGI_FOLDER = "SOURCE_OSGI_FOLDER";
+  public static final String CONFIGPROP_SOURCE_CONF_FOLDER = "SOURCE_CONF_FOLDER";
   public static final String CONFIGPROP_SOURCE_MODELS_FOLDER = "SOURCE_MODELS_FOLDER";
   public static final String CONFIGPROP_SOURCE_SERVICES_FOLDER = "SOURCE_SERVICES_FOLDER";
   public static final String CONFIGPROP_SOURCE_SERVLETS_FOLDER = "SOURCE_SERVLETS_FOLDER";
 
   // configuration constants: target folders
   public static final String CONFIGPROP_TARGET_UI_FOLDER = "TARGET_UI_FOLDER";
+  public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
   public static final String CONFIGPROP_TARGET_PROJECT_ROOT = "TARGET_PROJECT_ROOT";
   public static final String CONFIGPROP_TARGET_JAVA_FOLDER = "TARGET_JAVA_FOLDER";
   public static final String CONFIGPROP_TARGET_JAVA_PACKAGE = "TARGET_JAVA_PACKAGE";
   public static final String CONFIGPROP_TARGET_TEMPLATES_FOLDER = "TARGET_TEMPLATES_FOLDER";
   public static final String CONFIGPROP_TARGET_COMPONENTS_FOLDER = "TARGET_COMPONENTS_FOLDER";
   public static final String CONFIGPROP_TARGET_OSGI_FOLDER = "TARGET_OSGI_FOLDER";
+  public static final String CONFIGPROP_TARGET_CONF_FOLDER = "TARGET_CONF_FOLDER";
   public static final String CONFIGPROP_TARGET_MODELS_FOLDER = "TARGET_MODELS_FOLDER";
   public static final String CONFIGPROP_TARGET_SERVICES_FOLDER = "TARGET_SERVICES_FOLDER";
   public static final String CONFIGPROP_TARGET_SERVLETS_FOLDER = "TARGET_SERVLETS_FOLDER";
@@ -65,10 +69,12 @@ public class Constants {
   public static final String TYPE_COMPONENT = "comp";
   public static final String TYPE_COMPONENT_FULL = "component";
   public static final String TYPE_OSGI = "osgi";
+  public static final String TYPE_EDITABLE_TEMPLATE_STRUCTURE = "confstr";
   public static final String TYPE_MODEL = "model";
   public static final String TYPE_SERVICE = "service";
   public static final String TYPE_SERVLET = "servlet";
   public static List<String> TYPE_APPS_UI_LIST = new ArrayList<String>();
+  public static List<String> TYPE_CONF_UI_LIST = new ArrayList<String>();
   public static List<String> TYPE_CORE_LIST = new ArrayList<String>();
 
   // arguments constants
@@ -94,6 +100,8 @@ public class Constants {
     TYPE_APPS_UI_LIST.add(TYPE_COMPONENT);
     TYPE_APPS_UI_LIST.add(TYPE_COMPONENT_FULL);
     TYPE_APPS_UI_LIST.add(TYPE_OSGI);
+
+    TYPE_CONF_UI_LIST.add(TYPE_EDITABLE_TEMPLATE_STRUCTURE);
 
     TYPE_CORE_LIST.add(TYPE_MODEL);
     TYPE_CORE_LIST.add(TYPE_SERVICE);

@@ -34,6 +34,7 @@ public class HelpUtil {
   public static final String HELP_TEMPLATE_FOLDER = "template";
   public static final String HELP_COMPONENT_FOLDER = "component";
   public static final String HELP_OSGI_FOLDER = "osgi";
+  public static final String HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER = "confstr";
   public static final String HELP_MODEL_FOLDER = "model";
   public static final String HELP_SERVICE_FOLDER = "service";
   public static final String HELP_SERVLET_FOLDER = "servlet";
@@ -124,12 +125,14 @@ public class HelpUtil {
     helpText.append(getTextFromFile(HELP_FILE_OPTIONS));
     helpText.append(getTextFromFile(HELP_FILE_CONFIG));
     helpText.append(getTextFromFile(HELP_FILE_TYPE));
+    helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_TYPE));
 
     // name option
     helpText.append(getTextFromFile(HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER + "/" + HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_NAME));
     helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_NAME));
@@ -139,6 +142,7 @@ public class HelpUtil {
     helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
     helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_TARGET_NAME));
     helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
     helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_TARGET_NAME));
     helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
     helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_TARGET_NAME));
@@ -171,7 +175,7 @@ public class HelpUtil {
 
     } else if (StringUtils.isNotBlank(type) && StringUtils.isBlank(name)) {
       // if only <type>
-      if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)) {
+      if (isExistingType(type)) {
         helpText.append(getTextFromFile(HELP_FILE_START));
         helpText.append(getTextFromFile(HELP_FILE_NAME));
         helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_NAME));
@@ -185,7 +189,7 @@ public class HelpUtil {
 
     } else if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(name)) {
       // if <type> + <name>
-      if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)) {
+      if (isExistingType(type)) {
         helpText.append(getTextFromFile(HELP_FILE_START));
         helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
         helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
@@ -197,6 +201,21 @@ public class HelpUtil {
     }
 
     return helpText.toString();
+  }
+
+  /**
+   * Is existing type
+   *
+   * @param type
+   *          - template type
+   * @return true if type exists
+   */
+  public static boolean isExistingType(final String type) {
+    if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)
+        || Constants.TYPE_CONF_UI_LIST.contains(type)) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -387,6 +406,7 @@ public class HelpUtil {
       case Constants.TYPE_TEMPLATE_FULL:
       case Constants.TYPE_COMPONENT:
       case Constants.TYPE_COMPONENT_FULL:
+      case Constants.TYPE_EDITABLE_TEMPLATE_STRUCTURE:
         for (final File file : FileUtils.listFilesAndDirs(dir, FalseFileFilter.INSTANCE,
             DirectoryFileFilter.INSTANCE)) {
           // get only root directories
@@ -430,6 +450,9 @@ public class HelpUtil {
         break;
       case Constants.TYPE_OSGI:
         typeHelpFolder = HELP_OSGI_FOLDER;
+        break;
+      case Constants.TYPE_EDITABLE_TEMPLATE_STRUCTURE:
+        typeHelpFolder = HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER;
         break;
       case Constants.TYPE_MODEL:
         typeHelpFolder = HELP_MODEL_FOLDER;

@@ -1,8 +1,11 @@
 package com.headwire.aemdc.companion;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**
@@ -16,7 +19,6 @@ public class Resource {
   private String targetName;
   private String sourceFolderPath;
   private String targetFolderPath;
-  private String targetProjectJcrPath;
   private String[] extentions;
   private boolean toDeleteDestDir;
   private boolean toWarnDestDir;
@@ -103,21 +105,6 @@ public class Resource {
    */
   public void setTargetFolderPath(final String targetFolderPath) {
     this.targetFolderPath = targetFolderPath;
-  }
-
-  /**
-   * @return the targetProjectJcrPath
-   */
-  public String getTargetProjectJcrPath() {
-    return targetProjectJcrPath;
-  }
-
-  /**
-   * @param targetProjectJcrPath
-   *          the targetProjectJcrPath to set
-   */
-  public void setTargetProjectJcrPath(final String targetProjectJcrPath) {
-    this.targetProjectJcrPath = targetProjectJcrPath;
   }
 
   /**
@@ -227,4 +214,50 @@ public class Resource {
     this.javaClassPackage = javaClassPackage;
   }
 
+  @Override
+  public Resource clone() {
+    final Resource newResource = new Resource();
+    newResource.setType(getType());
+    newResource.setSourceName(getSourceName());
+    newResource.setTargetName(getTargetName());
+    newResource.setSourceFolderPath(getSourceFolderPath());
+    newResource.setTargetFolderPath(getTargetFolderPath());
+    newResource.setExtentions(getExtentions());
+    newResource.setToDeleteDestDir(isToDeleteDestDir());
+    newResource.setToWarnDestDir(isToWarnDestDir());
+    newResource.setJavaClassName(getJavaClassName());
+    newResource.setJavaClassPackage(getJavaClassPackage());
+
+    // clone Jcr Properties
+    final Map<String, Map<String, String>> props = shallowCopy(getJcrProperties());
+    newResource.setJcrProperties(props);
+
+    return newResource;
+  }
+
+  /**
+   * Clone Jcr Properties Set
+   *
+   * @param source
+   *          - source map
+   * @return cloned map
+   */
+  private Map<String, Map<String, String>> shallowCopy(final Map<String, Map<String, String>> source) {
+    final Map<String, Map<String, String>> newMap = new HashMap<String, Map<String, String>>();
+
+    final Iterator<Entry<String, Map<String, String>>> iter = source.entrySet().iterator();
+    while (iter.hasNext()) {
+      final Entry<String, Map<String, String>> element = iter.next();
+      final String key = element.getKey();
+      final Map<String, String> value = element.getValue();
+
+      // clone single map
+      final Map<String, String> newValueMap = new HashMap<String, String>();
+      newValueMap.putAll(value);
+
+      // add single cloned map to a new Properties Set Map
+      newMap.put(key, newValueMap);
+    }
+    return newMap;
+  }
 }

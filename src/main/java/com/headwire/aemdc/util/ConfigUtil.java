@@ -75,20 +75,37 @@ public class ConfigUtil {
    * @return initialized configuration properties
    */
   private static Properties replacePathPlaceHolders(final Properties configProps) {
-    final Properties newProps = new Properties();
-
-    // source path placeholder values
-    final String sourceFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER);
-    final String sourceUIFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER);
-    final String sourceJavaFolder = configProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER);
-
-    // target path placeholder values
-    final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
-    final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-    final String targetJavaFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
-    final String targetJavaPackage = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE);
+    Properties newProps = new Properties();
 
     LOG.debug("Configuration properties path placeholders replacing... ");
+
+    // source path placeholder values
+    newProps = replacePathPlaceHolder(configProps, Constants.CONFIGPROP_SOURCE_FOLDER);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_JAVA_FOLDER);
+
+    // target path placeholder values
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_UI_FOLDER);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_JAVA_PACKAGE);
+
+    return newProps;
+  }
+
+  /**
+   * Replace path placeholder in the configuration properties path values.
+   *
+   * @param configProps
+   *          - configuration properties
+   * @return initialized configuration properties
+   */
+  private static Properties replacePathPlaceHolder(final Properties configProps, final String placeHolderName) {
+    final Properties newProps = new Properties();
+
+    final String placeHolderValue = configProps.getProperty(placeHolderName);
 
     final Enumeration<?> e = configProps.propertyNames();
     while (e.hasMoreElements()) {
@@ -96,20 +113,11 @@ public class ConfigUtil {
       String value = configProps.getProperty(key);
 
       LOG.debug("Original {}={}", key, value);
-
-      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_FOLDER + "}}", sourceFolder);
-      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_UI_FOLDER + "}}", sourceUIFolder);
-      value = value.replace("{{" + Constants.CONFIGPROP_SOURCE_JAVA_FOLDER + "}}", sourceJavaFolder);
-
-      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_UI_FOLDER + "}}", targetUIFolder);
-      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_PROJECT_ROOT + "}}", targetProjectRoot);
-      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_JAVA_FOLDER + "}}", targetJavaFolder);
-      value = value.replace("{{" + Constants.CONFIGPROP_TARGET_JAVA_PACKAGE + "}}", targetJavaPackage);
+      value = value.replace("{{" + placeHolderName + "}}", placeHolderValue);
+      LOG.debug("Replaced {}={}", key, value);
 
       // add with replaced path values
       newProps.put(key, value);
-
-      LOG.debug("Replaced {}={}", key, value);
     }
     return newProps;
   }
@@ -195,6 +203,9 @@ public class ConfigUtil {
         break;
       case Constants.TYPE_OSGI:
         typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER);
+        break;
+      case Constants.TYPE_EDITABLE_TEMPLATE_STRUCTURE:
+        typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_CONF_FOLDER);
         break;
       case Constants.TYPE_MODEL:
         typeSrcPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_MODELS_FOLDER);

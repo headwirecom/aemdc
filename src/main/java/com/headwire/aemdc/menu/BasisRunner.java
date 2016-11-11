@@ -30,11 +30,19 @@ public abstract class BasisRunner {
 
     if (Constants.TYPE_APPS_UI_LIST.contains(resource.getType())) {
       // get target project jcr path
-      final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-      final int pos = targetPath.indexOf(targetProjectJcrPath);
+      final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+      final int pos = targetPath.indexOf(targetProjectRoot);
       if (pos == -1) {
-        throw new IllegalStateException("The target project jcr path " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT
-            + " is different to " + targetPath + " in the config file.");
+        throw new IllegalStateException("The target project root jcr path " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT
+            + " is different to target path  " + targetPath + " in the config file.");
+      }
+    } else if (Constants.TYPE_CONF_UI_LIST.contains(resource.getType())) {
+      // get target UI folder
+      final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+      final int pos = targetPath.indexOf(targetUIFolder);
+      if (pos == -1) {
+        throw new IllegalStateException("The target UI folder " + Constants.CONFIGPROP_TARGET_UI_FOLDER
+            + " is different to target path " + targetPath + " in the config file.");
       }
     } else if (Constants.TYPE_CORE_LIST.contains(resource.getType())) {
       // get target java source folder
@@ -43,7 +51,7 @@ public abstract class BasisRunner {
       if (pos == -1) {
         throw new IllegalStateException(
             "The target java source folder " + Constants.CONFIGPROP_TARGET_JAVA_FOLDER
-                + " is different to " + targetPath + " in the config file.");
+                + " is different to target path " + targetPath + " in the config file.");
       }
     } else {
       throw new IllegalStateException("The type " + resource.getType() + " is not defined");
@@ -60,10 +68,6 @@ public abstract class BasisRunner {
    * @throws IOException
    */
   public void setGlobalConfigProperties(final Properties configProps, final Resource resource) throws IOException {
-    // Set target project jcr path from config file
-    final String targetProjectJcrPath = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-    resource.setTargetProjectJcrPath(targetProjectJcrPath);
-
     // Set extentions from config file
     final String[] extentions = ConfigUtil.getConfigExtensions(configProps);
     resource.setExtentions(extentions);

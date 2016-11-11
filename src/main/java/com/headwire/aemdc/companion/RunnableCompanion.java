@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.menu.BasisRunner;
 import com.headwire.aemdc.menu.ComponentRunner;
+import com.headwire.aemdc.menu.EditableTemplateStructureRunner;
 import com.headwire.aemdc.menu.ModelRunner;
 import com.headwire.aemdc.menu.OsgiRunner;
 import com.headwire.aemdc.menu.ServiceRunner;
@@ -71,6 +72,9 @@ public class RunnableCompanion {
         break;
       case Constants.TYPE_OSGI:
         runner = new OsgiRunner(resource);
+        break;
+      case Constants.TYPE_EDITABLE_TEMPLATE_STRUCTURE:
+        runner = new EditableTemplateStructureRunner(resource);
         break;
       case Constants.TYPE_MODEL:
         runner = new ModelRunner(resource);
