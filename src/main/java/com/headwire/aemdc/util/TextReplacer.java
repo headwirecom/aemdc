@@ -135,6 +135,10 @@ public class TextReplacer {
    */
   public static String replaceCommonXmlPlaceHolders(final String text, final Resource resource,
       final Map<String, String> jcrProperties) throws IOException {
+
+    // Get Config Properties from config file
+    final Properties configProps = ConfigUtil.getConfigProperties();
+
     // jcr:tile
     String jcrTitle = jcrProperties.get(Constants.PARAM_PROP_JCR_TITLE);
     if (StringUtils.isBlank(jcrTitle)) {
@@ -163,12 +167,17 @@ public class TextReplacer {
     }
     result = result.replace("{{ " + Constants.PARAM_PROP_ALLOWED_PATHS + " }}", getCrxXMLValue(allowedPaths));
 
+    // componentGroup
+    String componentGroup = jcrProperties.get(Constants.PARAM_PROP_COMPONENT_GROUP);
+    if (StringUtils.isBlank(componentGroup)) {
+      // get target project name
+      componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+    }
+    result = result.replace("{{ " + Constants.PARAM_PROP_COMPONENT_GROUP + " }}", getCrxXMLValue(componentGroup));
+
     // sling:resourceType
     String slingResourceType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_TYPE);
     if (StringUtils.isBlank(slingResourceType)) {
-      // Get Config Properties from config file
-      final Properties configProps = ConfigUtil.getConfigProperties();
-
       // get target components folder
       final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
       // Set target project root jcr path from config file

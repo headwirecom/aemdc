@@ -85,6 +85,7 @@ public class Constants {
   public static final String PARAM_PROP_ALLOWED_PATHS = "allowedPaths";
   public static final String PARAM_PROP_SLING_RESOURCE_TYPE = "sling:resourceType";
   public static final String PARAM_PROP_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
+  public static final String PARAM_PROP_COMPONENT_GROUP = "componentGroup";
 
   public static final String PLACEHOLDERS_PROPS_SET_COMMON = "common";
   public static final String PLACEHOLDERS_PROPS_SET_PREFIX = "ph_";
