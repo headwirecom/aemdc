@@ -140,21 +140,28 @@ public class TextReplacer {
     if (StringUtils.isBlank(jcrTitle)) {
       jcrTitle = resource.getTargetName();
     }
-    String result = text.replace("{{ jcr:title }}", getCrxXMLValue(jcrTitle));
+    String result = text.replace("{{ " + Constants.PARAM_PROP_JCR_TITLE + " }}", getCrxXMLValue(jcrTitle));
 
     // jcr:description
     String jcrDescription = jcrProperties.get(Constants.PARAM_PROP_JCR_DESCRIPTION);
     if (StringUtils.isBlank(jcrDescription)) {
-      jcrDescription = resource.getTargetName() + " description";
+      jcrDescription = resource.getTargetName();
     }
-    result = result.replace("{{ jcr:description }}", getCrxXMLValue(jcrDescription));
+    result = result.replace("{{ " + Constants.PARAM_PROP_JCR_DESCRIPTION + " }}", getCrxXMLValue(jcrDescription));
 
     // ranking
     String ranking = jcrProperties.get(Constants.PARAM_PROP_RANKING);
     if (StringUtils.isBlank(ranking)) {
       ranking = Constants.DEFAULT_RANKING;
     }
-    result = result.replace("{{ ranking }}", getCrxXMLValue(ranking));
+    result = result.replace("{{ " + Constants.PARAM_PROP_RANKING + " }}", getCrxXMLValue(ranking));
+
+    // allowedPaths
+    String allowedPaths = jcrProperties.get(Constants.PARAM_PROP_ALLOWED_PATHS);
+    if (StringUtils.isBlank(allowedPaths)) {
+      allowedPaths = Constants.DEFAULT_ALLOWED_PATHS;
+    }
+    result = result.replace("{{ " + Constants.PARAM_PROP_ALLOWED_PATHS + " }}", getCrxXMLValue(allowedPaths));
 
     // sling:resourceType
     String slingResourceType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_TYPE);
@@ -175,14 +182,16 @@ public class TextReplacer {
       // set like "/apps/my-aem-project/components/contentpage";
       slingResourceType = targetCompFolder.substring(pos) + "/" + resource.getTargetName();
     }
-    result = result.replace("{{ sling:resourceType }}", getCrxXMLValue(slingResourceType));
+    result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_TYPE + " }}",
+        getCrxXMLValue(slingResourceType));
 
     // sling:resourceSuperType="foundation/components/page"
     String slingResourceSuperType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
       slingResourceSuperType = Constants.DEFAULT_SLING_RESOURCE_SUPER_TYPE;
     }
-    result = result.replace("{{ sling:resourceSuperType }}", getCrxXMLValue(slingResourceSuperType));
+    result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE + " }}",
+        getCrxXMLValue(slingResourceSuperType));
 
     return result;
   }

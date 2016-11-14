@@ -82,6 +82,7 @@ public class Constants {
   public static final String PARAM_PROP_JCR_TITLE = "jcr:title";
   public static final String PARAM_PROP_JCR_DESCRIPTION = "jcr:description";
   public static final String PARAM_PROP_RANKING = "ranking";
+  public static final String PARAM_PROP_ALLOWED_PATHS = "allowedPaths";
   public static final String PARAM_PROP_SLING_RESOURCE_TYPE = "sling:resourceType";
   public static final String PARAM_PROP_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
 
@@ -91,8 +92,9 @@ public class Constants {
   public static final String PLACEHOLDER_JAVA_CLASS = "{{ java-class }}";
 
   // default values
-  public static final String DEFAULT_RANKING = "{Long}90";
+  public static final String DEFAULT_RANKING = "{Long}100";
   public static final String DEFAULT_SLING_RESOURCE_SUPER_TYPE = "foundation/components/page";
+  public static final String DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
 
   static {
     TYPE_APPS_UI_LIST.add(TYPE_TEMPLATE);
