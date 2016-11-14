@@ -180,7 +180,8 @@ public class TextReplacer {
       }
 
       // set like "/apps/my-aem-project/components/contentpage";
-      slingResourceType = targetCompFolder.substring(pos) + "/" + resource.getTargetName();
+      final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+      slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" + resource.getTargetName();
     }
     result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_TYPE + " }}",
         getCrxXMLValue(slingResourceType));
@@ -188,7 +189,7 @@ public class TextReplacer {
     // sling:resourceSuperType="foundation/components/page"
     String slingResourceSuperType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
-      slingResourceSuperType = Constants.DEFAULT_SLING_RESOURCE_SUPER_TYPE;
+      slingResourceSuperType = Constants.DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
     }
     result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE + " }}",
         getCrxXMLValue(slingResourceSuperType));

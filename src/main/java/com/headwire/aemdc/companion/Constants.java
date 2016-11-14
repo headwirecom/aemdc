@@ -93,7 +93,7 @@ public class Constants {
 
   // default values
   public static final String DEFAULT_RANKING = "{Long}100";
-  public static final String DEFAULT_SLING_RESOURCE_SUPER_TYPE = "foundation/components/page";
+  public static final String DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
   public static final String DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
 
   static {
