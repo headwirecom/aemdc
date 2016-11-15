@@ -1,8 +1,6 @@
 package com.headwire.aemdc.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -39,31 +37,10 @@ public class ConfigUtil {
    *           - IOException
    */
   public static Properties getConfigProperties() throws IOException {
-    Properties props = new Properties();
-    InputStream input = null;
+    Properties props = PropsUtil.getProperties(Constants.CONFIG_FILENAME);
 
-    try {
-      input = new FileInputStream(Constants.CONFIG_FILENAME);
-      // load a properties file from class path
-      props.load(input);
-
-      // replace path place holders
-      props = replacePathPlaceHolders(props);
-
-    } catch (final IOException e) {
-      LOG.error("Sorry, unable to find or read properties from configuration file [{}] in the root of your project.",
-          Constants.CONFIG_FILENAME);
-      throw new IOException(e);
-    } finally {
-      if (input != null) {
-        try {
-          input.close();
-        } catch (final IOException e) {
-          LOG.error("Sorry, unable to close input stream from configuration file {}.", Constants.CONFIG_FILENAME);
-          throw new IOException(e);
-        }
-      }
-    }
+    // replace path place holders
+    props = replacePathPlaceHolders(props);
     return props;
   }
 

@@ -1,0 +1,67 @@
+package com.headwire.aemdc.util;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.menu.BasisRunner;
+
+
+/**
+ * Reflection API to get template type Runner object
+ *
+ * @author Marat Saitov, 15.11.2016
+ */
+public class Reflection {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Reflection.class);
+
+  private final Properties props;
+
+  /**
+   * Constructor
+   *
+   * @throws IOException
+   */
+  public Reflection() throws IOException {
+    // Get properties from reflection file
+    props = PropsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_FILENAME_PATH);
+  }
+
+  /**
+   * Get Runner according to the template type of resource.
+   *
+   * @param resource
+   *          - resource object
+   * @return runner object
+   */
+  public BasisRunner getRunner(final Resource resource) {
+    BasisRunner runner = null;
+    final String type = resource.getType();
+
+    final String fullyQualifiedClassName = props.getProperty(type);
+
+    if (StringUtils.isNotBlank(fullyQualifiedClassName)) {
+      try {
+        final Class<?> c = Class.forName(fullyQualifiedClassName);
+        final Constructor<?> ctor = c.getDeclaredConstructor(Resource.class);
+        ctor.setAccessible(true);
+        runner = (BasisRunner) ctor.newInstance(resource);
+
+      } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
+          | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+        LOG.error("Can't get class instance for template type [{}]. ", type, e);
+      }
+    } else {
+      LOG.error("Unknown <type> argument [{}].", type);
+    }
+    return runner;
+  }
+}

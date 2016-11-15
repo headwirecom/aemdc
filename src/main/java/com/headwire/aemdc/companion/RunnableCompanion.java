@@ -9,15 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.menu.BasisRunner;
-import com.headwire.aemdc.menu.ComponentRunner;
-import com.headwire.aemdc.menu.EditableTemplateStructureRunner;
-import com.headwire.aemdc.menu.ModelRunner;
-import com.headwire.aemdc.menu.OsgiRunner;
-import com.headwire.aemdc.menu.ServiceRunner;
-import com.headwire.aemdc.menu.ServletRunner;
-import com.headwire.aemdc.menu.TemplateRunner;
 import com.headwire.aemdc.util.ConfigUtil;
 import com.headwire.aemdc.util.HelpUtil;
+import com.headwire.aemdc.util.Reflection;
 
 import ch.qos.logback.classic.Level;
 
@@ -59,39 +53,16 @@ public class RunnableCompanion {
     // Set JCR Properties from arguments
     resource.setJcrProperties(convertArgsToMaps(args, 3));
 
-    // Set source and destination paths from config file
-    BasisRunner runner;
-    switch (resource.getType()) {
-      case Constants.TYPE_TEMPLATE:
-      case Constants.TYPE_TEMPLATE_FULL:
-        runner = new TemplateRunner(resource);
-        break;
-      case Constants.TYPE_COMPONENT:
-      case Constants.TYPE_COMPONENT_FULL:
-        runner = new ComponentRunner(resource);
-        break;
-      case Constants.TYPE_OSGI:
-        runner = new OsgiRunner(resource);
-        break;
-      case Constants.TYPE_EDITABLE_TEMPLATE_STRUCTURE:
-        runner = new EditableTemplateStructureRunner(resource);
-        break;
-      case Constants.TYPE_MODEL:
-        runner = new ModelRunner(resource);
-        break;
-      case Constants.TYPE_SERVICE:
-        runner = new ServiceRunner(resource);
-        break;
-      case Constants.TYPE_SERVLET:
-        runner = new ServletRunner(resource);
-        break;
-      default:
-        HelpUtil.showHelp(args);
-        return;
-    }
+    // Get Runner
+    final Reflection reflection = new Reflection();
+    final BasisRunner runner = reflection.getRunner(resource);
 
-    // create structure
-    runner.run();
+    // Run to create template structure
+    if (runner != null) {
+      runner.run();
+    } else {
+      HelpUtil.showHelp(args);
+    }
   }
 
   /**
@@ -99,6 +70,8 @@ public class RunnableCompanion {
    *
    * @param args
    *          - arguments
+   * @param start
+   *          - start position for not mandatory arguments
    * @return map of jcr properties sets with values
    */
   private static Map<String, Map<String, String>> convertArgsToMaps(final String[] args, final int start) {
@@ -116,25 +89,30 @@ public class RunnableCompanion {
         final int pos = key.indexOf(":");
         final String phSetKey = key.substring(0, pos);
         Map<String, String> jcrPropsSet = jcrPropAllSets.get(phSetKey);
+
         if (jcrPropsSet == null) {
           jcrPropsSet = new HashMap<String, String>();
         }
+
         final String ph_key = key.substring(pos + 1);
         jcrPropsSet.put(ph_key, value);
         jcrPropAllSets.put(phSetKey, jcrPropsSet);
+
         LOG.debug("ph_key={}, value={}", ph_key, value);
       } else {
         jcrPropsCommon.put(key, value);
         LOG.debug("key={}, value={}", key, value);
       }
     }
+
+    // put the common set at the end to the sets list
     jcrPropAllSets.put(Constants.PLACEHOLDERS_PROPS_SET_COMMON, jcrPropsCommon);
 
     return jcrPropAllSets;
   }
 
   /**
-   * Set log level based on the LOG_LEVEL configuration param.
+   * Set log level based on the LOG_LEVEL configuration parameter.
    * Possible values: ALL/TRACE/DEBUG/INFO/WARN/ERROR/OFF
    *
    * @throws IOException
