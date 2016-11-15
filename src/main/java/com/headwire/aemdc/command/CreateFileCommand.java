@@ -61,8 +61,12 @@ public class CreateFileCommand implements Command {
         throw new IllegalStateException(message);
       }
 
-      FileUtils.copyFile(srcFile, destFile);
-      LOG.info("File {} created.", destFile);
+      if (!srcFile.exists()) {
+        LOG.error("Can't get available templates. File {} doesn't exist.", srcFile);
+      } else {
+        FileUtils.copyFile(srcFile, destFile);
+        LOG.info("File {} created.", destFile);
+      }
 
     } catch (final IOException e) {
       LOG.error("Can't copy source file [{}] to destination file [{}]", srcFile, destFile);

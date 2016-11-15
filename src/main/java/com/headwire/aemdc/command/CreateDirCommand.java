@@ -67,8 +67,12 @@ public class CreateDirCommand implements Command {
         }
       }
 
-      FileUtils.copyDirectory(srcDir, destDir);
-      LOG.info("Directory {} created.", destDir);
+      if (!srcDir.exists()) {
+        LOG.error("Can't get available templates. Directory {} doesn't exist.", srcDir);
+      } else {
+        FileUtils.copyDirectory(srcDir, destDir);
+        LOG.info("Directory {} created.", destDir);
+      }
 
     } catch (final IOException e) {
       LOG.error("Can't create destination directory [{}] from source directory [{}]", srcDir, destDir);
