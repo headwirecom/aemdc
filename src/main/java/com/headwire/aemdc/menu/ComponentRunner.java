@@ -23,9 +23,10 @@ public class ComponentRunner extends BasisRunner {
   /**
    * Constructor
    *
-   * @param params
-   *          - params
+   * @param resource
+   *          - resource object
    * @throws IOException
+   *           - IOException
    */
   public ComponentRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file

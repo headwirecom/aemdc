@@ -26,9 +26,10 @@ public class OsgiRunner extends BasisRunner {
   /**
    * Constructor
    *
-   * @param params
-   *          - params
+   * @param resource
+   *          - resource object
    * @throws IOException
+   *           - IOException
    */
   public OsgiRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file

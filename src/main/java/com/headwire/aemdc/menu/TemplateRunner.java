@@ -23,9 +23,10 @@ public class TemplateRunner extends BasisRunner {
   /**
    * Constructor
    *
-   * @param params
-   *          - params
+   * @param resource
+   *          - resource object
    * @throws IOException
+   *           - IOException
    */
   public TemplateRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file

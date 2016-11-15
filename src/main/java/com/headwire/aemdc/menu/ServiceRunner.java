@@ -23,9 +23,10 @@ public class ServiceRunner extends BasisRunner {
   /**
    * Constructor
    *
-   * @param params
-   *          - params
+   * @param resource
+   *          - resource object
    * @throws IOException
+   *           - IOException
    */
   public ServiceRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
