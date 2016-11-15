@@ -80,9 +80,19 @@ public class RunnableCompanion {
     // common jcr props set
     final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
     for (int i = start; i < args.length; i++) {
-      final String[] splited = args[i].split("=");
-      final String key = splited[0];
-      final String value = splited[1];
+
+      // check for valid params like "paramName=paramValue"
+      final int splitPos = args[i].indexOf("=");
+      if (splitPos < 1) {
+        throw new IllegalArgumentException("Params must be in form \"paramName=paramValue\"");
+      }
+
+      // get param key and value
+      final String key = args[i].substring(0, splitPos);
+      String value = "";
+      if (args[i].length() >= (splitPos + 1)) {
+        value = args[i].substring(splitPos + 1);
+      }
 
       if (key.startsWith(Constants.PLACEHOLDERS_PROPS_SET_PREFIX)) {
         // get "ph_" jcr props set
