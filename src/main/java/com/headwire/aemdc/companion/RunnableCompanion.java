@@ -90,7 +90,7 @@ public class RunnableCompanion {
       // get param key and value
       final String key = args[i].substring(0, splitPos);
       String value = "";
-      if (args[i].length() >= (splitPos + 1)) {
+      if (args[i].length() > (splitPos + 1)) {
         value = args[i].substring(splitPos + 1);
       }
 
