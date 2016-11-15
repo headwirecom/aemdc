@@ -14,6 +14,7 @@ import java.util.Map.Entry;
  */
 public class Resource {
 
+  private boolean help;
   private String type;
   private String sourceName;
   private String targetName;
@@ -30,6 +31,21 @@ public class Resource {
    * Constructor
    */
   public Resource() {
+  }
+
+  /**
+   * @return the help
+   */
+  public boolean isHelp() {
+    return help;
+  }
+
+  /**
+   * @param help
+   *          the help to set
+   */
+  public void setHelp(final boolean help) {
+    this.help = help;
   }
 
   /**
@@ -217,6 +233,7 @@ public class Resource {
   @Override
   public Resource clone() {
     final Resource newResource = new Resource();
+    newResource.setHelp(isHelp());
     newResource.setType(getType());
     newResource.setSourceName(getSourceName());
     newResource.setTargetName(getTargetName());
