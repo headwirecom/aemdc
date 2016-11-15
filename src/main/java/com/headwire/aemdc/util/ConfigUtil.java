@@ -127,7 +127,7 @@ public class ConfigUtil {
     Collections.sort(sortedKeys);
 
     final StringBuilder configText = new StringBuilder();
-    configText.append("Properties from configuration file [");
+    configText.append("Resolved properties from configuration file [");
     configText.append(Constants.CONFIG_FILENAME);
     configText.append("]:\n");
 
