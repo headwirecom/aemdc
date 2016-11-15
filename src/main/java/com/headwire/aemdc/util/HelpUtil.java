@@ -129,23 +129,11 @@ public class HelpUtil {
 
     // name option
     helpText.append(getTextFromFile(HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_NAME));
-    helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_NAME));
+    helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_NAME));
 
     // targetname option
     helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_TEMPLATE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_COMPONENT_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_OSGI_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_EDITABLE_TEMPLATE_STRUCTURE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_MODEL_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_SERVICE_FOLDER + "/" + HELP_FILE_TARGET_NAME));
-    helpText.append(getTextFromFile(HELP_SERVLET_FOLDER + "/" + HELP_FILE_TARGET_NAME));
+    helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_TARGET_NAME));
 
     // args option
     helpText.append(getTextFromFile(HELP_FILE_ARGS));
