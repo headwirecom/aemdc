@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.menu.BasisRunner;
 
 
 /**
@@ -55,51 +57,40 @@ public class HelpUtil {
   /**
    * Shows help text.
    *
+   * @param resource
+   *          - resource object
    * @throws IOException
    *           - IOException
    */
-  public static void showHelp(final String[] args) throws IOException {
-    System.out.print(getHelpText(args));
+  public static void showHelp(final Resource resource) throws IOException {
+    System.out.print(getHelpText(resource));
   }
 
   /**
    * Build help text from helper files.
    *
+   * @param resource
+   *          - resource object
    * @return help text
    * @throws IOException
    *           - IOException
    */
-  public static String getHelpText(final String[] args) throws IOException {
+  public static String getHelpText(final Resource resource) throws IOException {
     String helpText = "";
 
-    // no args or help
-    if (args == null || args.length == 0 || (args.length == 1 && Constants.PARAM_HELP.equals(args[0]))) {
+    final String type = resource.getType();
+
+    if (StringUtils.isBlank(type)) {
+      // no type
       helpText = getCompleteHelpText();
 
-    } else if (Constants.PARAM_HELP.equals(args[0])) {
-      String type = "";
-      String name = "";
-
-      if (args.length > 1) {
-        type = args[1];
-      }
-      if (args.length > 2) {
-        name = args[2];
-      }
-      helpText = getSpecificHelpText(type, name);
+    } else if (!isExistingType(type)) {
+      // not existing type
+      LOG.debug("Unknown <type> argument: " + type);
+      helpText = getCompleteHelpText();
 
     } else {
-      // not help and args.length < 3
-      String type = "";
-      String name = "";
-
-      if (args.length > 0) {
-        type = args[0];
-      }
-      if (args.length > 1) {
-        name = args[1];
-      }
-      helpText = getSpecificHelpText(type, name);
+      helpText = getSpecificHelpText(resource);
     }
 
     // get complete help
@@ -145,47 +136,57 @@ public class HelpUtil {
   /**
    * Get template type specific help text.
    *
-   * @param type
-   *          - template type
-   * @param name
-   *          - template name
+   * @param resource
+   *          - resource object
    * @return type specific help text
    * @throws IOException
    *           - IOException
    */
-  public static String getSpecificHelpText(final String type, final String name) throws IOException {
+  public static String getSpecificHelpText(final Resource resource) throws IOException {
     final StringBuilder helpText = new StringBuilder();
+
+    final String type = resource.getType();
+    final String name = resource.getSourceName();
+    final String targetname = resource.getTargetName();
+
+    // Get Runner
+    final Reflection reflection = new Reflection();
+    final BasisRunner runner = reflection.getRunner(resource);
 
     // config type
     if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
       // show current config properties
       helpText.append(ConfigUtil.getConfigPropertiesAsText());
 
-    } else if (StringUtils.isNotBlank(type) && StringUtils.isBlank(name)) {
+    } else if (StringUtils.isBlank(name)) {
       // if only <type>
-      if (isExistingType(type)) {
-        helpText.append(getTextFromFile(HELP_FILE_START));
-        helpText.append(getTextFromFile(HELP_FILE_NAME));
-        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_ARGS));
-        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
-        // get all available templates
-        helpText.append(getTemplates(type));
-      }
+      helpText.append(getTextFromFile(HELP_FILE_START));
+      helpText.append(getTextFromFile(HELP_FILE_NAME));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_NAME));
+      helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
+      helpText.append(getTextFromFile(HELP_FILE_ARGS));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
+      // get all available templates
+      helpText.append(getTemplates(type));
 
-    } else if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(name)) {
+    } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(targetname)) {
       // if <type> + <name>
-      if (isExistingType(type)) {
-        helpText.append(getTextFromFile(HELP_FILE_START));
-        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_ARGS));
-        helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
-        // get all placeholders
-        helpText.append(getPlaceHolders(type, name));
-      }
+      helpText.append(getTextFromFile(HELP_FILE_START));
+      helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_TARGET_NAME));
+      helpText.append(getTextFromFile(HELP_FILE_ARGS));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
+      // get all placeholders
+      helpText.append(getPlaceHolders(type, name));
+
+    } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(targetname)) {
+      // if <type> + <name> + <targetname>
+      helpText.append(getTextFromFile(HELP_FILE_START));
+      helpText.append(getTextFromFile(HELP_FILE_ARGS));
+      helpText.append(getTextFromFile(getTypeHelpFolder(type) + "/" + HELP_FILE_ARGS));
+      // get all placeholders
+      helpText.append(getPlaceHolders(type, name));
     }
 
     return helpText.toString();
@@ -261,7 +262,7 @@ public class HelpUtil {
     final StringBuilder placeHolders = new StringBuilder();
 
     if (!dir.exists()) {
-      placeHolders.append("Can't get place holders. Directory/file " + templateSrcPath + " doesn't exist.");
+      LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
     } else {
       placeHolders.append("Found next placeholders: \n");
 

@@ -46,22 +46,25 @@ public class Reflection {
     BasisRunner runner = null;
     final String type = resource.getType();
 
-    final String fullyQualifiedClassName = props.getProperty(type);
+    if (StringUtils.isNotBlank(type)) {
+      final String fullyQualifiedClassName = props.getProperty(type);
 
-    if (StringUtils.isNotBlank(fullyQualifiedClassName)) {
-      try {
-        final Class<?> c = Class.forName(fullyQualifiedClassName);
-        final Constructor<?> ctor = c.getDeclaredConstructor(Resource.class);
-        ctor.setAccessible(true);
-        runner = (BasisRunner) ctor.newInstance(resource);
+      if (StringUtils.isNotBlank(fullyQualifiedClassName)) {
+        try {
+          final Class<?> c = Class.forName(fullyQualifiedClassName);
+          final Constructor<?> ctor = c.getDeclaredConstructor(Resource.class);
+          ctor.setAccessible(true);
+          runner = (BasisRunner) ctor.newInstance(resource);
 
-      } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
-          | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-        LOG.error("Can't get class instance for template type [{}]. ", type, e);
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
+            | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+          LOG.error("Can't get class instance for template type [{}]. ", type, e);
+        }
+      } else {
+        LOG.error("Unknown <type> argument [{}].", type);
       }
-    } else {
-      LOG.error("Unknown <type> argument [{}].", type);
     }
+
     return runner;
   }
 }

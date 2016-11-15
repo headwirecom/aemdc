@@ -1,16 +1,14 @@
 package com.headwire.aemdc.companion;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.menu.BasisRunner;
+import com.headwire.aemdc.menu.HelpRunner;
 import com.headwire.aemdc.util.ConfigUtil;
-import com.headwire.aemdc.util.HelpUtil;
 import com.headwire.aemdc.util.Reflection;
 
 import ch.qos.logback.classic.Level;
@@ -38,87 +36,19 @@ public class RunnableCompanion {
     // set log level
     setLogLevel();
 
-    // check for mandatory arguments
-    if (args == null || args.length < 3 || Constants.PARAM_HELP.equals(args[0])) {
-      HelpUtil.showHelp(args);
-      return;
-    }
-
     // Set mandatories from arguments
-    final Resource resource = new Resource();
-    resource.setType(args[0]);
-    resource.setSourceName(args[1]);
-    resource.setTargetName(args[2]);
-
-    // Set JCR Properties from arguments
-    resource.setJcrProperties(convertArgsToMaps(args, 3));
+    final Resource resource = new Resource(args);
 
     // Get Runner
     final Reflection reflection = new Reflection();
-    final BasisRunner runner = reflection.getRunner(resource);
+    BasisRunner runner = reflection.getRunner(resource);
+
+    if (runner == null || resource.isHelp()) {
+      runner = new HelpRunner(resource);
+    }
 
     // Run to create template structure
-    if (runner != null) {
-      runner.run();
-    } else {
-      HelpUtil.showHelp(args);
-    }
-  }
-
-  /**
-   * Convert arguments to jcr properties with values
-   *
-   * @param args
-   *          - arguments
-   * @param start
-   *          - start position for not mandatory arguments
-   * @return map of jcr properties sets with values
-   */
-  private static Map<String, Map<String, String>> convertArgsToMaps(final String[] args, final int start) {
-    final Map<String, Map<String, String>> jcrPropAllSets = new HashMap<String, Map<String, String>>();
-
-    // common jcr props set
-    final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
-    for (int i = start; i < args.length; i++) {
-
-      // check for valid params like "paramName=paramValue"
-      final int splitPos = args[i].indexOf("=");
-      if (splitPos < 1) {
-        throw new IllegalArgumentException("Params must be in form \"paramName=paramValue\"");
-      }
-
-      // get param key and value
-      final String key = args[i].substring(0, splitPos);
-      String value = "";
-      if (args[i].length() > (splitPos + 1)) {
-        value = args[i].substring(splitPos + 1);
-      }
-
-      if (key.startsWith(Constants.PLACEHOLDERS_PROPS_SET_PREFIX)) {
-        // get "ph_" jcr props set
-        final int pos = key.indexOf(":");
-        final String phSetKey = key.substring(0, pos);
-        Map<String, String> jcrPropsSet = jcrPropAllSets.get(phSetKey);
-
-        if (jcrPropsSet == null) {
-          jcrPropsSet = new HashMap<String, String>();
-        }
-
-        final String ph_key = key.substring(pos + 1);
-        jcrPropsSet.put(ph_key, value);
-        jcrPropAllSets.put(phSetKey, jcrPropsSet);
-
-        LOG.debug("ph_key={}, value={}", ph_key, value);
-      } else {
-        jcrPropsCommon.put(key, value);
-        LOG.debug("key={}, value={}", key, value);
-      }
-    }
-
-    // put the common set at the end to the sets list
-    jcrPropAllSets.put(Constants.PLACEHOLDERS_PROPS_SET_COMMON, jcrPropsCommon);
-
-    return jcrPropAllSets;
+    runner.run();
   }
 
   /**
@@ -154,5 +84,7 @@ public class RunnableCompanion {
         rootLogger.setLevel(Level.OFF);
       }
     }
+    LOG.debug("Current LOG Level: {}", rootLogger.getLevel());
   }
+
 }
