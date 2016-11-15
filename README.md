@@ -64,21 +64,9 @@ Usage:
 	    servlet     Servlet java class to be created.
 	    service     Service java class to be created.
 	name:
-	    Source AEM template name under ../templates folder.
-	    Source AEM component name under ../components folder.
-	    Source OSGI file name under ../config folder.
-	    Source editable templates config folder name.
-	    Source model file name under ../models java package.
-	    Source service file name under ../services java package.
-	    Source servlet file name under ../servlets java package.
+	    Source template name (folder or file).
 	targetname:
-	    Target AEM template name.
-	    Target AEM component name.
-	    Target osgi service PID file name.
-	    Target editable templates config folder name.
-	    Target model java class file name.
-	    Target service java class file name.
-	    Target servlet java class file name.
+	    Target template name (folder or file).
 	args:
 	    runmode=<value>
 	        Osgi config folder definition runmode.
