@@ -1,9 +1,5 @@
 package com.headwire.aemdc.companion;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 /**
  * Constants
  */
@@ -74,9 +70,6 @@ public class Constants {
   public static final String TYPE_MODEL = "model";
   public static final String TYPE_SERVICE = "service";
   public static final String TYPE_SERVLET = "servlet";
-  public static List<String> TYPE_APPS_UI_LIST = new ArrayList<String>();
-  public static List<String> TYPE_CONF_UI_LIST = new ArrayList<String>();
-  public static List<String> TYPE_CORE_LIST = new ArrayList<String>();
 
   // arguments constants
   public static final String PARAM_RUNMODE = "runmode";
@@ -97,18 +90,4 @@ public class Constants {
   public static final String DEFAULT_RANKING = "{Long}100";
   public static final String DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
   public static final String DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
-
-  static {
-    TYPE_APPS_UI_LIST.add(TYPE_TEMPLATE);
-    TYPE_APPS_UI_LIST.add(TYPE_TEMPLATE_FULL);
-    TYPE_APPS_UI_LIST.add(TYPE_COMPONENT);
-    TYPE_APPS_UI_LIST.add(TYPE_COMPONENT_FULL);
-    TYPE_APPS_UI_LIST.add(TYPE_OSGI);
-
-    TYPE_CONF_UI_LIST.add(TYPE_EDITABLE_TEMPLATE_STRUCTURE);
-
-    TYPE_CORE_LIST.add(TYPE_MODEL);
-    TYPE_CORE_LIST.add(TYPE_SERVICE);
-    TYPE_CORE_LIST.add(TYPE_SERVLET);
-  }
 }

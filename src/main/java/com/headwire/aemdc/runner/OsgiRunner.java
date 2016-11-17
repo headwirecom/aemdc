@@ -8,6 +8,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateFileCommand;
@@ -23,13 +25,15 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class OsgiRunner extends BasisRunner {
 
+  private static final Logger LOG = LoggerFactory.getLogger(OsgiRunner.class);
   private static final String HELP_FOLDER = "osgi";
 
   /**
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private Resource resource;
+  private final Resource resource;
+  private final Properties configProps;
 
   /**
    * Constructor
@@ -40,8 +44,12 @@ public class OsgiRunner extends BasisRunner {
    *           - IOException
    */
   public OsgiRunner(final Resource resource) throws IOException {
+    this.resource = resource;
+
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    configProps = ConfigUtil.getConfigProperties();
+
+    LOG.debug("OSGI runner starting...");
 
     // set target folder patch
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
@@ -54,8 +62,6 @@ public class OsgiRunner extends BasisRunner {
     } else {
       resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
     }
-
-    checkConfiguration(configProps, resource);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(configProps, resource);
@@ -71,7 +77,7 @@ public class OsgiRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  public void run() throws IOException {
+  protected void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("CreateFile");
     menu.runCommand("ReplacePlaceHolders");
@@ -93,4 +99,17 @@ public class OsgiRunner extends BasisRunner {
     return fileList;
   }
 
+  @Override
+  public boolean checkConfiguration() {
+    final String targetPath = resource.getTargetFolderPath();
+    // get target project jcr path
+    final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    final int pos = targetPath.indexOf(targetProjectRoot);
+    if (pos == -1) {
+      LOG.error("The target project root jcr path {} is different to target path {} in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT, targetPath);
+      return false;
+    }
+    return true;
+  }
 }

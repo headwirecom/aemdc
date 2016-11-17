@@ -32,7 +32,7 @@ public abstract class BasisRunner {
    *
    * @throws IOException
    */
-  public abstract void run() throws IOException;
+  protected abstract void run() throws IOException;
 
   /**
    * Get help folder name for template type.
@@ -55,6 +55,26 @@ public abstract class BasisRunner {
    * @return list of all existing templates
    */
   public abstract Collection<File> listAvailableTemplates(final File dir);
+
+  /**
+   * Any checks for configuration paths or resource
+   *
+   * @return true if Ok.
+   */
+  public abstract boolean checkConfiguration();
+
+  /**
+   * Global Run command
+   *
+   * @throws IOException
+   *           - IOException
+   *
+   */
+  public void globalRun() throws IOException {
+    if (checkConfiguration()) {
+      run();
+    }
+  }
 
   /**
    * Get list of all available templates.
@@ -120,46 +140,6 @@ public abstract class BasisRunner {
       name = name.substring(1);
     }
     return name;
-  }
-
-  /**
-   * @param configProps
-   * @param resource
-   *          - resource with properties
-   * @return true if Ok.
-   */
-  public boolean checkConfiguration(final Properties configProps, final Resource resource) {
-    final String targetPath = resource.getTargetFolderPath();
-
-    if (Constants.TYPE_APPS_UI_LIST.contains(resource.getType())) {
-      // get target project jcr path
-      final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-      final int pos = targetPath.indexOf(targetProjectRoot);
-      if (pos == -1) {
-        throw new IllegalStateException("The target project root jcr path " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT
-            + " is different to target path  " + targetPath + " in the config file.");
-      }
-    } else if (Constants.TYPE_CONF_UI_LIST.contains(resource.getType())) {
-      // get target UI folder
-      final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
-      final int pos = targetPath.indexOf(targetUIFolder);
-      if (pos == -1) {
-        throw new IllegalStateException("The target UI folder " + Constants.CONFIGPROP_TARGET_UI_FOLDER
-            + " is different to target path " + targetPath + " in the config file.");
-      }
-    } else if (Constants.TYPE_CORE_LIST.contains(resource.getType())) {
-      // get target java source folder
-      final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
-      final int pos = targetPath.indexOf(targetJavaSrcFolder);
-      if (pos == -1) {
-        throw new IllegalStateException(
-            "The target java source folder " + Constants.CONFIGPROP_TARGET_JAVA_FOLDER
-                + " is different to target path " + targetPath + " in the config file.");
-      }
-    } else {
-      throw new IllegalStateException("The type " + resource.getType() + " is not defined");
-    }
-    return true;
   }
 
   /**

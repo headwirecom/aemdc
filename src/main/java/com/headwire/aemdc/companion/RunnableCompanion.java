@@ -38,16 +38,23 @@ public class RunnableCompanion {
     // Set mandatories from arguments
     final Resource resource = new Resource(args);
 
-    // Get Runner
-    final Reflection reflection = new Reflection();
-    BasisRunner runner = reflection.getRunner(resource);
+    BasisRunner runner;
 
-    if (runner == null || resource.isHelp()) {
+    if (resource.isHelp()) {
+      // Get Help Runner
       runner = new HelpRunner(resource);
+    } else {
+      // Get Runner
+      final Reflection reflection = new Reflection();
+      runner = reflection.getRunner(resource);
+
+      if (runner == null) {
+        runner = new HelpRunner(resource);
+      }
     }
 
     // Run to create template structure
-    runner.run();
+    runner.globalRun();
   }
 
   /**

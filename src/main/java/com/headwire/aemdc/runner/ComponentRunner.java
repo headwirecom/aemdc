@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateDirCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
@@ -19,13 +22,15 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class ComponentRunner extends BasisRunner {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ComponentRunner.class);
   private static final String HELP_FOLDER = "component";
 
   /**
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private Resource resource;
+  private final Resource resource;
+  private final Properties configProps;
 
   /**
    * Constructor
@@ -36,13 +41,15 @@ public class ComponentRunner extends BasisRunner {
    *           - IOException
    */
   public ComponentRunner(final Resource resource) throws IOException {
+    this.resource = resource;
+
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    configProps = ConfigUtil.getConfigProperties();
+
+    LOG.debug("Component runner starting...");
 
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER));
     resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER));
-
-    checkConfiguration(configProps, resource);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(configProps, resource);
@@ -58,7 +65,7 @@ public class ComponentRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  public void run() throws IOException {
+  protected void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
@@ -78,5 +85,19 @@ public class ComponentRunner extends BasisRunner {
   public Collection<File> listAvailableTemplates(final File dir) {
     final Collection<File> fileList = listRootDirs(dir);
     return fileList;
+  }
+
+  @Override
+  public boolean checkConfiguration() {
+    final String targetPath = resource.getTargetFolderPath();
+    // get target project jcr path
+    final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    final int pos = targetPath.indexOf(targetProjectRoot);
+    if (pos == -1) {
+      LOG.error("The target project root jcr path {} is different to target path {} in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT, targetPath);
+      return false;
+    }
+    return true;
   }
 }

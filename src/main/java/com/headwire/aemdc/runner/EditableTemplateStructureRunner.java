@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateDirCommand;
 import com.headwire.aemdc.command.CreateFileCommand;
@@ -20,13 +23,15 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class EditableTemplateStructureRunner extends BasisRunner {
 
+  private static final Logger LOG = LoggerFactory.getLogger(EditableTemplateStructureRunner.class);
   private static final String HELP_FOLDER = "confstr";
 
   /**
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private Resource resource;
+  private final Resource resource;
+  private final Properties configProps;
 
   /**
    * Constructor
@@ -37,13 +42,15 @@ public class EditableTemplateStructureRunner extends BasisRunner {
    *           - IOException
    */
   public EditableTemplateStructureRunner(final Resource resource) throws IOException {
+    this.resource = resource;
+
     // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    configProps = ConfigUtil.getConfigProperties();
+
+    LOG.debug("Editable Template Structure runner starting...");
 
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_CONF_FOLDER));
     resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_CONF_FOLDER));
-
-    checkConfiguration(configProps, resource);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(configProps, resource);
@@ -65,7 +72,7 @@ public class EditableTemplateStructureRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  public void run() throws IOException {
+  protected void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
@@ -86,5 +93,19 @@ public class EditableTemplateStructureRunner extends BasisRunner {
   public Collection<File> listAvailableTemplates(final File dir) {
     final Collection<File> fileList = listRootDirs(dir);
     return fileList;
+  }
+
+  @Override
+  public boolean checkConfiguration() {
+    final String targetPath = resource.getTargetFolderPath();
+    // get target UI folder
+    final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+    final int pos = targetPath.indexOf(targetUIFolder);
+    if (pos == -1) {
+      LOG.error("The target target UI folder {} is different to target path {} in the config file.",
+          Constants.CONFIGPROP_TARGET_UI_FOLDER, targetPath);
+      return false;
+    }
+    return true;
   }
 }

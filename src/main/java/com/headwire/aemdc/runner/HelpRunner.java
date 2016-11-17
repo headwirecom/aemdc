@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Resource;
@@ -16,11 +19,13 @@ import com.headwire.aemdc.util.HelpUtil;
  */
 public class HelpRunner extends BasisRunner {
 
+  private static final Logger LOG = LoggerFactory.getLogger(HelpRunner.class);
+
   /**
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private Resource resource;
+  private final Resource resource;
 
   /**
    * Constructor
@@ -30,6 +35,10 @@ public class HelpRunner extends BasisRunner {
    * @throws IOException
    */
   public HelpRunner(final Resource resource) {
+    this.resource = resource;
+
+    LOG.debug("Help runner starting...");
+
     // Creates Invoker object, command object and configure them
     menu.setCommand("ShowHelp", new HelpCommand(resource));
   }
@@ -40,7 +49,7 @@ public class HelpRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  public void run() throws IOException {
+  protected void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("ShowHelp");
   }
@@ -59,5 +68,10 @@ public class HelpRunner extends BasisRunner {
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
     return null;
+  }
+
+  @Override
+  public boolean checkConfiguration() {
+    return true;
   }
 }

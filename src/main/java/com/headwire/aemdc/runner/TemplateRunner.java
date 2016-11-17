@@ -29,7 +29,8 @@ public class TemplateRunner extends BasisRunner {
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private Resource resource;
+  private final Resource resource;
+  private final Properties configProps;
 
   /**
    * Constructor
@@ -40,16 +41,15 @@ public class TemplateRunner extends BasisRunner {
    *           - IOException
    */
   public TemplateRunner(final Resource resource) throws IOException {
+    this.resource = resource;
+
+    // Get Config Properties from config file
+    configProps = ConfigUtil.getConfigProperties();
 
     LOG.debug("Template runner starting...");
 
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
-
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER));
     resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER));
-
-    checkConfiguration(configProps, resource);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(configProps, resource);
@@ -65,7 +65,7 @@ public class TemplateRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  public void run() throws IOException {
+  protected void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
@@ -85,6 +85,20 @@ public class TemplateRunner extends BasisRunner {
   public Collection<File> listAvailableTemplates(final File dir) {
     final Collection<File> fileList = listRootDirs(dir);
     return fileList;
+  }
+
+  @Override
+  public boolean checkConfiguration() {
+    final String targetPath = resource.getTargetFolderPath();
+    // get target project jcr path
+    final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    final int pos = targetPath.indexOf(targetProjectRoot);
+    if (pos == -1) {
+      LOG.error("The target project root jcr path {} is different to target path {} in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT, targetPath);
+      return false;
+    }
+    return true;
   }
 
 }

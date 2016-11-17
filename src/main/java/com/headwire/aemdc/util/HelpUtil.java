@@ -74,12 +74,6 @@ public class HelpUtil {
     if (StringUtils.isBlank(type)) {
       // no type
       helpText = getCompleteHelpText();
-
-    } else if (!isExistingType(type)) {
-      // not existing type
-      LOG.debug("Unknown <type> argument: " + type);
-      helpText = getCompleteHelpText();
-
     } else {
       helpText = getSpecificHelpText(resource);
     }
@@ -140,66 +134,57 @@ public class HelpUtil {
     final String name = resource.getSourceName();
     final String targetname = resource.getTargetName();
 
-    // Get Runner
-    final Reflection reflection = new Reflection();
-    final BasisRunner runner = reflection.getRunner(resource);
+    // config type
+    if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
+      // show current config properties
+      helpText.append(ConfigUtil.getConfigPropertiesAsText());
 
-    if (runner != null) {
-      final String helpFolder = runner.getHelpFolder();
-      final String templateSrcPath = runner.getSourceFolder() + "/" + name;
+    } else {
+      // Get Runner
+      final Reflection reflection = new Reflection();
+      final BasisRunner runner = reflection.getRunner(resource);
 
-      // config type
-      if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
-        // show current config properties
-        helpText.append(ConfigUtil.getConfigPropertiesAsText());
+      if (runner == null) {
+        // not existing type
+        helpText.append(getCompleteHelpText());
 
-      } else if (StringUtils.isBlank(name)) {
-        // if only <type>
-        helpText.append(getTextFromFile(HELP_FILE_START));
-        helpText.append(getTextFromFile(HELP_FILE_NAME));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_ARGS));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
-        // get all available templates
-        helpText.append(getTemplatesAsString(runner));
+      } else {
+        final String helpFolder = runner.getHelpFolder();
+        final String templateSrcPath = runner.getSourceFolder() + "/" + name;
 
-      } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(targetname)) {
-        // if <type> + <name>
-        helpText.append(getTextFromFile(HELP_FILE_START));
-        helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_TARGET_NAME));
-        helpText.append(getTextFromFile(HELP_FILE_ARGS));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
-        // get all placeholders
-        helpText.append(getPlaceHolders(templateSrcPath));
+        if (StringUtils.isBlank(name)) {
+          // if only <type>
+          helpText.append(getTextFromFile(HELP_FILE_START));
+          helpText.append(getTextFromFile(HELP_FILE_NAME));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_NAME));
+          helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(HELP_FILE_ARGS));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
+          // get all available templates
+          helpText.append(getTemplatesAsString(runner));
 
-      } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(targetname)) {
-        // if <type> + <name> + <targetname>
-        helpText.append(getTextFromFile(HELP_FILE_START));
-        helpText.append(getTextFromFile(HELP_FILE_ARGS));
-        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
-        // get all placeholders
-        helpText.append(getPlaceHolders(templateSrcPath));
+        } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(targetname)) {
+          // if <type> + <name>
+          helpText.append(getTextFromFile(HELP_FILE_START));
+          helpText.append(getTextFromFile(HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_TARGET_NAME));
+          helpText.append(getTextFromFile(HELP_FILE_ARGS));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
+          // get all placeholders
+          helpText.append(getPlaceHolders(templateSrcPath));
+
+        } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(targetname)) {
+          // if <type> + <name> + <targetname>
+          helpText.append(getTextFromFile(HELP_FILE_START));
+          helpText.append(getTextFromFile(HELP_FILE_ARGS));
+          helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_ARGS));
+          // get all placeholders
+          helpText.append(getPlaceHolders(templateSrcPath));
+        }
       }
     }
     return helpText.toString();
-  }
-
-  /**
-   * Is existing type
-   *
-   * @param type
-   *          - template type
-   * @return true if type exists
-   */
-  public static boolean isExistingType(final String type) {
-    if (Constants.TYPE_APPS_UI_LIST.contains(type) || Constants.TYPE_CORE_LIST.contains(type)
-        || Constants.TYPE_CONF_UI_LIST.contains(type)) {
-      return true;
-    }
-    return false;
   }
 
   /**
