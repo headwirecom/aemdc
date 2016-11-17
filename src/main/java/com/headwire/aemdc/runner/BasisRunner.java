@@ -85,6 +85,7 @@ public abstract class BasisRunner {
     Collection<File> fileList = new ArrayList<File>();
     final String searchPath = getSourceFolder();
     final File dir = new File(searchPath);
+    LOG.debug("File {}", dir);
 
     if (!dir.exists()) {
       LOG.error("Can't get available templates. Directory {} doesn't exist.", searchPath);
@@ -110,8 +111,9 @@ public abstract class BasisRunner {
     final Collection<File> fileList = new ArrayList<File>();
 
     for (final File file : FileUtils.listFilesAndDirs(dir, FalseFileFilter.INSTANCE, DirectoryFileFilter.INSTANCE)) {
+      LOG.debug("File: {}", file);
       // get only root directories
-      final String name = getTemplateName(dir.getPath(), file.getPath());
+      final String name = getTemplateName(dir, file);
       if (StringUtils.isNotBlank(name) && !name.contains("/")) {
         fileList.add(file);
       }
@@ -122,15 +124,15 @@ public abstract class BasisRunner {
   /**
    * Get template name incl. subfolders.
    *
-   * @param sourceDirPath
-   *          - source templates directory path
-   * @param templateFilePath
-   *          - template file path under the directory
+   * @param sourceDir
+   *          - source templates directory
+   * @param templateFile
+   *          - template file under the directory
    * @return template name
    */
-  public String getTemplateName(final String sourceDirPath, final String templateFilePath) {
+  public String getTemplateName(final File sourceDir, final File templateFile) {
     // get template name incl. subfolders, for ex. "impl/SampleServiceImpl.java"
-    String name = StringUtils.substringAfter(sourceDirPath, templateFilePath);
+    String name = StringUtils.substringAfter(templateFile.getPath(), sourceDir.getPath());
 
     // convert to unix path format
     name = name.replace("\\", "/");
@@ -139,6 +141,8 @@ public abstract class BasisRunner {
     if (name.indexOf("/") == 0) {
       name = name.substring(1);
     }
+    LOG.debug("Template Name: {}", name);
+
     return name;
   }
 

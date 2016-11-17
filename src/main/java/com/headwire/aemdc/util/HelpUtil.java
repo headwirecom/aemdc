@@ -302,17 +302,18 @@ public class HelpUtil {
     final StringBuilder templs = new StringBuilder();
 
     templs.append("available names: \n");
+    final File sourceDir = new File(runner.getSourceFolder());
 
     // find available templates
     final Collection<File> fileList = runner.getAvailableTemplates();
     final Iterator<File> iter = fileList.iterator();
     while (iter.hasNext()) {
-      final File nextFile = iter.next();
-      final String templateName = runner.getTemplateName(runner.getSourceFolder(), nextFile.getPath());
+      final File templateFile = iter.next();
+      final String templateName = runner.getTemplateName(sourceDir, templateFile);
       templs.append("    ");
       templs.append(templateName);
       templs.append("\n");
-      LOG.debug("Found: {}", nextFile);
+      LOG.debug("Found: {}", templateFile);
     }
 
     return templs.toString();
