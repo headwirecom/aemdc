@@ -1,10 +1,13 @@
 package com.headwire.aemdc.menu;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.HelpUtil;
 
 
 /**
@@ -13,8 +16,11 @@ import com.headwire.aemdc.companion.Resource;
  */
 public class HelpRunner extends BasisRunner {
 
-  // Invoker
+  /**
+   * Invoker
+   */
   private final CommandMenu menu = new CommandMenu();
+  private Resource resource;
 
   /**
    * Constructor
@@ -37,5 +43,21 @@ public class HelpRunner extends BasisRunner {
   public void run() throws IOException {
     // Invoker invokes command
     menu.runCommand("ShowHelp");
+  }
+
+  @Override
+  public String getHelpFolder() {
+    return HelpUtil.HELP_COMMON_FOLDER;
+  }
+
+  @Override
+  public String getSourceFolder() {
+    // return HELP_ROOT_FOLDER;
+    return resource.getSourceFolderPath();
+  }
+
+  @Override
+  public Collection<File> listAvailableTemplates(final File dir) {
+    return null;
   }
 }

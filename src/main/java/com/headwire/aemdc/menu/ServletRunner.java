@@ -1,7 +1,11 @@
 package com.headwire.aemdc.menu;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateFileCommand;
@@ -17,8 +21,13 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class ServletRunner extends BasisRunner {
 
-  // Invoker
+  private static final String HELP_FOLDER = "servlet";
+
+  /**
+   * Invoker
+   */
   private final CommandMenu menu = new CommandMenu();
+  private Resource resource;
 
   /**
    * Constructor
@@ -56,6 +65,22 @@ public class ServletRunner extends BasisRunner {
     // Invoker invokes command
     menu.runCommand("CreateFile");
     menu.runCommand("ReplacePlaceHolders");
+  }
+
+  @Override
+  public String getHelpFolder() {
+    return HELP_FOLDER;
+  }
+
+  @Override
+  public String getSourceFolder() {
+    return resource.getSourceFolderPath();
+  }
+
+  @Override
+  public Collection<File> listAvailableTemplates(final File dir) {
+    final Collection<File> fileList = FileUtils.listFiles(dir, new String[] { Constants.FILE_EXT_JAVA }, true);
+    return fileList;
   }
 
 }

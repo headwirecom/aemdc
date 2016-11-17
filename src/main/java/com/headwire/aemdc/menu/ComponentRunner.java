@@ -1,6 +1,8 @@
 package com.headwire.aemdc.menu;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Properties;
 
 import com.headwire.aemdc.command.CommandMenu;
@@ -17,8 +19,13 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class ComponentRunner extends BasisRunner {
 
-  // Invoker
+  private static final String HELP_FOLDER = "component";
+
+  /**
+   * Invoker
+   */
   private final CommandMenu menu = new CommandMenu();
+  private Resource resource;
 
   /**
    * Constructor
@@ -55,5 +62,21 @@ public class ComponentRunner extends BasisRunner {
     // Invoker invokes command
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
+  }
+
+  @Override
+  public String getHelpFolder() {
+    return HELP_FOLDER;
+  }
+
+  @Override
+  public String getSourceFolder() {
+    return resource.getSourceFolderPath();
+  }
+
+  @Override
+  public Collection<File> listAvailableTemplates(final File dir) {
+    final Collection<File> fileList = listRootDirs(dir);
+    return fileList;
   }
 }

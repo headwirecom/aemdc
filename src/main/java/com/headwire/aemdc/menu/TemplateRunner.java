@@ -1,7 +1,12 @@
 package com.headwire.aemdc.menu;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateDirCommand;
@@ -17,8 +22,14 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class TemplateRunner extends BasisRunner {
 
-  // Invoker
+  private static final Logger LOG = LoggerFactory.getLogger(TemplateRunner.class);
+  private static final String HELP_FOLDER = "template";
+
+  /**
+   * Invoker
+   */
   private final CommandMenu menu = new CommandMenu();
+  private Resource resource;
 
   /**
    * Constructor
@@ -29,6 +40,9 @@ public class TemplateRunner extends BasisRunner {
    *           - IOException
    */
   public TemplateRunner(final Resource resource) throws IOException {
+
+    LOG.debug("Template runner starting...");
+
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
@@ -56,4 +70,21 @@ public class TemplateRunner extends BasisRunner {
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
   }
+
+  @Override
+  public String getHelpFolder() {
+    return HELP_FOLDER;
+  }
+
+  @Override
+  public String getSourceFolder() {
+    return resource.getSourceFolderPath();
+  }
+
+  @Override
+  public Collection<File> listAvailableTemplates(final File dir) {
+    final Collection<File> fileList = listRootDirs(dir);
+    return fileList;
+  }
+
 }

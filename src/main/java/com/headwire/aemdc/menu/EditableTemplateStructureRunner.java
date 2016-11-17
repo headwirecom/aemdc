@@ -1,6 +1,8 @@
 package com.headwire.aemdc.menu;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Properties;
 
 import com.headwire.aemdc.command.CommandMenu;
@@ -18,8 +20,13 @@ import com.headwire.aemdc.util.ConfigUtil;
  */
 public class EditableTemplateStructureRunner extends BasisRunner {
 
-  // Invoker
+  private static final String HELP_FOLDER = "confstr";
+
+  /**
+   * Invoker
+   */
   private final CommandMenu menu = new CommandMenu();
+  private Resource resource;
 
   /**
    * Constructor
@@ -63,5 +70,21 @@ public class EditableTemplateStructureRunner extends BasisRunner {
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
     menu.runCommand("CreateFile");
+  }
+
+  @Override
+  public String getHelpFolder() {
+    return HELP_FOLDER;
+  }
+
+  @Override
+  public String getSourceFolder() {
+    return resource.getSourceFolderPath();
+  }
+
+  @Override
+  public Collection<File> listAvailableTemplates(final File dir) {
+    final Collection<File> fileList = listRootDirs(dir);
+    return fileList;
   }
 }
