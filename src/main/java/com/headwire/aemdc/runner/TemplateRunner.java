@@ -1,16 +1,15 @@
-package com.headwire.aemdc.menu;
+package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.command.CommandMenu;
-import com.headwire.aemdc.command.CreateFileCommand;
+import com.headwire.aemdc.command.CreateDirCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
@@ -18,12 +17,13 @@ import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * OSGI creator
+ * Template creator
  *
  */
-public class OsgiRunner extends BasisRunner {
+public class TemplateRunner extends BasisRunner {
 
-  private static final String HELP_FOLDER = "osgi";
+  private static final Logger LOG = LoggerFactory.getLogger(TemplateRunner.class);
+  private static final String HELP_FOLDER = "template";
 
   /**
    * Invoker
@@ -39,21 +39,15 @@ public class OsgiRunner extends BasisRunner {
    * @throws IOException
    *           - IOException
    */
-  public OsgiRunner(final Resource resource) throws IOException {
+  public TemplateRunner(final Resource resource) throws IOException {
+
+    LOG.debug("Template runner starting...");
+
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
-    // set target folder patch
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
-    final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDERS_PROPS_SET_COMMON);
-    final String runmode = commonJcrProps.get(Constants.PARAM_RUNMODE);
-    if (StringUtils.isNotBlank(runmode)) {
-      // add config.<runmode> to the target path
-      resource
-          .setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER) + "." + runmode);
-    } else {
-      resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
-    }
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER));
 
     checkConfiguration(configProps, resource);
 
@@ -61,7 +55,7 @@ public class OsgiRunner extends BasisRunner {
     setGlobalConfigProperties(configProps, resource);
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand("CreateFile", new CreateFileCommand(resource));
+    menu.setCommand("CreateDir", new CreateDirCommand(resource));
     menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
   }
 
@@ -73,7 +67,7 @@ public class OsgiRunner extends BasisRunner {
   @Override
   public void run() throws IOException {
     // Invoker invokes command
-    menu.runCommand("CreateFile");
+    menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
   }
 
@@ -89,7 +83,7 @@ public class OsgiRunner extends BasisRunner {
 
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
-    final Collection<File> fileList = FileUtils.listFiles(dir, new String[] { Constants.FILE_EXT_XML }, false);
+    final Collection<File> fileList = listRootDirs(dir);
     return fileList;
   }
 

@@ -1,15 +1,14 @@
-package com.headwire.aemdc.menu;
+package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
 
 import com.headwire.aemdc.command.CommandMenu;
-import com.headwire.aemdc.command.CreateDirCommand;
+import com.headwire.aemdc.command.CreateFileCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
@@ -17,13 +16,12 @@ import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Template creator
+ * Java Service creator
  *
  */
-public class TemplateRunner extends BasisRunner {
+public class ServiceRunner extends BasisRunner {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TemplateRunner.class);
-  private static final String HELP_FOLDER = "template";
+  private static final String HELP_FOLDER = "service";
 
   /**
    * Invoker
@@ -39,23 +37,21 @@ public class TemplateRunner extends BasisRunner {
    * @throws IOException
    *           - IOException
    */
-  public TemplateRunner(final Resource resource) throws IOException {
-
-    LOG.debug("Template runner starting...");
-
+  public ServiceRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_TEMPLATES_FOLDER));
-    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER));
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
 
     checkConfiguration(configProps, resource);
 
-    // Set global config properties in the resource
+    // Set all other config properties in the resource
     setGlobalConfigProperties(configProps, resource);
+    setJavaConfigProperties(configProps, resource);
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand("CreateDir", new CreateDirCommand(resource));
+    menu.setCommand("CreateFile", new CreateFileCommand(resource));
     menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
   }
 
@@ -67,7 +63,7 @@ public class TemplateRunner extends BasisRunner {
   @Override
   public void run() throws IOException {
     // Invoker invokes command
-    menu.runCommand("CreateDir");
+    menu.runCommand("CreateFile");
     menu.runCommand("ReplacePlaceHolders");
   }
 
@@ -83,7 +79,7 @@ public class TemplateRunner extends BasisRunner {
 
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
-    final Collection<File> fileList = listRootDirs(dir);
+    final Collection<File> fileList = FileUtils.listFiles(dir, new String[] { Constants.FILE_EXT_JAVA }, true);
     return fileList;
   }
 

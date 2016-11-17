@@ -1,4 +1,4 @@
-package com.headwire.aemdc.menu;
+package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +58,7 @@ public abstract class BasisRunner {
 
   /**
    * Get list of all available templates.
-   * 
+   *
    * @return list of all existing templates
    */
   public Collection<File> getAvailableTemplates() {

@@ -1,4 +1,4 @@
-package com.headwire.aemdc.util;
+package com.headwire.aemdc.companion;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -9,9 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemdc.companion.Constants;
-import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.menu.BasisRunner;
+import com.headwire.aemdc.runner.BasisRunner;
+import com.headwire.aemdc.util.PropsUtil;
 
 
 /**

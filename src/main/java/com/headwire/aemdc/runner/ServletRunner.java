@@ -1,4 +1,4 @@
-package com.headwire.aemdc.menu;
+package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Java Service creator
+ * Java Servlet creator
  *
  */
-public class ServiceRunner extends BasisRunner {
+public class ServletRunner extends BasisRunner {
 
-  private static final String HELP_FOLDER = "service";
+  private static final String HELP_FOLDER = "servlet";
 
   /**
    * Invoker
@@ -37,12 +37,12 @@ public class ServiceRunner extends BasisRunner {
    * @throws IOException
    *           - IOException
    */
-  public ServiceRunner(final Resource resource) throws IOException {
+  public ServletRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVICES_FOLDER));
-    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVICES_FOLDER));
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVLETS_FOLDER));
 
     checkConfiguration(configProps, resource);
 

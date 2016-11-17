@@ -6,10 +6,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemdc.menu.BasisRunner;
-import com.headwire.aemdc.menu.HelpRunner;
+import com.headwire.aemdc.runner.BasisRunner;
+import com.headwire.aemdc.runner.HelpRunner;
 import com.headwire.aemdc.util.ConfigUtil;
-import com.headwire.aemdc.util.Reflection;
 
 import ch.qos.logback.classic.Level;
 

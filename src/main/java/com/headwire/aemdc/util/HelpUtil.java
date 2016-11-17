@@ -16,8 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.menu.BasisRunner;
+import com.headwire.aemdc.runner.BasisRunner;
 
 
 /**

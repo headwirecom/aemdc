@@ -1,14 +1,12 @@
-package com.headwire.aemdc.menu;
+package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
-
 import com.headwire.aemdc.command.CommandMenu;
-import com.headwire.aemdc.command.CreateFileCommand;
+import com.headwire.aemdc.command.CreateDirCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
@@ -16,12 +14,12 @@ import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Java Servlet creator
+ * Component creator
  *
  */
-public class ServletRunner extends BasisRunner {
+public class ComponentRunner extends BasisRunner {
 
-  private static final String HELP_FOLDER = "servlet";
+  private static final String HELP_FOLDER = "component";
 
   /**
    * Invoker
@@ -37,21 +35,20 @@ public class ServletRunner extends BasisRunner {
    * @throws IOException
    *           - IOException
    */
-  public ServletRunner(final Resource resource) throws IOException {
+  public ComponentRunner(final Resource resource) throws IOException {
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
 
-    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_SERVLETS_FOLDER));
-    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_SERVLETS_FOLDER));
+    resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_COMPONENTS_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER));
 
     checkConfiguration(configProps, resource);
 
-    // Set all other config properties in the resource
+    // Set global config properties in the resource
     setGlobalConfigProperties(configProps, resource);
-    setJavaConfigProperties(configProps, resource);
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand("CreateFile", new CreateFileCommand(resource));
+    menu.setCommand("CreateDir", new CreateDirCommand(resource));
     menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
   }
 
@@ -63,7 +60,7 @@ public class ServletRunner extends BasisRunner {
   @Override
   public void run() throws IOException {
     // Invoker invokes command
-    menu.runCommand("CreateFile");
+    menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
   }
 
@@ -79,8 +76,7 @@ public class ServletRunner extends BasisRunner {
 
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
-    final Collection<File> fileList = FileUtils.listFiles(dir, new String[] { Constants.FILE_EXT_JAVA }, true);
+    final Collection<File> fileList = listRootDirs(dir);
     return fileList;
   }
-
 }
