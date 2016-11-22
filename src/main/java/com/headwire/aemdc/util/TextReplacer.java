@@ -35,6 +35,42 @@ public class TextReplacer {
   }
 
   /**
+   * Replace path place holders in the file path
+   *
+   * @param path
+   *          the path where to replace placeholders
+   * @param resource
+   *          the resource
+   * @return replaced path
+   */
+  public static String replacePathPlaceHolders(final String path, final Resource resource) {
+    String result = path;
+
+    // {{ targetname }}
+    result = result.replace(Constants.PLACEHOLDER_PATH_TARGET_NAME, getTargetLastName(resource));
+
+    return result;
+  }
+
+  /**
+   * Get target last name w/o target sub folders.
+   * For example from "page/contentpage" will be get "contentpage".
+   *
+   * @param resource
+   *          the resource
+   * @return target last name
+   */
+  private static String getTargetLastName(final Resource resource) {
+    // {{ targetname }}
+    String targetName = resource.getTargetName();
+
+    // get target name w/o target subfolders
+    // ex. "page/contentpage" --> "contentpage"
+    targetName = StringUtils.substringAfterLast(targetName, "/");
+    return targetName;
+  }
+
+  /**
    * Replace place holders in the java files
    *
    * @param text
@@ -71,6 +107,9 @@ public class TextReplacer {
    */
   public static String replaceTextPlaceHolders(final String text, final Resource resource) {
     String result = text;
+
+    // {{ targetname }}
+    result = result.replace(Constants.PLACEHOLDER_TARGET_NAME, getTargetLastName(resource));
 
     // get Jcr Properties Sets
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
@@ -142,14 +181,14 @@ public class TextReplacer {
     // jcr:tile
     String jcrTitle = jcrProperties.get(Constants.PARAM_PROP_JCR_TITLE);
     if (StringUtils.isBlank(jcrTitle)) {
-      jcrTitle = resource.getTargetName();
+      jcrTitle = getTargetLastName(resource);
     }
     String result = text.replace("{{ " + Constants.PARAM_PROP_JCR_TITLE + " }}", getCrxXMLValue(jcrTitle));
 
     // jcr:description
     String jcrDescription = jcrProperties.get(Constants.PARAM_PROP_JCR_DESCRIPTION);
     if (StringUtils.isBlank(jcrDescription)) {
-      jcrDescription = resource.getTargetName();
+      jcrDescription = getTargetLastName(resource);
     }
     result = result.replace("{{ " + Constants.PARAM_PROP_JCR_DESCRIPTION + " }}", getCrxXMLValue(jcrDescription));
 
@@ -195,7 +234,7 @@ public class TextReplacer {
     result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_TYPE + " }}",
         getCrxXMLValue(slingResourceType));
 
-    // sling:resourceSuperType="foundation/components/page"
+    // sling:resourceSuperType="/libs/wcm/foundation/components/page"
     String slingResourceSuperType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
       slingResourceSuperType = Constants.DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;

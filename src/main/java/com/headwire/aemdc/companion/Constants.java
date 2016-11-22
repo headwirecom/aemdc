@@ -11,10 +11,12 @@ public class Constants {
   public static final String REFLECTION_FILENAME_PATH = "reflection/typeRunner.properties";
   public static final String FILE_EXT_XML = "xml";
   public static final String FILE_EXT_JAVA = "java";
+  public static final String FILE_EXT_HTML = "html";
   public static final String FILE_EXT_JSP = "jsp";
   public static final String FILE_EXT_JS = "js";
   public static final String FILE_EXT_CSS = "css";
-  public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { FILE_EXT_XML, FILE_EXT_JAVA, FILE_EXT_JSP, FILE_EXT_JS,
+  public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { FILE_EXT_XML, FILE_EXT_JAVA, FILE_EXT_HTML, FILE_EXT_JSP,
+      FILE_EXT_JS,
       FILE_EXT_CSS };
 
   // configuration constants: source folders
@@ -85,6 +87,8 @@ public class Constants {
   public static final String PLACEHOLDERS_PROPS_SET_PREFIX = "ph_";
   public static final String PLACEHOLDER_JAVA_PACKAGE = "{{ java-package }}";
   public static final String PLACEHOLDER_JAVA_CLASS = "{{ java-class }}";
+  public static final String PLACEHOLDER_TARGET_NAME = "{{ targetname }}";
+  public static final String PLACEHOLDER_PATH_TARGET_NAME = "{targetname}";
 
   // default values
   public static final String DEFAULT_RANKING = "{Long}100";

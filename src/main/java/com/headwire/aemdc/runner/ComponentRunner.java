@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.CreateDirCommand;
+import com.headwire.aemdc.command.ReplacePathPlaceHoldersCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
@@ -57,6 +58,7 @@ public class ComponentRunner extends BasisRunner {
     // Creates Invoker object, command object and configure them
     menu.setCommand("CreateDir", new CreateDirCommand(resource));
     menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
+    menu.setCommand("ReplacePathPlaceHolders", new ReplacePathPlaceHoldersCommand(resource));
   }
 
   /**
@@ -69,6 +71,7 @@ public class ComponentRunner extends BasisRunner {
     // Invoker invokes command
     menu.runCommand("CreateDir");
     menu.runCommand("ReplacePlaceHolders");
+    menu.runCommand("ReplacePathPlaceHolders");
   }
 
   @Override
