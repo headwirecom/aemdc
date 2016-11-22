@@ -111,14 +111,20 @@ public class TextReplacer {
     // {{ targetname }}
     result = result.replace(Constants.PLACEHOLDER_TARGET_NAME, getTargetLastName(resource));
 
-    // get Jcr Properties Sets
-    final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
-
     // get COMMON Properties Set
+    final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
     final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDERS_PROPS_SET_COMMON);
+
+    // {{ comp-model }}
+    String compModel = commonProps.get(Constants.PLACEHOLDER_COMP_MODEL);
+    if (StringUtils.isBlank(compModel)) {
+      compModel = Constants.DEFAULT_COMP_MODEL;
+    }
+    result = result.replace("{{ " + Constants.PLACEHOLDER_COMP_MODEL + " }}", compModel);
+
+    // replace all other placeholders
     final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
     while (iter.hasNext()) {
-      // replace all other placeholders
       final Entry<String, String> prop = iter.next();
       result = result.replace("{{ " + prop.getKey() + " }}", prop.getValue());
       LOG.debug("'{{ {} }}' replacing with '{}'", prop.getKey(), prop.getValue());
