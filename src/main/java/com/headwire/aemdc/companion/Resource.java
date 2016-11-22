@@ -385,7 +385,7 @@ public class Resource {
         value = args[i].substring(splitPos + 1);
       }
 
-      if (key.startsWith(Constants.PLACEHOLDERS_PROPS_SET_PREFIX)) {
+      if (key.startsWith(Constants.PLACEHOLDER_PROPS_SET_PREFIX)) {
         // get "ph_" jcr props set
         final int pos = key.indexOf(":");
         final String phSetKey = key.substring(0, pos);
@@ -407,7 +407,7 @@ public class Resource {
     }
 
     // put the common set at the end to the sets list
-    jcrPropAllSets.put(Constants.PLACEHOLDERS_PROPS_SET_COMMON, jcrPropsCommon);
+    jcrPropAllSets.put(Constants.PLACEHOLDER_PROPS_SET_COMMON, jcrPropsCommon);
 
     return jcrPropAllSets;
   }

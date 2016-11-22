@@ -74,26 +74,24 @@ public class Constants {
   public static final String TYPE_SERVLET = "servlet";
 
   // arguments constants
-  public static final String PARAM_RUNMODE = "runmode";
-  public static final String PARAM_PROP_JCR_TITLE = "jcr:title";
-  public static final String PARAM_PROP_JCR_DESCRIPTION = "jcr:description";
-  public static final String PARAM_PROP_RANKING = "ranking";
-  public static final String PARAM_PROP_ALLOWED_PATHS = "allowedPaths";
-  public static final String PARAM_PROP_SLING_RESOURCE_TYPE = "sling:resourceType";
-  public static final String PARAM_PROP_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
-  public static final String PARAM_PROP_COMPONENT_GROUP = "componentGroup";
-
-  public static final String PLACEHOLDERS_PROPS_SET_COMMON = "common";
-  public static final String PLACEHOLDERS_PROPS_SET_PREFIX = "ph_";
-  public static final String PLACEHOLDER_JAVA_PACKAGE = "{{ java-package }}";
-  public static final String PLACEHOLDER_JAVA_CLASS = "{{ java-class }}";
-  public static final String PLACEHOLDER_TARGET_NAME = "{{ targetname }}";
-  public static final String PLACEHOLDER_PATH_TARGET_NAME = "{targetname}";
+  public static final String PLACEHOLDER_PROPS_SET_COMMON = "common";
+  public static final String PLACEHOLDER_PROPS_SET_PREFIX = "ph_";
+  public static final String PLACEHOLDER_RUNMODE = "runmode";
+  public static final String PLACEHOLDER_JCR_TITLE = "jcr:title";
+  public static final String PLACEHOLDER_JCR_DESCRIPTION = "jcr:description";
+  public static final String PLACEHOLDER_RANKING = "ranking";
+  public static final String PLACEHOLDER_ALLOWED_PATHS = "allowedPaths";
+  public static final String PLACEHOLDER_SLING_RESOURCE_TYPE = "sling:resourceType";
+  public static final String PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
+  public static final String PLACEHOLDER_COMPONENT_GROUP = "componentGroup";
+  public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
+  public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
+  public static final String PLACEHOLDER_TARGET_NAME = "targetname";
   public static final String PLACEHOLDER_COMP_MODEL = "comp-model";
 
   // default values
-  public static final String DEFAULT_RANKING = "{Long}100";
-  public static final String DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
-  public static final String DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
-  public static final String DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
+  public static final String PH_DEFAULT_RANKING = "{Long}100";
+  public static final String PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
+  public static final String PH_DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
+  public static final String PH_DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
 }

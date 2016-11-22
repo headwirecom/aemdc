@@ -35,6 +35,30 @@ public class TextReplacer {
   }
 
   /**
+   * Get text in placeholder format like "{{ phName }}"
+   *
+   * @param phName
+   *          - placeholder name
+   * @return placeholder as string in placeholder format.
+   */
+  public static String getPH(final String phName) {
+    final String result = "{{ " + phName + " }}";
+    return result;
+  }
+
+  /**
+   * Get text in path placeholder format like "{phName}"
+   *
+   * @param phName
+   *          - placeholder name
+   * @return placeholder as string in path placeholder format.
+   */
+  public static String getPathPH(final String phName) {
+    final String result = "{{" + phName + "}}";
+    return result;
+  }
+
+  /**
    * Replace path place holders in the file path
    *
    * @param path
@@ -47,7 +71,7 @@ public class TextReplacer {
     String result = path;
 
     // {{ targetname }}
-    result = result.replace(Constants.PLACEHOLDER_PATH_TARGET_NAME, getTargetLastName(resource));
+    result = result.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName(resource));
 
     return result;
   }
@@ -84,11 +108,11 @@ public class TextReplacer {
 
     // {{ java-class }}
     final String javaClassName = resource.getJavaClassName();
-    result = result.replace(Constants.PLACEHOLDER_JAVA_CLASS, javaClassName);
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_CLASS), javaClassName);
 
     // {{ java-package }}
     final String javaPackage = resource.getJavaClassPackage();
-    result = result.replace(Constants.PLACEHOLDER_JAVA_PACKAGE, javaPackage);
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_PACKAGE), javaPackage);
 
     // all other placeholders
     result = replaceTextPlaceHolders(result, resource);
@@ -109,25 +133,26 @@ public class TextReplacer {
     String result = text;
 
     // {{ targetname }}
-    result = result.replace(Constants.PLACEHOLDER_TARGET_NAME, getTargetLastName(resource));
+    result = result.replace(getPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName(resource));
 
     // get COMMON Properties Set
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
-    final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDERS_PROPS_SET_COMMON);
+    final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDER_PROPS_SET_COMMON);
 
     // {{ comp-model }}
     String compModel = commonProps.get(Constants.PLACEHOLDER_COMP_MODEL);
     if (StringUtils.isBlank(compModel)) {
-      compModel = Constants.DEFAULT_COMP_MODEL;
+      compModel = Constants.PH_DEFAULT_COMP_MODEL;
     }
-    result = result.replace("{{ " + Constants.PLACEHOLDER_COMP_MODEL + " }}", compModel);
+    result = result.replace(getPH(Constants.PLACEHOLDER_COMP_MODEL), compModel);
 
     // replace all other placeholders
     final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
     while (iter.hasNext()) {
       final Entry<String, String> prop = iter.next();
-      result = result.replace("{{ " + prop.getKey() + " }}", prop.getValue());
-      LOG.debug("'{{ {} }}' replacing with '{}'", prop.getKey(), prop.getValue());
+      final String ph = getPH(prop.getKey());
+      result = result.replace(ph, prop.getValue());
+      LOG.debug("'{}' replacing with '{}'", ph, prop.getValue());
     }
     return result;
   }
@@ -156,7 +181,7 @@ public class TextReplacer {
 
       LOG.debug("propsSetKey={}", propsSetKey);
 
-      if (Constants.PLACEHOLDERS_PROPS_SET_COMMON.equals(propsSetKey)) {
+      if (Constants.PLACEHOLDER_PROPS_SET_COMMON.equals(propsSetKey)) {
         result = replaceCommonXmlPlaceHolders(result, resource, propsSet.getValue());
       } else {
         result = replaceXmlPlaceHoldersSets(result, resource, propsSet.getValue(), propsSetKey);
@@ -185,43 +210,43 @@ public class TextReplacer {
     final Properties configProps = ConfigUtil.getConfigProperties();
 
     // jcr:tile
-    String jcrTitle = jcrProperties.get(Constants.PARAM_PROP_JCR_TITLE);
+    String jcrTitle = jcrProperties.get(Constants.PLACEHOLDER_JCR_TITLE);
     if (StringUtils.isBlank(jcrTitle)) {
       jcrTitle = getTargetLastName(resource);
     }
-    String result = text.replace("{{ " + Constants.PARAM_PROP_JCR_TITLE + " }}", getCrxXMLValue(jcrTitle));
+    String result = text.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
 
     // jcr:description
-    String jcrDescription = jcrProperties.get(Constants.PARAM_PROP_JCR_DESCRIPTION);
+    String jcrDescription = jcrProperties.get(Constants.PLACEHOLDER_JCR_DESCRIPTION);
     if (StringUtils.isBlank(jcrDescription)) {
       jcrDescription = getTargetLastName(resource);
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_JCR_DESCRIPTION + " }}", getCrxXMLValue(jcrDescription));
+    result = result.replace(getPH(Constants.PLACEHOLDER_JCR_DESCRIPTION), getCrxXMLValue(jcrDescription));
 
     // ranking
-    String ranking = jcrProperties.get(Constants.PARAM_PROP_RANKING);
+    String ranking = jcrProperties.get(Constants.PLACEHOLDER_RANKING);
     if (StringUtils.isBlank(ranking)) {
-      ranking = Constants.DEFAULT_RANKING;
+      ranking = Constants.PH_DEFAULT_RANKING;
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_RANKING + " }}", getCrxXMLValue(ranking));
+    result = result.replace(getPH(Constants.PLACEHOLDER_RANKING), getCrxXMLValue(ranking));
 
     // allowedPaths
-    String allowedPaths = jcrProperties.get(Constants.PARAM_PROP_ALLOWED_PATHS);
+    String allowedPaths = jcrProperties.get(Constants.PLACEHOLDER_ALLOWED_PATHS);
     if (StringUtils.isBlank(allowedPaths)) {
-      allowedPaths = Constants.DEFAULT_ALLOWED_PATHS;
+      allowedPaths = Constants.PH_DEFAULT_ALLOWED_PATHS;
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_ALLOWED_PATHS + " }}", getCrxXMLValue(allowedPaths));
+    result = result.replace(getPH(Constants.PLACEHOLDER_ALLOWED_PATHS), getCrxXMLValue(allowedPaths));
 
     // componentGroup
-    String componentGroup = jcrProperties.get(Constants.PARAM_PROP_COMPONENT_GROUP);
+    String componentGroup = jcrProperties.get(Constants.PLACEHOLDER_COMPONENT_GROUP);
     if (StringUtils.isBlank(componentGroup)) {
       // get target project name
       componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_COMPONENT_GROUP + " }}", getCrxXMLValue(componentGroup));
+    result = result.replace(getPH(Constants.PLACEHOLDER_COMPONENT_GROUP), getCrxXMLValue(componentGroup));
 
     // sling:resourceType
-    String slingResourceType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_TYPE);
+    String slingResourceType = jcrProperties.get(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE);
     if (StringUtils.isBlank(slingResourceType)) {
       // get target components folder
       final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
@@ -237,15 +262,14 @@ public class TextReplacer {
       final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
       slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" + resource.getTargetName();
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_TYPE + " }}",
-        getCrxXMLValue(slingResourceType));
+    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE), getCrxXMLValue(slingResourceType));
 
     // sling:resourceSuperType="/libs/wcm/foundation/components/page"
-    String slingResourceSuperType = jcrProperties.get(Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE);
+    String slingResourceSuperType = jcrProperties.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
-      slingResourceSuperType = Constants.DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
+      slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
     }
-    result = result.replace("{{ " + Constants.PARAM_PROP_SLING_RESOURCE_SUPER_TYPE + " }}",
+    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE),
         getCrxXMLValue(slingResourceSuperType));
 
     return result;
@@ -269,7 +293,7 @@ public class TextReplacer {
     while (iter.hasNext()) {
       final String placeHolder = iter.next();
       result = result.replace(placeHolder, "");
-      LOG.debug("'{}' replacing with ''", placeHolder);
+      LOG.debug("'{}' replacing with empty string", placeHolder);
     }
     return result;
   }
@@ -317,7 +341,7 @@ public class TextReplacer {
       first = false;
     }
 
-    final String result = text.replace("{{ " + propsSetKey + " }}", phValue.toString());
+    final String result = text.replace(getPH(propsSetKey), phValue.toString());
     LOG.debug("PropsSet {} replaced by {}", propsSetKey, phValue.toString());
     return result;
   }
