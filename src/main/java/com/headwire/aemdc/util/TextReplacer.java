@@ -90,7 +90,9 @@ public class TextReplacer {
 
     // get target name w/o target subfolders
     // ex. "page/contentpage" --> "contentpage"
-    targetName = StringUtils.substringAfterLast(targetName, "/");
+    if (targetName.contains("/")) {
+      targetName = StringUtils.substringAfterLast(targetName, "/");
+    }
     return targetName;
   }
 
