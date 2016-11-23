@@ -338,20 +338,24 @@ public class Resource {
    * @return cloned map
    */
   private Map<String, Map<String, String>> shallowCopy(final Map<String, Map<String, String>> source) {
-    final Map<String, Map<String, String>> newMap = new HashMap<String, Map<String, String>>();
+    Map<String, Map<String, String>> newMap = null;
 
-    final Iterator<Entry<String, Map<String, String>>> iter = source.entrySet().iterator();
-    while (iter.hasNext()) {
-      final Entry<String, Map<String, String>> element = iter.next();
-      final String key = element.getKey();
-      final Map<String, String> value = element.getValue();
+    if (source != null) {
+      newMap = new HashMap<String, Map<String, String>>();
 
-      // clone single map
-      final Map<String, String> newValueMap = new HashMap<String, String>();
-      newValueMap.putAll(value);
+      final Iterator<Entry<String, Map<String, String>>> iter = source.entrySet().iterator();
+      while (iter.hasNext()) {
+        final Entry<String, Map<String, String>> element = iter.next();
+        final String key = element.getKey();
+        final Map<String, String> value = element.getValue();
 
-      // add single cloned map to a new Properties Set Map
-      newMap.put(key, newValueMap);
+        // clone single map
+        final Map<String, String> newValueMap = new HashMap<String, String>();
+        newValueMap.putAll(value);
+
+        // add single cloned map to a new Properties Set Map
+        newMap.put(key, newValueMap);
+      }
     }
     return newMap;
   }
