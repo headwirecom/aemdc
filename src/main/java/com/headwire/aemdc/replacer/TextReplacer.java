@@ -1,4 +1,4 @@
-package com.headwire.aemdc.util;
+package com.headwire.aemdc.replacer;
 
 import java.io.IOException;
 import java.text.CharacterIterator;
@@ -18,21 +18,27 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
  * Replace place holders inside of templates.
  *
  */
-public class TextReplacer {
+public abstract class TextReplacer {
 
   private static final Logger LOG = LoggerFactory.getLogger(TextReplacer.class);
 
   /**
-   * Constructor
+   * Replace place holders in the text for resource
+   *
+   * @param text
+   *          the text where to replace place holders
+   * @param resource
+   *          the resource involved into replacing
+   * @return result text
    */
-  private TextReplacer() {
-  }
+  public abstract String replacePlaceHolders(final String text, final Resource resource);
 
   /**
    * Get text in placeholder format like "{{ phName }}"
@@ -84,7 +90,7 @@ public class TextReplacer {
    *          the resource
    * @return target last name
    */
-  private static String getTargetLastName(final Resource resource) {
+  protected static String getTargetLastName(final Resource resource) {
     // {{ targetname }}
     String targetName = resource.getTargetName();
 
@@ -379,7 +385,7 @@ public class TextReplacer {
    * </table>
    *
    */
-  private static String getCrxXMLValue(final String value) {
+  protected static String getCrxXMLValue(final String value) {
     String resultValue = StringUtils.trimToEmpty(value);
 
     // escape special characters
