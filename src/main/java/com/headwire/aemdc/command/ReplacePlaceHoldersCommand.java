@@ -4,16 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemdc.companion.Constants;
+import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.TextReplacer;
+import com.headwire.aemdc.replacer.Replacer;
+import com.headwire.aemdc.runner.BasisRunner;
 
 
 /**
@@ -25,15 +24,23 @@ public class ReplacePlaceHoldersCommand implements Command {
   private static final Logger LOG = LoggerFactory.getLogger(ReplacePlaceHoldersCommand.class);
 
   private final Resource resource;
+  private final Replacer replacer;
 
   /**
    * Constructor
    *
    * @param resource
    *          - resource
+   * @throws IOException
+   *           IOException
    */
-  public ReplacePlaceHoldersCommand(final Resource resource) {
+  public ReplacePlaceHoldersCommand(final Resource resource) throws IOException {
     this.resource = resource;
+
+    // Get Replacer
+    final Reflection reflection = new Reflection();
+    final BasisRunner runner = reflection.getRunner(resource);
+    replacer = runner.getPlaceHolderReplacer();
   }
 
   @Override
@@ -57,48 +64,10 @@ public class ReplacePlaceHoldersCommand implements Command {
         final File nextFile = iter.next();
 
         // replace place holders
-        replacePlaceHolders(nextFile);
+        replacer.replacePlaceHolders(nextFile);
       }
     } else {
-      replacePlaceHolders(dest);
-    }
-  }
-
-  /**
-   * Replace place holders in file
-   *
-   * @param destFile
-   *          - destination file
-   * @throws IOException
-   *           - IOException
-   */
-  private void replacePlaceHolders(final File destFile) throws IOException {
-    try {
-      String fileText = FileUtils.readFileToString(destFile, Constants.ENCODING);
-
-      final List<String> allExtList = resource.getExtentionsList();
-      final String extention = FilenameUtils.getExtension(destFile.getName());
-
-      if (Constants.FILE_EXT_XML.equals(extention)) {
-        fileText = TextReplacer.replaceXmlPlaceHolders(fileText, resource);
-      } else if (Constants.FILE_EXT_JAVA.equals(extention)) {
-        fileText = TextReplacer.replaceJavaPlaceHolders(fileText, resource);
-      } else if (allExtList.contains(extention)) {
-        fileText = TextReplacer.replaceTextPlaceHolders(fileText, resource);
-      }
-
-      // replace the rest placeholders with default values
-      if (allExtList.contains(extention)) {
-        fileText = TextReplacer.replacePlaceHoldersByDefault(fileText);
-      }
-
-      FileUtils.writeStringToFile(destFile, fileText, Constants.ENCODING);
-
-      LOG.debug("Place holders replaced in the file [{}]", destFile);
-
-    } catch (final IOException e) {
-      LOG.error("Can't replace place holders in the file [{}]", destFile);
-      throw new IOException(e);
+      replacer.replacePlaceHolders(dest);
     }
   }
 }

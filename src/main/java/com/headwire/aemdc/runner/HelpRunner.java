@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.util.HelpUtil;
 
 
@@ -73,5 +74,10 @@ public class HelpRunner extends BasisRunner {
   @Override
   public boolean checkConfiguration() {
     return true;
+  }
+
+  @Override
+  public Replacer getPlaceHolderReplacer() {
+    return null;
   }
 }

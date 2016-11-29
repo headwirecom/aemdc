@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.runner.BasisRunner;
 
 
@@ -276,7 +277,7 @@ public class HelpUtil {
     try {
       final String text = FileUtils.readFileToString(file, Constants.ENCODING);
       // find placeholders
-      final List<String> phList = TextReplacer.findTextPlaceHolders(text);
+      final List<String> phList = Replacer.findTextPlaceHolders(text);
       final Iterator<String> iter = phList.iterator();
       while (iter.hasNext()) {
         // add offset for help

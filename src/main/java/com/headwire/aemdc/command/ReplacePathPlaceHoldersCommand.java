@@ -9,8 +9,10 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.TextReplacer;
+import com.headwire.aemdc.replacer.Replacer;
+import com.headwire.aemdc.runner.BasisRunner;
 
 
 /**
@@ -22,15 +24,23 @@ public class ReplacePathPlaceHoldersCommand implements Command {
   private static final Logger LOG = LoggerFactory.getLogger(ReplacePathPlaceHoldersCommand.class);
 
   private final Resource resource;
+  private final Replacer replacer;
 
   /**
    * Constructor
    *
    * @param resource
    *          - resource
+   * @throws IOException
+   *           IOException
    */
-  public ReplacePathPlaceHoldersCommand(final Resource resource) {
+  public ReplacePathPlaceHoldersCommand(final Resource resource) throws IOException {
     this.resource = resource;
+
+    // Get Replacer
+    final Reflection reflection = new Reflection();
+    final BasisRunner runner = reflection.getRunner(resource);
+    replacer = runner.getPlaceHolderReplacer();
   }
 
   @Override
@@ -72,7 +82,7 @@ public class ReplacePathPlaceHoldersCommand implements Command {
   private void replacePathPlaceHolders(final File srcFile) throws IOException {
     try {
       final String filePath = srcFile.getPath();
-      final String newPath = TextReplacer.replacePathPlaceHolders(filePath, resource);
+      final String newPath = replacer.replacePathPlaceHolders(filePath);
 
       // rename file
       if (!filePath.equals(newPath)) {

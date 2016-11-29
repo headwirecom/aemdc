@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.util.ConfigUtil;
 
 
@@ -62,6 +63,13 @@ public abstract class BasisRunner {
    * @return true if Ok.
    */
   public abstract boolean checkConfiguration();
+
+  /**
+   * Get place holder replacer.
+   *
+   * @return place holder replacer
+   */
+  public abstract Replacer getPlaceHolderReplacer();
 
   /**
    * Global Run command

@@ -14,6 +14,8 @@ import com.headwire.aemdc.command.CreateFileCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.JavaReplacer;
+import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.util.ConfigUtil;
 
 
@@ -101,6 +103,11 @@ public class ServletRunner extends BasisRunner {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public Replacer getPlaceHolderReplacer() {
+    return new JavaReplacer(resource);
   }
 
 }

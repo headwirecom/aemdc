@@ -1,5 +1,6 @@
 package com.headwire.aemdc.replacer;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -8,60 +9,70 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Replace place holders inside of templates.
+ * Replace place holders inside of any templates.
  *
  */
-public abstract class TextReplacer {
+public abstract class Replacer {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TextReplacer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Replacer.class);
+
+  protected Resource resource;
 
   /**
-   * Replace place holders in the text for resource
+   * Replace place holders in XML file
    *
    * @param text
-   *          the text where to replace place holders
-   * @param resource
-   *          the resource involved into replacing
-   * @return result text
+   *          - text to replace placeholders there
+   * @param placeholders
+   *          placeholders list
+   * @return result text with replaced placeholders
+   * @throws IOException
+   *           IOException
    */
-  public abstract String replacePlaceHolders(final String text, final Resource resource);
+  protected abstract String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders)
+      throws IOException;
 
   /**
-   * Get text in placeholder format like "{{ phName }}"
+   * Replace place holders in all other files (html, jsp, js, css, ...)
    *
-   * @param phName
-   *          - placeholder name
-   * @return placeholder as string in placeholder format.
+   * @param text
+   *          - text to replace placeholders there
+   * @param placeholders
+   *          placeholders list
+   * @return result text with replaced placeholders
    */
-  public static String getPH(final String phName) {
-    final String result = "{{ " + phName + " }}";
-    return result;
-  }
+  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders);
 
   /**
-   * Get text in path placeholder format like "{phName}"
+   * Find place holders in text
    *
-   * @param phName
-   *          - placeholder name
-   * @return placeholder as string in path placeholder format.
+   * @param text
+   *          - text to find placeholders there
+   * @return list of place holders
    */
-  public static String getPathPH(final String phName) {
-    final String result = "{{" + phName + "}}";
-    return result;
+  public static List<String> findTextPlaceHolders(final String text) {
+    final List<String> phList = new ArrayList<String>();
+    final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
+    final Matcher matcher = pattern.matcher(text);
+    // find placeholders
+    while (matcher.find()) {
+      phList.add(matcher.group());
+    }
+    return phList;
   }
 
   /**
@@ -69,100 +80,48 @@ public abstract class TextReplacer {
    *
    * @param path
    *          the path where to replace placeholders
-   * @param resource
-   *          the resource
    * @return replaced path
    */
-  public static String replacePathPlaceHolders(final String path, final Resource resource) {
-    String result = path;
-
+  public String replacePathPlaceHolders(final String path) {
     // {{ targetname }}
-    result = result.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName(resource));
-
+    final String result = path.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
     return result;
   }
 
   /**
-   * Get target last name w/o target sub folders.
-   * For example from "page/contentpage" will be get "contentpage".
+   * Replace place holders in file
    *
-   * @param resource
-   *          the resource
-   * @return target last name
+   * @param file
+   *          - input and destination file
+   * @throws IOException
+   *           - IOException
    */
-  protected static String getTargetLastName(final Resource resource) {
-    // {{ targetname }}
-    String targetName = resource.getTargetName();
+  public void replacePlaceHolders(final File file) throws IOException {
+    try {
+      String fileText = FileUtils.readFileToString(file, Constants.ENCODING);
 
-    // get target name w/o target subfolders
-    // ex. "page/contentpage" --> "contentpage"
-    if (targetName.contains("/")) {
-      targetName = StringUtils.substringAfterLast(targetName, "/");
+      final String extention = FilenameUtils.getExtension(file.getName());
+      final List<String> allExtList = resource.getExtentionsList();
+
+      if (Constants.FILE_EXT_XML.equals(extention)) {
+        fileText = replaceXmlPlaceHolders(fileText);
+      } else if (allExtList.contains(extention)) {
+        fileText = replaceTextPlaceHolders(fileText);
+      }
+
+      // replace the rest placeholders with default values
+      if (allExtList.contains(extention)) {
+        fileText = replacePlaceHoldersByDefault(fileText);
+      }
+
+      FileUtils.writeStringToFile(file, fileText, Constants.ENCODING);
+
+      LOG.debug("Place holders replaced in the file [{}]", file);
+
+    } catch (final IOException e) {
+      LOG.error("Can't replace place holders in the file [{}]", file);
+      throw new IOException(e);
     }
-    return targetName;
-  }
-
-  /**
-   * Replace place holders in the java files
-   *
-   * @param text
-   *          the text
-   * @param resource
-   *          the resource
-   * @return result text
-   */
-  public static String replaceJavaPlaceHolders(final String text, final Resource resource) {
-    String result = text;
-
-    // {{ java-class }}
-    final String javaClassName = resource.getJavaClassName();
-    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_CLASS), javaClassName);
-
-    // {{ java-package }}
-    final String javaPackage = resource.getJavaClassPackage();
-    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_PACKAGE), javaPackage);
-
-    // all other placeholders
-    result = replaceTextPlaceHolders(result, resource);
-
-    return result;
-  }
-
-  /**
-   * Replace place holders in all other files (jsp, js, css)
-   *
-   * @param text
-   *          the text
-   * @param resource
-   *          the resource
-   * @return result text
-   */
-  public static String replaceTextPlaceHolders(final String text, final Resource resource) {
-    String result = text;
-
-    // {{ targetname }}
-    result = result.replace(getPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName(resource));
-
-    // get COMMON Properties Set
-    final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
-    final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDER_PROPS_SET_COMMON);
-
-    // {{ comp-model }}
-    String compModel = commonProps.get(Constants.PLACEHOLDER_COMP_MODEL);
-    if (StringUtils.isBlank(compModel)) {
-      compModel = Constants.PH_DEFAULT_COMP_MODEL;
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_COMP_MODEL), compModel);
-
-    // replace all other placeholders
-    final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
-    while (iter.hasNext()) {
-      final Entry<String, String> prop = iter.next();
-      final String ph = getPH(prop.getKey());
-      result = result.replace(ph, prop.getValue());
-      LOG.debug("'{}' replacing with '{}'", ph, prop.getValue());
-    }
-    return result;
   }
 
   /**
@@ -170,13 +129,11 @@ public abstract class TextReplacer {
    *
    * @param text
    *          the text
-   * @param resource
-   *          the resource
    * @return result text
    * @throws IOException
    *           - IOException
    */
-  public static String replaceXmlPlaceHolders(final String text, final Resource resource) throws IOException {
+  private String replaceXmlPlaceHolders(final String text) throws IOException {
     String result = text;
 
     // get Jcr Properties Sets
@@ -190,11 +147,152 @@ public abstract class TextReplacer {
       LOG.debug("propsSetKey={}", propsSetKey);
 
       if (Constants.PLACEHOLDER_PROPS_SET_COMMON.equals(propsSetKey)) {
-        result = replaceCommonXmlPlaceHolders(result, resource, propsSet.getValue());
+        result = replaceCustomXmlPlaceHolders(result, propsSet.getValue());
       } else {
-        result = replaceXmlPlaceHoldersSets(result, resource, propsSet.getValue(), propsSetKey);
+        result = replaceXmlPlaceHoldersSets(result, propsSetKey, propsSet.getValue());
       }
     }
+    return result;
+  }
+
+  /**
+   * Replace place holders in all other files (html, jsp, js, css, ...)
+   *
+   * @param text
+   *          the text
+   * @param resource
+   *          the resource
+   * @return result text
+   */
+  private String replaceTextPlaceHolders(final String text) {
+    String result = text;
+
+    // get COMMON Properties Set
+    final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
+    final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDER_PROPS_SET_COMMON);
+
+    // replace custom placeholders
+    result = replaceCustomTextPlaceHolders(result, commonProps);
+
+    // replace all other placeholders
+    final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
+    while (iter.hasNext()) {
+      final Entry<String, String> prop = iter.next();
+      final String ph = getPH(prop.getKey());
+      result = result.replace(ph, prop.getValue());
+      LOG.debug("'{}' replacing with '{}'", ph, prop.getValue());
+    }
+    return result;
+  }
+
+  /**
+   * Replace place holders sets in the XML text
+   *
+   * @param text
+   *          the text
+   * @param propsSetKey
+   *          key of properties set
+   * @param jcrProperties
+   *          jcr properties
+   * @return result text
+   */
+  private String replaceXmlPlaceHoldersSets(final String text, final String propsSetKey,
+      final Map<String, String> jcrProperties) {
+
+    final StringBuilder phValue = new StringBuilder();
+
+    // get second number from ph key "ph_1_XXX"
+    final int pos = propsSetKey.lastIndexOf("_");
+
+    // offset = number * 4 blanks
+    final int offset = Integer.valueOf(propsSetKey.substring(pos + 1)) * 4;
+
+    final Iterator<Entry<String, String>> iter = jcrProperties.entrySet().iterator();
+    boolean first = true;
+    while (iter.hasNext()) {
+      if (!first) {
+        phValue.append("\n");
+        for (int i = 0; i < offset; i++) {
+          phValue.append(" ");
+        }
+      }
+      final Entry<String, String> entry = iter.next();
+      final String key = entry.getKey();
+      final String value = entry.getValue();
+      phValue.append(key);
+      phValue.append("=\"");
+      phValue.append(getCrxXMLValue(value));
+      phValue.append("\"");
+      first = false;
+    }
+
+    final String result = text.replace(getPH(propsSetKey), phValue.toString());
+    LOG.debug("PropsSet {} replaced by {}", propsSetKey, phValue.toString());
+    return result;
+  }
+
+  /**
+   * Replace all place holders with default values.
+   *
+   * @param text
+   *          the text
+   * @return result text
+   */
+  private String replacePlaceHoldersByDefault(final String text) {
+    String result = text;
+
+    // get all placeholders
+    final List<String> restPlaceHolders = Replacer.findTextPlaceHolders(text);
+
+    // replace all other placeholders
+    final Iterator<String> iter = restPlaceHolders.iterator();
+    while (iter.hasNext()) {
+      final String placeHolder = iter.next();
+      result = result.replace(placeHolder, "");
+      LOG.debug("'{}' replacing with empty string", placeHolder);
+    }
+    return result;
+  }
+
+  /**
+   * Get target last name w/o target sub folders.
+   * For example from "page/contentpage" will be get "contentpage".
+   *
+   * @return target last name
+   */
+  protected String getTargetLastName() {
+    // {{ targetname }}
+    String targetName = resource.getTargetName();
+
+    // get target name w/o target subfolders
+    // ex. "page/contentpage" --> "contentpage"
+    if (targetName.contains("/")) {
+      targetName = StringUtils.substringAfterLast(targetName, "/");
+    }
+    return targetName;
+  }
+
+  /**
+   * Get text in placeholder format like "{{ phName }}"
+   *
+   * @param phName
+   *          - placeholder name
+   * @return placeholder as string in placeholder format.
+   */
+  protected String getPH(final String phName) {
+    final String result = "{{ " + phName + " }}";
+    return result;
+  }
+
+  /**
+   * Get text in path placeholder format like "{phName}"
+   *
+   * @param phName
+   *          - placeholder name
+   * @return placeholder as string in path placeholder format.
+   */
+  protected String getPathPH(final String phName) {
+    final String result = "{{" + phName + "}}";
     return result;
   }
 
@@ -211,6 +309,7 @@ public abstract class TextReplacer {
    * @throws IOException
    *           - IOException
    */
+  /*
   public static String replaceCommonXmlPlaceHolders(final String text, final Resource resource,
       final Map<String, String> jcrProperties) throws IOException {
 
@@ -281,95 +380,7 @@ public abstract class TextReplacer {
 
     return result;
   }
-
-  /**
-   * Replace all place holders with default values.
-   *
-   * @param text
-   *          the text
-   * @return result text
-   */
-  public static String replacePlaceHoldersByDefault(final String text) {
-    String result = text;
-
-    // get all placeholders
-    final List<String> restPlaceHolders = TextReplacer.findTextPlaceHolders(text);
-
-    // replace all other placeholders
-    final Iterator<String> iter = restPlaceHolders.iterator();
-    while (iter.hasNext()) {
-      final String placeHolder = iter.next();
-      result = result.replace(placeHolder, "");
-      LOG.debug("'{}' replacing with empty string", placeHolder);
-    }
-    return result;
-  }
-
-  /**
-   * Replace place holders sets in the XML text
-   *
-   * @param text
-   *          the text
-   * @param resource
-   *          the resource
-   * @param jcrProperties
-   *          jcr properties
-   * @param propsSetKey
-   *          key value of properties set
-   * @return result text
-   */
-  public static String replaceXmlPlaceHoldersSets(final String text, final Resource resource,
-      final Map<String, String> jcrProperties, final String propsSetKey) {
-
-    final StringBuilder phValue = new StringBuilder();
-
-    // get second number from ph key "ph_1_XXX"
-    final int pos = propsSetKey.lastIndexOf("_");
-
-    // offset = number * 4 blanks
-    final int offset = Integer.valueOf(propsSetKey.substring(pos + 1)) * 4;
-
-    final Iterator<Entry<String, String>> iter = jcrProperties.entrySet().iterator();
-    boolean first = true;
-    while (iter.hasNext()) {
-      if (!first) {
-        phValue.append("\n");
-        for (int i = 0; i < offset; i++) {
-          phValue.append(" ");
-        }
-      }
-      final Entry<String, String> entry = iter.next();
-      final String key = entry.getKey();
-      final String value = entry.getValue();
-      phValue.append(key);
-      phValue.append("=\"");
-      phValue.append(getCrxXMLValue(value));
-      phValue.append("\"");
-      first = false;
-    }
-
-    final String result = text.replace(getPH(propsSetKey), phValue.toString());
-    LOG.debug("PropsSet {} replaced by {}", propsSetKey, phValue.toString());
-    return result;
-  }
-
-  /**
-   * Find place holders in text
-   *
-   * @param text
-   *          - text to find placeholders there
-   * @return list of place holders
-   */
-  public static List<String> findTextPlaceHolders(final String text) {
-    final List<String> phList = new ArrayList<String>();
-    final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
-    final Matcher matcher = pattern.matcher(text);
-    // find placeholders
-    while (matcher.find()) {
-      phList.add(matcher.group());
-    }
-    return phList;
-  }
+  */
 
   /**
    * Escape characters for text appearing as CRX XML Parameter value.
@@ -385,7 +396,7 @@ public abstract class TextReplacer {
    * </table>
    *
    */
-  protected static String getCrxXMLValue(final String value) {
+  protected String getCrxXMLValue(final String value) {
     String resultValue = StringUtils.trimToEmpty(value);
 
     // escape special characters

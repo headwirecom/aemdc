@@ -13,6 +13,8 @@ import com.headwire.aemdc.command.CreateDirCommand;
 import com.headwire.aemdc.command.ReplacePlaceHoldersCommand;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.Replacer;
+import com.headwire.aemdc.replacer.TemplateReplacer;
 import com.headwire.aemdc.util.ConfigUtil;
 
 
@@ -89,16 +91,35 @@ public class TemplateRunner extends BasisRunner {
 
   @Override
   public boolean checkConfiguration() {
+    // get target templates folder
     final String targetPath = resource.getTargetFolderPath();
+
+    // get target components folder
+    final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
+
     // get target project jcr path
     final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-    final int pos = targetPath.indexOf(targetProjectRoot);
+
+    int pos = targetPath.indexOf(targetProjectRoot);
     if (pos == -1) {
       LOG.error("The target project root jcr path {} is different to target path {} in the config file.",
           Constants.CONFIGPROP_TARGET_PROJECT_ROOT, targetPath);
       return false;
     }
+
+    pos = targetCompFolder.indexOf(targetProjectRoot);
+    if (pos == -1) {
+      LOG.error("The target project root jcr path {} is different to target path {} in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT, targetCompFolder);
+      return false;
+    }
+
     return true;
+  }
+
+  @Override
+  public Replacer getPlaceHolderReplacer() {
+    return new TemplateReplacer(resource);
   }
 
 }

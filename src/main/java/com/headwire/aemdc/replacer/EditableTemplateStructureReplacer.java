@@ -14,23 +14,25 @@ import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
- * Component place holders replacer.
+ * Editable Template Structure place holders replacer.
  *
  */
-public class ComponentReplacer extends Replacer {
+public class EditableTemplateStructureReplacer extends Replacer {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ComponentReplacer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EditableTemplateStructureReplacer.class);
 
   /**
    * Constructor
    */
-  public ComponentReplacer(final Resource resource) {
+  public EditableTemplateStructureReplacer(final Resource resource) {
     this.resource = resource;
   }
 
   @Override
   protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders)
       throws IOException {
+
+    String result = text;
 
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
@@ -40,14 +42,14 @@ public class ComponentReplacer extends Replacer {
     if (StringUtils.isBlank(jcrTitle)) {
       jcrTitle = getTargetLastName();
     }
-    String result = text.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
+    result = result.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
 
-    // jcr:description
-    String jcrDescription = placeholders.get(Constants.PLACEHOLDER_JCR_DESCRIPTION);
-    if (StringUtils.isBlank(jcrDescription)) {
-      jcrDescription = getTargetLastName();
+    // ranking
+    String ranking = placeholders.get(Constants.PLACEHOLDER_RANKING);
+    if (StringUtils.isBlank(ranking)) {
+      ranking = Constants.PH_DEFAULT_RANKING;
     }
-    result = result.replace(getPH(Constants.PLACEHOLDER_JCR_DESCRIPTION), getCrxXMLValue(jcrDescription));
+    result = result.replace(getPH(Constants.PLACEHOLDER_RANKING), ranking);
 
     // componentGroup
     String componentGroup = placeholders.get(Constants.PLACEHOLDER_COMPONENT_GROUP);
@@ -57,31 +59,35 @@ public class ComponentReplacer extends Replacer {
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_COMPONENT_GROUP), getCrxXMLValue(componentGroup));
 
+    // template-type aemdc-page-title
+    String templTypeJcrTitle = placeholders.get(Constants.PLACEHOLDER_TEMPL_TYPE_JCR_TITLE);
+    if (StringUtils.isBlank(templTypeJcrTitle)) {
+      templTypeJcrTitle = Constants.PH_DEFAULT_TEMPL_TYPE_JCR_TITLE;
+    }
+    result = result.replace(getPH(Constants.PLACEHOLDER_TEMPL_TYPE_JCR_TITLE), getCrxXMLValue(templTypeJcrTitle));
+
+    // template-type aemdc-page-description
+    String templTypeJcrDesc = placeholders.get(Constants.PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION);
+    if (StringUtils.isBlank(templTypeJcrDesc)) {
+      templTypeJcrDesc = Constants.PH_DEFAULT_TEMPL_TYPE_JCR_TITLE;
+    }
+    result = result.replace(getPH(Constants.PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION), getCrxXMLValue(templTypeJcrDesc));
+
+    /*
     // sling:resourceSuperType="/libs/wcm/foundation/components/page"
     String slingResourceSuperType = placeholders.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
       slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE), slingResourceSuperType);
+    */
 
     return result;
   }
 
   @Override
   protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
-    String result = text;
-
-    // {{ targetname }}
-    result = result.replace(getPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
-
-    // {{ comp-model }}
-    String compModel = placeholders.get(Constants.PLACEHOLDER_COMP_MODEL);
-    if (StringUtils.isBlank(compModel)) {
-      compModel = Constants.PH_DEFAULT_COMP_MODEL;
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_COMP_MODEL), compModel);
-
-    return result;
+    return text;
   }
 
 }
