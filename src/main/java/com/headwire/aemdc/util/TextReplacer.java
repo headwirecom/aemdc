@@ -230,7 +230,7 @@ public class TextReplacer {
     if (StringUtils.isBlank(ranking)) {
       ranking = Constants.PH_DEFAULT_RANKING;
     }
-    result = result.replace(getPH(Constants.PLACEHOLDER_RANKING), getCrxXMLValue(ranking));
+    result = result.replace(getPH(Constants.PLACEHOLDER_RANKING), ranking);
 
     // allowedPaths
     String allowedPaths = jcrProperties.get(Constants.PLACEHOLDER_ALLOWED_PATHS);
@@ -264,15 +264,14 @@ public class TextReplacer {
       final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
       slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" + resource.getTargetName();
     }
-    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE), getCrxXMLValue(slingResourceType));
+    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE), slingResourceType);
 
     // sling:resourceSuperType="/libs/wcm/foundation/components/page"
     String slingResourceSuperType = jcrProperties.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
       slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
     }
-    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE),
-        getCrxXMLValue(slingResourceSuperType));
+    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE), slingResourceSuperType);
 
     return result;
   }
