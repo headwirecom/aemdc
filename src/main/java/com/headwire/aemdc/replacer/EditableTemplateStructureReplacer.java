@@ -73,14 +73,12 @@ public class EditableTemplateStructureReplacer extends Replacer {
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION), getCrxXMLValue(templTypeJcrDesc));
 
-    /*
-    // sling:resourceSuperType="/libs/wcm/foundation/components/page"
-    String slingResourceSuperType = placeholders.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
-    if (StringUtils.isBlank(slingResourceSuperType)) {
-      slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
+    // sling:resourceType="wcm/foundation/components/page"
+    String slingResourceType = placeholders.get(Constants.PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE);
+    if (StringUtils.isBlank(slingResourceType)) {
+      slingResourceType = Constants.PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE;
     }
-    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE), slingResourceSuperType);
-    */
+    result = result.replace(getPH(Constants.PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE), slingResourceType);
 
     return result;
   }

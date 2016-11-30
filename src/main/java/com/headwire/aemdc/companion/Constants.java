@@ -90,11 +90,13 @@ public class Constants {
   public static final String PLACEHOLDER_COMP_MODEL = "comp-model";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
+  public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";
 
   // default values
   public static final String PH_DEFAULT_RANKING = "{Long}100";
-  public static final String PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
+  public static final String PH_DEFAULT_COMP_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
   public static final String PH_DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
   public static final String PH_DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
+  public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
 }

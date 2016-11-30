@@ -60,7 +60,7 @@ public class ComponentReplacer extends Replacer {
     // sling:resourceSuperType="/libs/wcm/foundation/components/page"
     String slingResourceSuperType = placeholders.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
     if (StringUtils.isBlank(slingResourceSuperType)) {
-      slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
+      slingResourceSuperType = Constants.PH_DEFAULT_COMP_SLING_RESOURCE_SUPER_TYPE;
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE), slingResourceSuperType);
 
