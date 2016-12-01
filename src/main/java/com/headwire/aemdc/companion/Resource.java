@@ -52,6 +52,8 @@ public class Resource {
       if (cmdArgs.length == 1) {
         if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
           setHelp(true);
+        } else if (Constants.TYPE_CONFIG_PROPS.equals(cmdArgs[0])) {
+          setType(cmdArgs[0]);
         } else {
           setHelp(true);
           setType(cmdArgs[0]);
@@ -258,6 +260,9 @@ public class Resource {
    * @return the jcrProperties
    */
   public Map<String, Map<String, String>> getJcrProperties() {
+    if (jcrProperties == null) {
+      jcrProperties = new HashMap<String, Map<String, String>>();
+    }
     return jcrProperties;
   }
 
@@ -267,7 +272,7 @@ public class Resource {
    * @return the jcrPropertiesSet by key
    */
   public Map<String, String> getJcrPropsSet(final String key) {
-    return jcrProperties.get(key);
+    return getJcrProperties().get(key);
   }
 
   /**

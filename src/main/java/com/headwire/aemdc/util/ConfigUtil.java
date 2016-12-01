@@ -37,10 +37,34 @@ public class ConfigUtil {
    *           - IOException
    */
   public static Properties getConfigProperties() throws IOException {
-    Properties props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
+
+    Properties props = null;
+    try {
+      props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
+    } catch (final IOException e) {
+      LOG.error("Please create a configuration properties file [{}] in the root folder.",
+          Constants.CONFIG_PROPS_FILENAME);
+    }
+
+    if (props == null) {
+      props = getConfigPropertiesFromResources();
+    }
 
     // replace path place holders
     props = replacePathPlaceHolders(props);
+    return props;
+  }
+
+  /**
+   * Get properties from configuration file from resources folder
+   *
+   * @return configuration properties
+   * @throws IOException
+   *           - IOException
+   */
+  private static Properties getConfigPropertiesFromResources() throws IOException {
+    final String configPropsFilePath = Constants.CONFIG_PROPS_FOLDER + "/" + Constants.CONFIG_PROPS_FILENAME;
+    final Properties props = PropsUtil.getPropertiesFromContextClassLoader(configPropsFilePath);
     return props;
   }
 
