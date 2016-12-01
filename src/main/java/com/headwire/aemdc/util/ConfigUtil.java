@@ -151,9 +151,7 @@ public class ConfigUtil {
     Collections.sort(sortedKeys);
 
     final StringBuilder configText = new StringBuilder();
-    configText.append("Resolved properties from configuration file [");
-    configText.append(Constants.CONFIG_PROPS_FILENAME);
-    configText.append("]:\n");
+    configText.append("Current configuration properties:\n");
 
     for (final String key : sortedKeys) {
       final String value = props.getProperty(key);
