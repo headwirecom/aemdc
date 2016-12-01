@@ -2,6 +2,7 @@ package com.headwire.aemdc.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class ConfigPropsRunner extends BasisRunner {
 
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
-    return null;
+    return new ArrayList<File>();
   }
 
   @Override
