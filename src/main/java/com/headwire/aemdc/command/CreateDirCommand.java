@@ -37,7 +37,7 @@ public class CreateDirCommand implements Command {
     final File srcDir = new File(sourcePath);
     final File targetDir = new File(targetPath);
 
-    LOG.debug("Coping files from [{}] to [{}] ...", sourcePath, targetPath);
+    LOG.debug("Copying files from [{}] to [{}] ...", sourcePath, targetPath);
 
     // copy directory
     copyDirectory(srcDir, targetDir);
