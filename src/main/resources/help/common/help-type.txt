@@ -1,3 +1,4 @@
+    config      Create configuration properties file.
     temp(late)  Template to be created.
     comp(onent) Component to be created.
     osgi        Osgi config to be created.

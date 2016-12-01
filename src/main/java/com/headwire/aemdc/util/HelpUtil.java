@@ -34,7 +34,7 @@ public class HelpUtil {
   public static final String HELP_COMMON_FOLDER = "common";
   public static final String HELP_FILE_START = "help-start.txt";
   public static final String HELP_FILE_OPTIONS = "help-options.txt";
-  public static final String HELP_FILE_CONFIG = "help-config.txt";
+  public static final String HELP_FILE_HELP = "help-help.txt";
   public static final String HELP_FILE_TYPE = "help-type.txt";
   public static final String HELP_FILE_NAME = "help-name.txt";
   public static final String HELP_FILE_TARGET_NAME = "help-targetname.txt";
@@ -100,7 +100,7 @@ public class HelpUtil {
     // get complete help
     helpText.append(getTextFromFile(HELP_FILE_START));
     helpText.append(getTextFromFile(HELP_FILE_OPTIONS));
-    helpText.append(getTextFromFile(HELP_FILE_CONFIG));
+    helpText.append(getTextFromFile(HELP_FILE_HELP));
     helpText.append(getTextFromFile(HELP_FILE_TYPE));
     helpText.append(getTextFromFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_TYPE));
 
