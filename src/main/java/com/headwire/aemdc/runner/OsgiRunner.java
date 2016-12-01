@@ -53,16 +53,18 @@ public class OsgiRunner extends BasisRunner {
 
     LOG.debug("OSGI runner starting...");
 
-    // set target folder patch
     resource.setSourceFolderPath(configProps.getProperty(Constants.CONFIGPROP_SOURCE_OSGI_FOLDER));
+    resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
+
+    // set target runmode folder
     final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDER_PROPS_SET_COMMON);
-    final String runmode = commonJcrProps.get(Constants.PLACEHOLDER_RUNMODE);
-    if (StringUtils.isNotBlank(runmode)) {
-      // add config.<runmode> to the target path
-      resource
-          .setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER) + "." + runmode);
-    } else {
-      resource.setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER));
+    if (commonJcrProps != null) {
+      final String runmode = commonJcrProps.get(Constants.PLACEHOLDER_RUNMODE);
+      if (StringUtils.isNotBlank(runmode)) {
+        // add config.<runmode> to the target path
+        resource
+            .setTargetFolderPath(configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_FOLDER) + "." + runmode);
+      }
     }
 
     // Set global config properties in the resource
