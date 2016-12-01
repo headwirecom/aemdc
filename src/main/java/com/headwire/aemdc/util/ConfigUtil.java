@@ -37,7 +37,7 @@ public class ConfigUtil {
    *           - IOException
    */
   public static Properties getConfigProperties() throws IOException {
-    Properties props = PropsUtil.getProperties(Constants.CONFIG_FILENAME);
+    Properties props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
 
     // replace path place holders
     props = replacePathPlaceHolders(props);
@@ -128,7 +128,7 @@ public class ConfigUtil {
 
     final StringBuilder configText = new StringBuilder();
     configText.append("Resolved properties from configuration file [");
-    configText.append(Constants.CONFIG_FILENAME);
+    configText.append(Constants.CONFIG_PROPS_FILENAME);
     configText.append("]:\n");
 
     for (final String key : sortedKeys) {
