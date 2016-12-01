@@ -9,10 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
-import com.headwire.aemdc.runner.BasisRunner;
 
 
 /**
@@ -34,13 +32,9 @@ public class ReplacePlaceHoldersCommand implements Command {
    * @throws IOException
    *           IOException
    */
-  public ReplacePlaceHoldersCommand(final Resource resource) throws IOException {
+  public ReplacePlaceHoldersCommand(final Resource resource, final Replacer replacer) throws IOException {
     this.resource = resource;
-
-    // Get Replacer
-    final Reflection reflection = new Reflection();
-    final BasisRunner runner = reflection.getRunner(resource);
-    replacer = runner.getPlaceHolderReplacer();
+    this.replacer = replacer;
   }
 
   @Override

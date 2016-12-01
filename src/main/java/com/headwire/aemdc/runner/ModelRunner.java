@@ -60,7 +60,7 @@ public class ModelRunner extends BasisRunner {
 
     // Creates Invoker object, command object and configure them
     menu.setCommand("CreateFile", new CreateFileCommand(resource));
-    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
+    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer()));
   }
 
   /**

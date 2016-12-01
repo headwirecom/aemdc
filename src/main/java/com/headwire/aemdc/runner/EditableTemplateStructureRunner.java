@@ -59,7 +59,7 @@ public class EditableTemplateStructureRunner extends BasisRunner {
 
     // Creates Invoker object, command object and configure them
     menu.setCommand("CreateDir", new CreateDirCommand(resource));
-    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
+    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer()));
 
     // copy /conf/.content.xml
     final Resource confResource = resource.clone();

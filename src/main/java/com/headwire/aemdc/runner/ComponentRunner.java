@@ -59,8 +59,8 @@ public class ComponentRunner extends BasisRunner {
 
     // Creates Invoker object, command object and configure them
     menu.setCommand("CreateDir", new CreateDirCommand(resource));
-    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource));
-    menu.setCommand("ReplacePathPlaceHolders", new ReplacePathPlaceHoldersCommand(resource));
+    menu.setCommand("ReplacePlaceHolders", new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer()));
+    menu.setCommand("ReplacePathPlaceHolders", new ReplacePathPlaceHoldersCommand(resource, getPlaceHolderReplacer()));
   }
 
   /**
