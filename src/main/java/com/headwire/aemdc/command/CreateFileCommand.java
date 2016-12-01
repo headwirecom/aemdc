@@ -39,7 +39,7 @@ public class CreateFileCommand implements Command {
 
     LOG.debug("Copying file from [{}] to [{}] ...", sourcePath, targetPath);
 
-    // copy directory
+    // copy file
     copyFile(srcFile, targetFile);
   }
 
