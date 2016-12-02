@@ -1,6 +1,7 @@
     config      Create configuration properties file.
     temp(late)  Template to be created.
     comp(onent) Component to be created.
+    page        Content page to be created.
     osgi        Osgi config to be created.
     confstr     Editable templates structure to be created.
     model       Model java class to be created.
