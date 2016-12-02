@@ -35,6 +35,9 @@ public class RunnableCompanion {
     // set log level
     setLogLevel();
 
+    // Check configuration from configuration properties file
+    ConfigUtil.checkConfiguration();
+
     // Set mandatories from arguments
     final Resource resource = new Resource(args);
 

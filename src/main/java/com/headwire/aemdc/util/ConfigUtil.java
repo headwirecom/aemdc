@@ -1,5 +1,6 @@
 package com.headwire.aemdc.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +54,35 @@ public class ConfigUtil {
     // replace path place holders
     props = replacePathPlaceHolders(props);
     return props;
+  }
+
+  /**
+   * Check whether configurated source paths exist
+   *
+   * @return true - if all paths exist, false - otherwise
+   * @throws IOException
+   *           IOException
+   */
+  public static boolean checkConfiguration() throws IOException {
+    // Get Config Properties from config file
+    final Properties configProps = getConfigProperties();
+    for (final String pathKey : Constants.SOURCE_PATHS) {
+      final String path = configProps.getProperty(pathKey);
+      if (StringUtils.isBlank(path)) {
+        LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
+            pathKey,
+            Constants.CONFIG_PROPS_FILENAME);
+        return false;
+      } else {
+        final File file = new File(path);
+        if (!file.exists()) {
+          LOG.error("The path [{}] from configuration properties file [{}] doesn't exist.", path,
+              Constants.CONFIG_PROPS_FILENAME);
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
