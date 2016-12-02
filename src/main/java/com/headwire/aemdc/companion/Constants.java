@@ -1,5 +1,9 @@
 package com.headwire.aemdc.companion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * Constants
  */
@@ -29,9 +33,25 @@ public class Constants {
   public static final String CONFIGPROP_SOURCE_COMPONENTS_FOLDER = "SOURCE_COMPONENTS_FOLDER";
   public static final String CONFIGPROP_SOURCE_OSGI_FOLDER = "SOURCE_OSGI_FOLDER";
   public static final String CONFIGPROP_SOURCE_CONF_FOLDER = "SOURCE_CONF_FOLDER";
+  public static final String CONFIGPROP_SOURCE_CONTENT_FOLDER = "SOURCE_CONTENT_FOLDER";
   public static final String CONFIGPROP_SOURCE_MODELS_FOLDER = "SOURCE_MODELS_FOLDER";
   public static final String CONFIGPROP_SOURCE_SERVICES_FOLDER = "SOURCE_SERVICES_FOLDER";
   public static final String CONFIGPROP_SOURCE_SERVLETS_FOLDER = "SOURCE_SERVLETS_FOLDER";
+  public static final List<String> SOURCE_PATHS = new ArrayList<String>();
+  static {
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_UI_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_PROJECT_ROOT);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_JAVA_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_TEMPLATES_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_COMPONENTS_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_OSGI_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_CONF_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_CONTENT_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_MODELS_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_SERVICES_FOLDER);
+    SOURCE_PATHS.add(CONFIGPROP_SOURCE_SERVLETS_FOLDER);
+  }
 
   // configuration constants: target folders
   public static final String CONFIGPROP_TARGET_UI_FOLDER = "TARGET_UI_FOLDER";
@@ -43,6 +63,7 @@ public class Constants {
   public static final String CONFIGPROP_TARGET_COMPONENTS_FOLDER = "TARGET_COMPONENTS_FOLDER";
   public static final String CONFIGPROP_TARGET_OSGI_FOLDER = "TARGET_OSGI_FOLDER";
   public static final String CONFIGPROP_TARGET_CONF_FOLDER = "TARGET_CONF_FOLDER";
+  public static final String CONFIGPROP_TARGET_CONTENT_FOLDER = "TARGET_CONTENT_FOLDER";
   public static final String CONFIGPROP_TARGET_MODELS_FOLDER = "TARGET_MODELS_FOLDER";
   public static final String CONFIGPROP_TARGET_SERVICES_FOLDER = "TARGET_SERVICES_FOLDER";
   public static final String CONFIGPROP_TARGET_SERVLETS_FOLDER = "TARGET_SERVLETS_FOLDER";
@@ -70,6 +91,7 @@ public class Constants {
   public static final String TYPE_COMPONENT_FULL = "component";
   public static final String TYPE_OSGI = "osgi";
   public static final String TYPE_EDITABLE_TEMPLATE_STRUCTURE = "confstr";
+  public static final String TYPE_PAGE = "page";
   public static final String TYPE_MODEL = "model";
   public static final String TYPE_SERVICE = "service";
   public static final String TYPE_SERVLET = "servlet";
@@ -92,6 +114,9 @@ public class Constants {
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
   public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";
+  public static final String PLACEHOLDER_CONTENT_CQ_TEMPLATE = "cq:template";
+  public static final String PLACEHOLDER_CONTENT_CQ_ALLOWED_TEMPLATES = "cq:allowedTemplates";
+  public static final String PLACEHOLDER_CONTENT_CQ_DESIGN_PATH = "cq:designPath";
 
   // default values
   public static final String PH_DEFAULT_RANKING = "{Long}100";
@@ -100,4 +125,8 @@ public class Constants {
   public static final String PH_DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
   public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
+  public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{TARGET_PROJECT_NAME}}/settings/wcm/templates/page";
+  public static final String PH_DEFAULT_CONTENT_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
+  public static final String PH_DEFAULT_CONTENT_CQ_ALLOWED_TEMPLATES = "/conf/{{TARGET_PROJECT_NAME}}/settings/wcm/templates/.*";
+  public static final String PH_DEFAULT_CONTENT_CQ_DESIGN_PATH = "/etc/designs/{{TARGET_PROJECT_NAME}}";
 }
