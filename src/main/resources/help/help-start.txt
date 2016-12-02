@@ -1,2 +1,4 @@
 Usage:
-  java [-options] -jar aemdc.jar [help] <type> [name] [targetname] [args...]
+      aemdc [-options] [help] <type> [name] [targetname] [args...]
+  OR
+      java [-options] -jar aemdc-X.X.X-jar-with-dependencies.jar [help] <type> [name] [targetname] [args...]
