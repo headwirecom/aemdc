@@ -78,11 +78,22 @@ public class ReplacePathPlaceHoldersCommand implements Command {
       final String filePath = srcFile.getPath();
       final String newPath = replacer.replacePathPlaceHolders(filePath);
 
-      // rename file
+      // if the new path is different to old path then rename file
       if (!filePath.equals(newPath)) {
         final File destFile = new File(newPath);
-        FileUtils.moveFile(srcFile, destFile);
-        LOG.debug("File {} removed to {}", srcFile, destFile);
+
+        if (resource.isToWarnDestDir() && destFile.exists()) {
+          final String message = "File " + destFile + " already exists and will be not overwritten.";
+          LOG.error(message);
+          throw new IllegalStateException(message);
+        }
+
+        if (!srcFile.exists()) {
+          LOG.error("Can't get available templates. File {} doesn't exist.", srcFile);
+        } else {
+          FileUtils.moveFile(srcFile, destFile);
+          LOG.debug("File {} removed to {}", srcFile, destFile);
+        }
       }
 
     } catch (final IOException e) {
