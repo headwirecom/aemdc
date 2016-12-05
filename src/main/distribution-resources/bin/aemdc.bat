@@ -71,6 +71,38 @@ set AEMDC_HOME=%~dp0\..
 
 :repoSetup
 
+@REM ----------------------------------------------------------------------------
+@REM --- Clone Placeholders example project from GitHub : START -----------------
+@REM ----------------------------------------------------------------------------
+:: set PATH=%PATH%;C:\Program Files\Git\bin
+
+IF exist "aemdc-config.properties" GOTO parseConfigFile
+GOTO gitCloneEnd
+
+:parseConfigFile
+FOR /F "eol=# delims== tokens=1,*" %%a IN (aemdc-config.properties) DO (
+    IF NOT "%%a"=="" IF NOT "%%b"=="" SET aemdc.%%a=%%b
+    IF "%%a"=="SOURCE_FOLDER" GOTO checkPlaceHolderRepo
+)
+GOTO gitCloneEnd
+
+:checkPlaceHolderRepo
+::ECHO PlaceHoldersRepo=%aemdc.SOURCE_FOLDER%
+IF exist "%aemdc.SOURCE_FOLDER%" GOTO gitCloneEnd
+
+:: IF NOT exist "%aemdc.SOURCE_FOLDER%"
+ECHO Placeholders folder "%aemdc.SOURCE_FOLDER%" doesn't exist
+SET /P gitClone="Would you like to clone an example placeholders project https://github.com/headwirecom/aemdc-files.git to "%aemdc.SOURCE_FOLDER%"? (y/n)"
+IF "y"=="%gitClone%" GOTO gitCloneCommando
+GOTO gitCloneEnd
+    
+:gitCloneCommando
+git clone https://github.com/headwirecom/aemdc-files.git "%aemdc.SOURCE_FOLDER%"
+
+:gitCloneEnd
+@REM ----------------------------------------------------------------------------
+@REM --- Clone Placeholders example project from GitHub : END -------------------
+@REM ----------------------------------------------------------------------------
 
 if "%JAVACMD%"=="" set JAVACMD=java
 
