@@ -90,6 +90,21 @@ if [ ! -x "$JAVACMD" ] ; then
   exit 1
 fi
 
+
+#----------------------------------------------------------------------------
+#--- Clone Placeholders example project from GitHub : START -----------------
+#----------------------------------------------------------------------------
+AEMDC_PROPS_FILE="./aemdc-config.properties"
+function prop {
+    grep "${1}=" ${AEMDC_PROPS_FILE}|cut -d'=' -f2
+}
+echo $(prop 'SOURCE_FOLDER')
+
+#----------------------------------------------------------------------------
+#--- Clone Placeholders example project from GitHub : END -------------------
+#----------------------------------------------------------------------------
+
+
 if [ -z "$REPO" ]
 then
   REPO="$AEMDC_HOME"/lib
