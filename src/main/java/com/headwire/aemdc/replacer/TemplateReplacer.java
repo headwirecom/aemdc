@@ -79,7 +79,8 @@ public class TemplateReplacer extends Replacer {
   }
 
   @Override
-  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
+  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders)
+      throws IOException {
     return text;
   }
 

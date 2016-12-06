@@ -54,8 +54,11 @@ public abstract class Replacer {
    * @param placeholders
    *          placeholders list
    * @return result text with replaced placeholders
+   * @throws IOException
+   *           IOException
    */
-  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders);
+  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders)
+      throws IOException;
 
   /**
    * Find place holders in text
@@ -163,8 +166,10 @@ public abstract class Replacer {
    * @param resource
    *          the resource
    * @return result text
+   * @throws IOException
+   *           IOException
    */
-  private String replaceTextPlaceHolders(final String text) {
+  private String replaceTextPlaceHolders(final String text) throws IOException {
     String result = text;
 
     // get COMMON Properties Set

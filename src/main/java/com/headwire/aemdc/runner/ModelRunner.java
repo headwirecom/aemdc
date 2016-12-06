@@ -57,7 +57,6 @@ public class ModelRunner extends BasisRunner {
 
     // Set all other config properties in the resource
     setGlobalConfigProperties(configProps, resource);
-    setJavaConfigProperties(configProps, resource);
 
     // Creates Invoker object, command object and configure them
     menu.setCommand("CreateFile", new CreateFileCommand(resource));

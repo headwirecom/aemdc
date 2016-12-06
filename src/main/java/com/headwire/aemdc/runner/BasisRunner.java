@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -180,28 +179,5 @@ public abstract class BasisRunner {
         .equals(configProps.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT))) {
       resource.setToDeleteDestDir(true);
     }
-  }
-
-  /**
-   * @param configProps
-   * @param resource
-   *          - resource to set properties
-   * @return true if Ok
-   */
-  public void setJavaConfigProperties(final Properties configProps, final Resource resource) {
-    // set java class name
-    final String javaClassName = FilenameUtils.getBaseName(resource.getTargetName());
-    resource.setJavaClassName(javaClassName);
-
-    // set java class package
-    final String javaClassFileName = FilenameUtils.getName(resource.getTargetName());
-    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
-    final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
-
-    // cut java file name, replace "/" with "."
-    String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
-    javaPackage = StringUtils.substringBefore(javaPackage, "/" + javaClassFileName);
-    javaPackage = StringUtils.replace(javaPackage, "/", ".");
-    resource.setJavaClassPackage(javaPackage);
   }
 }

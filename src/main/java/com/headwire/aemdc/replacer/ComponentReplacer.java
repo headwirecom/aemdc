@@ -68,7 +68,8 @@ public class ComponentReplacer extends Replacer {
   }
 
   @Override
-  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
+  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders)
+      throws IOException {
     String result = text;
 
     // {{ targetname }}
