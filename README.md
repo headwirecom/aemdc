@@ -1,5 +1,5 @@
-# aemdc
-AEM Developer Companion allows to create AEM templates, components, content pages, osgi configurations, AEM 6.2 editable templates structure, java models, services and servlets from predefined templates.
+# AEM Developer Companion (AEMDC)
+AEMDC allows to create AEM templates, components, content pages, osgi configurations, AEM 6.2 editable templates structure, java models, services and servlets from predefined templates.
 
 # Using placeholders
 Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemdc-files for you needs. 
@@ -109,7 +109,7 @@ The next command options are available:
 
 To compile:
 
-- mvn clean install
+	mvn clean install
 
 Extract the generated .zip or tar.gz file from target directory to any your tools directory and set the global PATH variable like:
 
