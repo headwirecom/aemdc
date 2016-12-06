@@ -46,8 +46,10 @@ public class Resource {
    */
   public Resource(final String[] cmdArgs) {
     // check for mandatory arguments
-    if (cmdArgs != null && cmdArgs.length > 0) {
+    if (cmdArgs == null || cmdArgs.length == 0) {
+      setHelp(true);
 
+    } else {
       // 1 arg
       if (cmdArgs.length == 1) {
         if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
@@ -108,8 +110,6 @@ public class Resource {
           setJcrProperties(convertArgsToMaps(cmdArgs, 3));
         }
       }
-    } else {
-      setHelp(true);
     }
   }
 

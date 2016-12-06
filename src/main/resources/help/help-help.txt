@@ -1,5 +1,5 @@
 help:
     ""            This help text.
-    config        Shows current configuration properties.
+    config        Shows initial default configuration properties.
     <type>        Shows list of possible templates.
     <type> <name> Shows list of possible place holders.    

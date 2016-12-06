@@ -92,18 +92,23 @@ public abstract class BasisRunner {
   public Collection<File> getAvailableTemplates() {
     Collection<File> fileList = new ArrayList<File>();
     final String searchPath = getSourceFolder();
-    final File dir = new File(searchPath);
-    LOG.debug("File {}", dir);
 
-    if (!dir.exists()) {
-      LOG.error("Can't get available templates. Directory {} doesn't exist.", searchPath);
-    } else {
-      if (dir.isDirectory()) {
-        // find available templates
-        fileList = listAvailableTemplates(dir);
+    LOG.debug("Directory {}", searchPath);
+
+    if (StringUtils.isNotBlank(searchPath)) {
+      final File dir = new File(searchPath);
+      if (!dir.exists()) {
+        LOG.error("Can't get available templates. Directory {} doesn't exist.", searchPath);
       } else {
-        LOG.error("Can't get available templates. The {} isn't directory.", searchPath);
+        if (dir.isDirectory()) {
+          // find available templates
+          fileList = listAvailableTemplates(dir);
+        } else {
+          LOG.error("Can't get available templates. The {} isn't directory.", searchPath);
+        }
       }
+    } else {
+      LOG.error("Can't get available templates. Source directory is blank.");
     }
     return fileList;
   }

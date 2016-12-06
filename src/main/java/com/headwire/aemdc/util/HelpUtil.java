@@ -149,8 +149,9 @@ public class HelpUtil {
 
       // config type
       if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
-        // show current config properties
-        helpText.append(ConfigUtil.getConfigPropertiesAsText());
+        // show default config properties
+        helpText.append(getTextFromFile(helpFolder + "/" + HELP_FILE_START));
+        helpText.append(ConfigUtil.getDefaultConfigPropertiesAsText());
 
       } else if (StringUtils.isBlank(name)) {
         // if only <type>
@@ -301,18 +302,24 @@ public class HelpUtil {
     final StringBuilder templs = new StringBuilder();
 
     templs.append("available names: \n");
-    final File sourceDir = new File(runner.getSourceFolder());
+    final String sourceFolder = runner.getSourceFolder();
 
-    // find available templates
-    final Collection<File> fileList = runner.getAvailableTemplates();
-    final Iterator<File> iter = fileList.iterator();
-    while (iter.hasNext()) {
-      final File templateFile = iter.next();
-      final String templateName = runner.getTemplateName(sourceDir, templateFile);
-      templs.append("    ");
-      templs.append(templateName);
-      templs.append("\n");
-      LOG.debug("Found: {}", templateFile);
+    if (StringUtils.isNotBlank(sourceFolder)) {
+      final File sourceDir = new File(runner.getSourceFolder());
+
+      // find available templates
+      final Collection<File> fileList = runner.getAvailableTemplates();
+      final Iterator<File> iter = fileList.iterator();
+      while (iter.hasNext()) {
+        final File templateFile = iter.next();
+        final String templateName = runner.getTemplateName(sourceDir, templateFile);
+        templs.append("    ");
+        templs.append(templateName);
+        templs.append("\n");
+        LOG.debug("Found: {}", templateFile);
+      }
+    } else {
+      LOG.error("Can't get available names. Source directory is blank.");
     }
 
     return templs.toString();

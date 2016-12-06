@@ -32,25 +32,20 @@ public class RunnableCompanion {
    */
   public static void main(final String[] args) throws IOException {
 
-    // set log level
-    setLogLevel();
+    // setup log level
+    if (setupLogLevel()) {
+      // Check configuration from configuration properties file
+      ConfigUtil.checkConfiguration();
+    }
 
-    // Check configuration from configuration properties file
-    ConfigUtil.checkConfiguration();
-
-    // Set mandatories from arguments
+    // set mandatories from arguments
     final Resource resource = new Resource(args);
 
-    BasisRunner runner;
-
-    if (resource.isHelp()) {
-      // Get Help Runner
-      runner = new HelpRunner(resource);
-    } else {
-      // Get Runner
+    // Get Runner
+    BasisRunner runner = new HelpRunner(resource);
+    if (!resource.isHelp()) {
       final Reflection reflection = new Reflection();
       runner = reflection.getRunner(resource);
-
       if (runner == null) {
         runner = new HelpRunner(resource);
       }
@@ -61,13 +56,16 @@ public class RunnableCompanion {
   }
 
   /**
-   * Set log level based on the LOG_LEVEL configuration parameter.
+   * Setup log level based on the LOG_LEVEL configuration parameter.
    * Possible values: ALL/TRACE/DEBUG/INFO/WARN/ERROR/OFF
    *
+   * @return true if can setup log level from configuration file
    * @throws IOException
    *           - IOException
    */
-  private static void setLogLevel() throws IOException {
+  private static boolean setupLogLevel() throws IOException {
+    boolean status = true;
+
     final ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory
         .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
@@ -76,24 +74,32 @@ public class RunnableCompanion {
 
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
-    final String logLevel = configProps.getProperty(Constants.CONFIGPROP_LOG_LEVEL);
 
-    if (!Level.INFO.toString().equalsIgnoreCase(logLevel)) {
-      if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.ALL);
-      } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.TRACE);
-      } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.DEBUG);
-      } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.WARN);
-      } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.ERROR);
-      } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
-        rootLogger.setLevel(Level.OFF);
+    if (!configProps.isEmpty()) {
+      final String logLevel = configProps.getProperty(Constants.CONFIGPROP_LOG_LEVEL);
+
+      if (!Level.INFO.toString().equalsIgnoreCase(logLevel)) {
+        if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.ALL);
+        } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.TRACE);
+        } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.DEBUG);
+        } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.WARN);
+        } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.ERROR);
+        } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
+          rootLogger.setLevel(Level.OFF);
+        }
       }
+    } else {
+      status = false;
     }
+
     LOG.debug("Current LOG Level: {}", rootLogger.getLevel());
+
+    return status;
   }
 
 }

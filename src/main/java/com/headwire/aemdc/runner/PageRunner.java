@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,9 +102,17 @@ public class PageRunner extends BasisRunner {
   public boolean checkConfiguration() {
     // get target content folder
     final String targetPath = resource.getTargetFolderPath();
+    if (StringUtils.isBlank(targetPath)) {
+      LOG.error("The target folder {} is blank in the config file.", Constants.CONFIGPROP_TARGET_CONTENT_FOLDER);
+      return false;
+    }
 
     // get target UI folder
     final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+    if (StringUtils.isBlank(targetUIFolder)) {
+      LOG.error("The target target UI folder {} is blank in the config file.", Constants.CONFIGPROP_TARGET_UI_FOLDER);
+      return false;
+    }
 
     final int pos = targetPath.indexOf(targetUIFolder);
     if (pos == -1) {

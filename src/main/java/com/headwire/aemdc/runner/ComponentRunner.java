@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,9 +95,21 @@ public class ComponentRunner extends BasisRunner {
 
   @Override
   public boolean checkConfiguration() {
+    // get target components folder
     final String targetPath = resource.getTargetFolderPath();
+    if (StringUtils.isBlank(targetPath)) {
+      LOG.error("The target folder {} is blank in the config file.", Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
+      return false;
+    }
+
     // get target project jcr path
     final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    if (StringUtils.isBlank(targetProjectRoot)) {
+      LOG.error("The target project jcr path {} is blank in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+      return false;
+    }
+
     final int pos = targetPath.indexOf(targetProjectRoot);
     if (pos == -1) {
       LOG.error("The target project root jcr path {} is different to target path {} in the config file.",

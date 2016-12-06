@@ -39,7 +39,7 @@ public class ConfigUtil {
    */
   public static Properties getConfigProperties() throws IOException {
 
-    Properties props = null;
+    Properties props = new Properties();
     try {
       props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
     } catch (final IOException e) {
@@ -47,12 +47,10 @@ public class ConfigUtil {
           Constants.CONFIG_PROPS_FILENAME);
     }
 
-    if (props == null) {
-      props = getConfigPropertiesFromResources();
-    }
-
     // replace path place holders
-    props = replacePathPlaceHolders(props);
+    if (!props.isEmpty()) {
+      props = replacePathPlaceHolders(props);
+    }
     return props;
   }
 
@@ -64,35 +62,42 @@ public class ConfigUtil {
    *           IOException
    */
   public static boolean checkConfiguration() throws IOException {
+    boolean status = true;
+
     // Get Config Properties from config file
     final Properties configProps = getConfigProperties();
-    for (final String pathKey : Constants.SOURCE_PATHS) {
-      final String path = configProps.getProperty(pathKey);
-      if (StringUtils.isBlank(path)) {
-        LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
-            pathKey,
-            Constants.CONFIG_PROPS_FILENAME);
-        return false;
-      } else {
-        final File file = new File(path);
-        if (!file.exists()) {
-          LOG.error("The path [{}] from configuration properties file [{}] doesn't exist.", path,
+    if (!configProps.isEmpty()) {
+      for (final String pathKey : Constants.SOURCE_PATHS) {
+        final String path = configProps.getProperty(pathKey);
+        if (StringUtils.isBlank(path)) {
+          LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
+              pathKey,
               Constants.CONFIG_PROPS_FILENAME);
-          return false;
+          status = false;
+        } else {
+          final File file = new File(path);
+          if (!file.exists()) {
+            LOG.error("The path [{}] from configuration properties file [{}] doesn't exist.", path,
+                Constants.CONFIG_PROPS_FILENAME);
+            status = false;
+          }
         }
       }
+    } else {
+      status = false;
     }
-    return true;
+
+    return status;
   }
 
   /**
-   * Get properties from configuration file from resources folder
+   * Get properties from default configuration file from resources folder
    *
    * @return configuration properties
    * @throws IOException
    *           - IOException
    */
-  private static Properties getConfigPropertiesFromResources() throws IOException {
+  private static Properties getConfigPropertiesFromDefaultResource() throws IOException {
     final String configPropsFilePath = Constants.CONFIG_PROPS_FOLDER + "/" + Constants.CONFIG_PROPS_FILENAME;
     final Properties props = PropsUtil.getPropertiesFromContextClassLoader(configPropsFilePath);
     return props;
@@ -154,13 +159,13 @@ public class ConfigUtil {
   }
 
   /**
-   * Get properties from configuration file as text
+   * Get properties from default configuration file as text
    *
-   * @return configuration properties as text
+   * @return default configuration properties as text
    * @throws IOException
    */
-  public static String getConfigPropertiesAsText() throws IOException {
-    final Properties props = getConfigProperties();
+  public static String getDefaultConfigPropertiesAsText() throws IOException {
+    final Properties props = getConfigPropertiesFromDefaultResource();
     final String configText = getConfigPropertiesAsText(props);
     return configText;
   }
@@ -181,8 +186,6 @@ public class ConfigUtil {
     Collections.sort(sortedKeys);
 
     final StringBuilder configText = new StringBuilder();
-    configText.append("Current configuration properties:\n");
-
     for (final String key : sortedKeys) {
       final String value = props.getProperty(key);
       configText.append(key);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,12 +94,26 @@ public class TemplateRunner extends BasisRunner {
   public boolean checkConfiguration() {
     // get target templates folder
     final String targetPath = resource.getTargetFolderPath();
+    if (StringUtils.isBlank(targetPath)) {
+      LOG.error("The target folder {} is blank in the config file.", Constants.CONFIGPROP_TARGET_TEMPLATES_FOLDER);
+      return false;
+    }
 
     // get target components folder
     final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
+    if (StringUtils.isBlank(targetCompFolder)) {
+      LOG.error("The target components folder {} is blank in the config file.",
+          Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
+      return false;
+    }
 
     // get target project jcr path
     final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+    if (StringUtils.isBlank(targetProjectRoot)) {
+      LOG.error("The target project jcr path {} is blank in the config file.",
+          Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
+      return false;
+    }
 
     int pos = targetPath.indexOf(targetProjectRoot);
     if (pos == -1) {

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,9 +94,21 @@ public class ServiceRunner extends BasisRunner {
 
   @Override
   public boolean checkConfiguration() {
+    // get target folder
     final String targetPath = resource.getTargetFolderPath();
+    if (StringUtils.isBlank(targetPath)) {
+      LOG.error("The target folder {} is blank in the config file.", Constants.CONFIGPROP_TARGET_SERVICES_FOLDER);
+      return false;
+    }
+
     // get target java source folder
     final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+    if (StringUtils.isBlank(targetJavaSrcFolder)) {
+      LOG.error("The target java source folder {} is blank in the config file.",
+          Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+      return false;
+    }
+
     final int pos = targetPath.indexOf(targetJavaSrcFolder);
     if (pos == -1) {
       LOG.error("The target java source folder {} is different to target path {} in the config file.",
