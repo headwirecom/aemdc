@@ -96,10 +96,23 @@ fi
 #----------------------------------------------------------------------------
 AEMDC_PROPS_FILE="./aemdc-config.properties"
 function prop {
-    grep "${1}=" ${AEMDC_PROPS_FILE}|cut -d'=' -f2
+    grep "^\s*${1}=" ${AEMDC_PROPS_FILE}|cut -d'=' -f2
 }
-echo $(prop 'SOURCE_FOLDER')
 
+if [ -f  "$AEMDC_PROPS_FILE" ] ; then
+  PLACEHOLDERS_REPO="$(prop 'SOURCE_FOLDER')"
+fi
+
+if [ -n "$PLACEHOLDERS_REPO" ] ; then
+  if [ ! -d  "$PLACEHOLDERS_REPO" ] ; then
+    echo "Placeholders folder $PLACEHOLDERS_REPO doesn't exist."
+    read -r -p "Would you like to clone an example placeholders project https://github.com/headwirecom/aemdc-files.git to $PLACEHOLDERS_REPO? (y/n)" GIT_CLONE
+  fi
+fi
+
+if [ "y" = "$GIT_CLONE" ] ; then
+  git clone https://github.com/headwirecom/aemdc-files.git $PLACEHOLDERS_REPO
+fi
 #----------------------------------------------------------------------------
 #--- Clone Placeholders example project from GitHub : END -------------------
 #----------------------------------------------------------------------------
