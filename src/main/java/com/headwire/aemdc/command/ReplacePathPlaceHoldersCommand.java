@@ -91,6 +91,7 @@ public class ReplacePathPlaceHoldersCommand implements Command {
         if (!srcFile.exists()) {
           LOG.error("Can't get available templates. File {} doesn't exist.", srcFile);
         } else {
+          FileUtils.deleteQuietly(destFile);
           FileUtils.moveFile(srcFile, destFile);
           LOG.debug("File {} removed to {}", srcFile, destFile);
         }
