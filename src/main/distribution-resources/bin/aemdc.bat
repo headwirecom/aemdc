@@ -108,9 +108,9 @@ if "%JAVACMD%"=="" set JAVACMD=java
 
 if "%REPO%"=="" set REPO=%AEMDC_HOME%\lib
 
-:: set CLASSPATH="%REPO%"\aemdc-1.0.0-jar-with-dependencies.jar
+:: set CLASSPATH="%REPO%"\aemdc-1.1.0-SNAPSHOT-jar-with-dependencies.jar
 set CLASSPATH=""
-set MAINJARPATH="%REPO%"\aemdc-1.0.0-jar-with-dependencies.jar
+set MAINJARPATH="%REPO%"\aemdc-1.1.0-SNAPSHOT-jar-with-dependencies.jar
 goto endInit
 
 @REM Reaching here means variables are defined and arguments have been captured
