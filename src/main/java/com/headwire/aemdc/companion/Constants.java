@@ -13,7 +13,8 @@ public class Constants {
 
   public static final String CONFIG_PROPS_FOLDER = "config";
   public static final String CONFIG_PROPS_FILENAME = "aemdc-config.properties";
-  public static final String REFLECTION_FILENAME_PATH = "reflection/typeRunner.properties";
+  public static final String LAZYBONES_CONFIG_PROPS_FILE_PATH = ".lazybones/stored-params.properties";
+  public static final String REFLECTION_PROPS_FILE_PATH = "reflection/typeRunner.properties";
   public static final String FILE_EXT_XML = "xml";
   public static final String FILE_EXT_JAVA = "java";
   public static final String FILE_EXT_HTML = "html";

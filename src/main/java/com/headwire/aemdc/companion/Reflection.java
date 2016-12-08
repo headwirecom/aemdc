@@ -31,7 +31,7 @@ public class Reflection {
    */
   public Reflection() throws IOException {
     // Get properties from reflection file
-    props = PropsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_FILENAME_PATH);
+    props = PropsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_PROPS_FILE_PATH);
   }
 
   /**
