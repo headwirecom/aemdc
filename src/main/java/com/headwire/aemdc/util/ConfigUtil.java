@@ -31,30 +31,6 @@ public class ConfigUtil {
   }
 
   /**
-   * Get properties from configuration file
-   *
-   * @return configuration properties
-   * @throws IOException
-   *           - IOException
-   */
-  public static Properties getConfigProperties() throws IOException {
-
-    Properties props = new Properties();
-    try {
-      props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
-    } catch (final IOException e) {
-      LOG.error("Please create a configuration properties file [{}] in the root folder.",
-          Constants.CONFIG_PROPS_FILENAME);
-    }
-
-    // replace path place holders
-    if (!props.isEmpty()) {
-      props = replacePathPlaceHolders(props);
-    }
-    return props;
-  }
-
-  /**
    * Check whether configurated source paths exist
    *
    * @return true - if all paths exist, false - otherwise
@@ -91,16 +67,95 @@ public class ConfigUtil {
   }
 
   /**
-   * Get properties from default configuration file from resources folder
+   * Get properties from configuration file
    *
    * @return configuration properties
    * @throws IOException
    *           - IOException
    */
-  private static Properties getConfigPropertiesFromDefaultResource() throws IOException {
+  public static Properties getConfigProperties() throws IOException {
+
+    Properties props = new Properties();
+    try {
+      props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
+    } catch (final IOException e) {
+      LOG.error("Please create a configuration properties file [{}] in the root folder.",
+          Constants.CONFIG_PROPS_FILENAME);
+    }
+
+    // replace path place holders
+    if (!props.isEmpty()) {
+      props = replacePathPlaceHolders(props);
+    }
+    return props;
+  }
+
+  /**
+   * Get properties from configuration file as text
+   *
+   * @param props
+   *          - configuration properties
+   * @return sorted configuration properties as text
+   */
+  public static String getConfigPropertiesAsText(final Properties props) {
+    // get sorted list
+    final List<String> sortedKeys = new ArrayList<String>();
+    for (final String key : props.stringPropertyNames()) {
+      sortedKeys.add(key);
+    }
+    Collections.sort(sortedKeys);
+
+    final StringBuilder configText = new StringBuilder();
+    for (final String key : sortedKeys) {
+      final String value = props.getProperty(key);
+      configText.append(key);
+      configText.append("=");
+      configText.append(value);
+      configText.append("\n");
+    }
+
+    return configText.toString();
+  }
+
+  /**
+   * Get properties from default configuration file from resources folder
+   *
+   * @return default configuration properties
+   * @throws IOException
+   *           - IOException
+   */
+  public static Properties getDefaultConfigProperties() throws IOException {
     final String configPropsFilePath = Constants.CONFIG_PROPS_FOLDER + "/" + Constants.CONFIG_PROPS_FILENAME;
     final Properties props = PropsUtil.getPropertiesFromContextClassLoader(configPropsFilePath);
     return props;
+  }
+
+  /**
+   * Get properties from default configuration file as text
+   *
+   * @return default configuration properties as text
+   * @throws IOException
+   */
+  public static String getDefaultConfigPropertiesAsText() throws IOException {
+    final Properties props = getDefaultConfigProperties();
+    final String configText = getConfigPropertiesAsText(props);
+    return configText;
+  }
+
+  /**
+   * Read extentions property from configuration file
+   *
+   * @param configProps
+   *          - configuration properties
+   * @return file extentions
+   */
+  public static String[] getConfigExtensions(final Properties configProps) {
+    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
+    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
+    if (StringUtils.isNotBlank(extentionsAsString)) {
+      extentions = extentionsAsString.split(",");
+    }
+    return extentions;
   }
 
   /**
@@ -157,60 +212,4 @@ public class ConfigUtil {
     }
     return newProps;
   }
-
-  /**
-   * Get properties from default configuration file as text
-   *
-   * @return default configuration properties as text
-   * @throws IOException
-   */
-  public static String getDefaultConfigPropertiesAsText() throws IOException {
-    final Properties props = getConfigPropertiesFromDefaultResource();
-    final String configText = getConfigPropertiesAsText(props);
-    return configText;
-  }
-
-  /**
-   * Get properties from configuration file as text
-   *
-   * @param props
-   *          - configuration properties
-   * @return sorted configuration properties as text
-   */
-  public static String getConfigPropertiesAsText(final Properties props) {
-    // get sorted list
-    final List<String> sortedKeys = new ArrayList<String>();
-    for (final String key : props.stringPropertyNames()) {
-      sortedKeys.add(key);
-    }
-    Collections.sort(sortedKeys);
-
-    final StringBuilder configText = new StringBuilder();
-    for (final String key : sortedKeys) {
-      final String value = props.getProperty(key);
-      configText.append(key);
-      configText.append("=");
-      configText.append(value);
-      configText.append("\n");
-    }
-
-    return configText.toString();
-  }
-
-  /**
-   * Read extentions property from configuration file
-   *
-   * @param configProps
-   *          - configuration properties
-   * @return file extentions
-   */
-  public static String[] getConfigExtensions(final Properties configProps) {
-    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
-    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
-    if (StringUtils.isNotBlank(extentionsAsString)) {
-      extentions = extentionsAsString.split(",");
-    }
-    return extentions;
-  }
-
 }
