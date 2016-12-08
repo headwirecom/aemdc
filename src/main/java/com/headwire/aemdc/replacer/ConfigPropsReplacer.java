@@ -29,12 +29,10 @@ public class ConfigPropsReplacer extends Replacer {
   // path placeholders
   public static final String PLACEHOLDER_TARGET_PROJECT_NAME = "PH_TARGET_PROJECT_NAME";
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE = "PH_TARGET_JAVA_PACKAGE";
-  public static final String PLACEHOLDER_TARGET_MODELS_FOLDER_NAME = "PH_TARGET_MODELS_FOLDER_NAME";
 
   // default values
   public static final String PH_DEFAULT_TARGET_PROJECT_NAME = "my-aem-project";
   public static final String PH_DEFAULT_TARGET_JAVA_PACKAGE = "com/headwire/aemdc/samples";
-  public static final String PH_DEFAULT_TARGET_MODELS_FOLDER_NAME = "models";
 
   /*
   //appsFolderName=my-aem-project
@@ -90,15 +88,8 @@ public class ConfigPropsReplacer extends Replacer {
 
     // slingModelsPackage & slingModelsFolderName
     String javaTargetPackage = props.getProperty(LAZYBONES_PROP_SLING_MODELS_PACKAGRE);
-    String slingModelsFolderName = "/" + PH_DEFAULT_TARGET_MODELS_FOLDER_NAME;
     if (StringUtils.isNotBlank(javaTargetPackage)) {
-      if (javaTargetPackage.indexOf('.') != -1) {
-        javaTargetPackage = javaTargetPackage.replace('.', '/');
-        slingModelsFolderName = "/" + StringUtils.substringAfterLast(javaTargetPackage, "/");
-        javaTargetPackage = StringUtils.substringBeforeLast(javaTargetPackage, "/");
-      } else {
-        slingModelsFolderName = "";
-      }
+      javaTargetPackage = javaTargetPackage.replace('.', '/');
     } else {
       final String groupId = props.getProperty(LAZYBONES_PROP_GROUP_ID);
       if (StringUtils.isBlank(groupId)) {
@@ -109,7 +100,6 @@ public class ConfigPropsReplacer extends Replacer {
       }
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_JAVA_PACKAGE), javaTargetPackage);
-    result = result.replace(getPH(PLACEHOLDER_TARGET_MODELS_FOLDER_NAME), slingModelsFolderName);
 
     return result;
   }
