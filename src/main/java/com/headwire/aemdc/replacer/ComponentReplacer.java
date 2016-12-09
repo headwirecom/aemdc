@@ -51,7 +51,7 @@ public class ComponentReplacer extends Replacer {
     String componentGroup = placeholders.get(Constants.PLACEHOLDER_COMPONENT_GROUP);
     if (StringUtils.isBlank(componentGroup)) {
       // get target project name
-      componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+      componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_COMPONENT_GROUP), getCrxXMLValue(componentGroup));
 

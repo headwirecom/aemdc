@@ -31,7 +31,7 @@ public class ConfigPropsReplacer extends Replacer {
   // contentFolderName=mynewproject
 
   // path placeholders
-  public static final String PLACEHOLDER_TARGET_PROJECT_NAME = "PH_TARGET_PROJECT_NAME";
+  public static final String PLACEHOLDER_TARGET_PROJECT_APPS_FOLDER = "PH_TARGET_PROJECT_APPS_FOLDER";
   public static final String PLACEHOLDER_TARGET_PROJECT_CONF_FOLDER = "PH_TARGET_PROJECT_CONF_FOLDER";
   public static final String PLACEHOLDER_TARGET_PROJECT_DESIGN_FOLDER = "PH_TARGET_PROJECT_DESIGN_FOLDER";
   public static final String PLACEHOLDER_TARGET_UI_PROJECT_FOLDER = "PH_TARGET_UI_PROJECT_FOLDER";
@@ -40,7 +40,7 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE = "PH_TARGET_JAVA_PACKAGE";
 
   // default values
-  public static final String PH_DEFAULT_TARGET_PROJECT_NAME = "my-aem-project";
+  public static final String PH_DEFAULT_TARGET_PROJECT_APPS_FOLDER = "my-aem-project";
   public static final String PH_DEFAULT_TARGET_UI_PROJECT_FOLDER = "ui.apps";
   public static final String PH_DEFAULT_TARGET_UI_PROJECT_FOLDER_OLD = "content";
   public static final String PH_DEFAULT_TARGET_CORE_PROJECT_FOLDER = "core";
@@ -71,21 +71,21 @@ public class ConfigPropsReplacer extends Replacer {
     // apps folder name
     String appsFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);
     if (StringUtils.isBlank(appsFolderName)) {
-      appsFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
+      appsFolderName = PH_DEFAULT_TARGET_PROJECT_APPS_FOLDER;
     }
-    result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_NAME), appsFolderName);
+    result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_APPS_FOLDER), appsFolderName);
 
     // conf folder name
     String confFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_CONF_FOLDER_NAME);
     if (StringUtils.isBlank(confFolderName)) {
-      confFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
+      confFolderName = PH_DEFAULT_TARGET_PROJECT_APPS_FOLDER;
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_CONF_FOLDER), confFolderName);
 
     // design folder name
     String designFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_DESIGN_FOLDER_NAME);
     if (StringUtils.isBlank(designFolderName)) {
-      designFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
+      designFolderName = PH_DEFAULT_TARGET_PROJECT_APPS_FOLDER;
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_DESIGN_FOLDER), designFolderName);
 

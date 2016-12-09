@@ -181,7 +181,7 @@ public class ConfigUtil {
 
     // target path placeholder values
     newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_UI_FOLDER);
-    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+    newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
     newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_CONF_FOLDER);
     newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER);
     newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
