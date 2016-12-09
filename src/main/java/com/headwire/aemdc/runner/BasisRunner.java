@@ -164,9 +164,8 @@ public abstract class BasisRunner {
    * @param configProps
    * @param resource
    *          - resource to set properties
-   * @throws IOException
    */
-  public void setGlobalConfigProperties(final Properties configProps, final Resource resource) throws IOException {
+  public void setGlobalConfigProperties(final Properties configProps, final Resource resource) {
     // Set extentions from config file
     final String[] extentions = ConfigUtil.getConfigExtensions(configProps);
     resource.setExtentions(extentions);

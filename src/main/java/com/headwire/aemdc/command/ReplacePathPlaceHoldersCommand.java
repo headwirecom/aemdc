@@ -29,10 +29,8 @@ public class ReplacePathPlaceHoldersCommand implements Command {
    *
    * @param resource
    *          - resource
-   * @throws IOException
-   *           IOException
    */
-  public ReplacePathPlaceHoldersCommand(final Resource resource, final Replacer replacer) throws IOException {
+  public ReplacePathPlaceHoldersCommand(final Resource resource, final Replacer replacer) {
     this.resource = resource;
     this.replacer = replacer;
   }

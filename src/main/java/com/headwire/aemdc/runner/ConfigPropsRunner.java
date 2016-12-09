@@ -39,10 +39,8 @@ public class ConfigPropsRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public ConfigPropsRunner(final Resource resource) throws IOException {
+  public ConfigPropsRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

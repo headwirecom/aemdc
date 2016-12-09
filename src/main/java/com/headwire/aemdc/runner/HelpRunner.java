@@ -33,7 +33,6 @@ public class HelpRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
    */
   public HelpRunner(final Resource resource) {
     this.resource = resource;

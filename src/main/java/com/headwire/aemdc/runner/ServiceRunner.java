@@ -41,10 +41,8 @@ public class ServiceRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public ServiceRunner(final Resource resource) throws IOException {
+  public ServiceRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

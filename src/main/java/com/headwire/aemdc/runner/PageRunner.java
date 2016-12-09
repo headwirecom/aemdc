@@ -41,10 +41,8 @@ public class PageRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public PageRunner(final Resource resource) throws IOException {
+  public PageRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

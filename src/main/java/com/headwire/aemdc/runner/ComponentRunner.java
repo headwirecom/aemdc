@@ -41,10 +41,8 @@ public class ComponentRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public ComponentRunner(final Resource resource) throws IOException {
+  public ComponentRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

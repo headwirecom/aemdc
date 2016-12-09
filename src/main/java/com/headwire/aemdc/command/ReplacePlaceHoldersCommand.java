@@ -29,10 +29,8 @@ public class ReplacePlaceHoldersCommand implements Command {
    *
    * @param resource
    *          - resource
-   * @throws IOException
-   *           IOException
    */
-  public ReplacePlaceHoldersCommand(final Resource resource, final Replacer replacer) throws IOException {
+  public ReplacePlaceHoldersCommand(final Resource resource, final Replacer replacer) {
     this.resource = resource;
     this.replacer = replacer;
   }

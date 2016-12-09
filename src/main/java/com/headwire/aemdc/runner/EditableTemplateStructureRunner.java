@@ -41,10 +41,8 @@ public class EditableTemplateStructureRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public EditableTemplateStructureRunner(final Resource resource) throws IOException {
+  public EditableTemplateStructureRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

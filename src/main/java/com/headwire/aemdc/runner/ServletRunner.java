@@ -41,10 +41,8 @@ public class ServletRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public ServletRunner(final Resource resource) throws IOException {
+  public ServletRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file

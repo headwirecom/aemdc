@@ -41,10 +41,8 @@ public class ModelRunner extends BasisRunner {
    *
    * @param resource
    *          - resource object
-   * @throws IOException
-   *           - IOException
    */
-  public ModelRunner(final Resource resource) throws IOException {
+  public ModelRunner(final Resource resource) {
     this.resource = resource;
 
     // Get Config Properties from config file
