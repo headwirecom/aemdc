@@ -31,10 +31,8 @@ public class PropsUtil {
    * @param filepath
    *          - file path
    * @return properties object
-   * @throws IOException
-   *           - IOException
    */
-  public static Properties getProperties(final String filepath) throws IOException {
+  public static Properties getProperties(final String filepath) {
     final Properties props = new Properties();
     InputStream input = null;
 
@@ -45,15 +43,13 @@ public class PropsUtil {
       props.load(input);
 
     } catch (final IOException e) {
-      LOG.error("Sorry, unable to find or read properties from file {}.", filepath);
-      throw new IOException(e);
+      LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {
       if (input != null) {
         try {
           input.close();
         } catch (final IOException e) {
-          LOG.error("Sorry, unable to close input stream from file {}.", filepath);
-          throw new IOException(e);
+          LOG.error("Sorry, unable to close input stream from file [{}].", filepath);
         }
       }
     }
@@ -66,10 +62,8 @@ public class PropsUtil {
    * @param filepath
    *          - file path
    * @return properties object
-   * @throws IOException
-   *           - IOException
    */
-  public static Properties getPropertiesFromContextClassLoader(final String filepath) throws IOException {
+  public static Properties getPropertiesFromContextClassLoader(final String filepath) {
     final Properties props = new Properties();
     InputStream input = null;
 
@@ -80,15 +74,13 @@ public class PropsUtil {
       props.load(input);
 
     } catch (final IOException e) {
-      LOG.error("Sorry, unable to find or read properties from file {}.", filepath);
-      throw new IOException(e);
+      LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {
       if (input != null) {
         try {
           input.close();
         } catch (final IOException e) {
           LOG.error("Sorry, unable to close input stream from file {}.", filepath);
-          throw new IOException(e);
         }
       }
     }

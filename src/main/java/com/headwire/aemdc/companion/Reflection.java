@@ -1,6 +1,5 @@
 package com.headwire.aemdc.companion;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
@@ -27,9 +26,8 @@ public class Reflection {
   /**
    * Constructor
    *
-   * @throws IOException
    */
-  public Reflection() throws IOException {
+  public Reflection() {
     // Get properties from reflection file
     props = PropsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_PROPS_FILE_PATH);
   }

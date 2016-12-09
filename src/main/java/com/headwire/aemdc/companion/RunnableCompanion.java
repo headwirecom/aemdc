@@ -60,10 +60,8 @@ public class RunnableCompanion {
    * Possible values: ALL/TRACE/DEBUG/INFO/WARN/ERROR/OFF
    *
    * @return true if can setup log level from configuration file
-   * @throws IOException
-   *           - IOException
    */
-  private static boolean setupLogLevel() throws IOException {
+  private static boolean setupLogLevel() {
     boolean status = true;
 
     final ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory

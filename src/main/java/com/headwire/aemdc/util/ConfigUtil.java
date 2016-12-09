@@ -1,7 +1,6 @@
 package com.headwire.aemdc.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -34,10 +33,8 @@ public class ConfigUtil {
    * Check whether configurated source paths exist
    *
    * @return true - if all paths exist, false - otherwise
-   * @throws IOException
-   *           IOException
    */
-  public static boolean checkConfiguration() throws IOException {
+  public static boolean checkConfiguration() {
     boolean status = true;
 
     // Get Config Properties from config file
@@ -70,18 +67,10 @@ public class ConfigUtil {
    * Get properties from configuration file
    *
    * @return configuration properties
-   * @throws IOException
-   *           - IOException
    */
-  public static Properties getConfigProperties() throws IOException {
+  public static Properties getConfigProperties() {
 
-    Properties props = new Properties();
-    try {
-      props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
-    } catch (final IOException e) {
-      LOG.error("Please create a configuration properties file [{}] in the root folder.",
-          Constants.CONFIG_PROPS_FILENAME);
-    }
+    Properties props = PropsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME);
 
     // replace path place holders
     if (!props.isEmpty()) {
@@ -121,10 +110,8 @@ public class ConfigUtil {
    * Get properties from default configuration file from resources folder
    *
    * @return default configuration properties
-   * @throws IOException
-   *           - IOException
    */
-  public static Properties getDefaultConfigProperties() throws IOException {
+  public static Properties getDefaultConfigProperties() {
     final String configPropsFilePath = Constants.CONFIG_PROPS_FOLDER + "/" + Constants.CONFIG_PROPS_FILENAME;
     final Properties props = PropsUtil.getPropertiesFromContextClassLoader(configPropsFilePath);
     return props;
@@ -134,9 +121,8 @@ public class ConfigUtil {
    * Get properties from default configuration file as text
    *
    * @return default configuration properties as text
-   * @throws IOException
    */
-  public static String getDefaultConfigPropertiesAsText() throws IOException {
+  public static String getDefaultConfigPropertiesAsText() {
     final Properties props = getDefaultConfigProperties();
     final String configText = getConfigPropertiesAsText(props);
     return configText;

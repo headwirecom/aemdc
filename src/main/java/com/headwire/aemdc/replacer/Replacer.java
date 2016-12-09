@@ -40,11 +40,8 @@ public abstract class Replacer {
    * @param placeholders
    *          placeholders list
    * @return result text with replaced placeholders
-   * @throws IOException
-   *           IOException
    */
-  protected abstract String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders)
-      throws IOException;
+  protected abstract String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders);
 
   /**
    * Replace place holders in all other files (html, jsp, js, css, ...)
@@ -54,11 +51,8 @@ public abstract class Replacer {
    * @param placeholders
    *          placeholders list
    * @return result text with replaced placeholders
-   * @throws IOException
-   *           IOException
    */
-  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders)
-      throws IOException;
+  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders);
 
   /**
    * Find place holders in text
@@ -133,10 +127,8 @@ public abstract class Replacer {
    * @param text
    *          the text
    * @return result text
-   * @throws IOException
-   *           - IOException
    */
-  private String replaceXmlPlaceHolders(final String text) throws IOException {
+  private String replaceXmlPlaceHolders(final String text) {
     String result = text;
 
     // get Jcr Properties Sets
@@ -166,10 +158,8 @@ public abstract class Replacer {
    * @param resource
    *          the resource
    * @return result text
-   * @throws IOException
-   *           IOException
    */
-  private String replaceTextPlaceHolders(final String text) throws IOException {
+  private String replaceTextPlaceHolders(final String text) {
     String result = text;
 
     // get COMMON Properties Set
@@ -300,92 +290,6 @@ public abstract class Replacer {
     final String result = "{{" + phName + "}}";
     return result;
   }
-
-  /**
-   * Replace common place holders in the XML text
-   *
-   * @param text
-   *          the text
-   * @param resource
-   *          the resource
-   * @param jcrProperties
-   *          jcr properties
-   * @return result text
-   * @throws IOException
-   *           - IOException
-   */
-  /*
-  public static String replaceCommonXmlPlaceHolders(final String text, final Resource resource,
-      final Map<String, String> jcrProperties) throws IOException {
-
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
-
-    // jcr:tile
-    String jcrTitle = jcrProperties.get(Constants.PLACEHOLDER_JCR_TITLE);
-    if (StringUtils.isBlank(jcrTitle)) {
-      jcrTitle = getTargetLastName(resource);
-    }
-    String result = text.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
-
-    // jcr:description
-    String jcrDescription = jcrProperties.get(Constants.PLACEHOLDER_JCR_DESCRIPTION);
-    if (StringUtils.isBlank(jcrDescription)) {
-      jcrDescription = getTargetLastName(resource);
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_JCR_DESCRIPTION), getCrxXMLValue(jcrDescription));
-
-    // ranking
-    String ranking = jcrProperties.get(Constants.PLACEHOLDER_RANKING);
-    if (StringUtils.isBlank(ranking)) {
-      ranking = Constants.PH_DEFAULT_RANKING;
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_RANKING), ranking);
-
-    // allowedPaths
-    String allowedPaths = jcrProperties.get(Constants.PLACEHOLDER_ALLOWED_PATHS);
-    if (StringUtils.isBlank(allowedPaths)) {
-      allowedPaths = Constants.PH_DEFAULT_ALLOWED_PATHS;
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_ALLOWED_PATHS), getCrxXMLValue(allowedPaths));
-
-    // componentGroup
-    String componentGroup = jcrProperties.get(Constants.PLACEHOLDER_COMPONENT_GROUP);
-    if (StringUtils.isBlank(componentGroup)) {
-      // get target project name
-      componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_COMPONENT_GROUP), getCrxXMLValue(componentGroup));
-
-    // sling:resourceType
-    String slingResourceType = jcrProperties.get(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE);
-    if (StringUtils.isBlank(slingResourceType)) {
-      // get target components folder
-      final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
-      // Set target project root jcr path from config file
-      final String targetProjectRoot = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-      final int pos = targetCompFolder.indexOf(targetProjectRoot);
-      if (pos == -1) {
-        throw new IllegalStateException("The /apps root path from " + Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER
-            + " is different to " + Constants.CONFIGPROP_TARGET_PROJECT_ROOT);
-      }
-
-      // set like "/apps/my-aem-project/components/contentpage";
-      final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
-      slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" + resource.getTargetName();
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE), slingResourceType);
-
-    // sling:resourceSuperType="/libs/wcm/foundation/components/page"
-    String slingResourceSuperType = jcrProperties.get(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE);
-    if (StringUtils.isBlank(slingResourceSuperType)) {
-      slingResourceSuperType = Constants.PH_DEFAULT_SIGHTLY_SLING_RESOURCE_SUPER_TYPE;
-    }
-    result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE), slingResourceSuperType);
-
-    return result;
-  }
-  */
 
   /**
    * Escape characters for text appearing as CRX XML Parameter value.

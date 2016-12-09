@@ -1,6 +1,5 @@
 package com.headwire.aemdc.replacer;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,14 +29,12 @@ public class JavaReplacer extends Replacer {
   }
 
   @Override
-  protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders)
-      throws IOException {
+  protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders) {
     return text;
   }
 
   @Override
-  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders)
-      throws IOException {
+  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
     String result = text;
 
     // Get Config Properties from config file
