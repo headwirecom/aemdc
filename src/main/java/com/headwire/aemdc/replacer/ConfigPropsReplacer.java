@@ -29,19 +29,17 @@ public class ConfigPropsReplacer extends Replacer {
   // path placeholders
   public static final String PLACEHOLDER_TARGET_PROJECT_NAME = "PH_TARGET_PROJECT_NAME";
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE = "PH_TARGET_JAVA_PACKAGE";
+  public static final String PLACEHOLDER_TARGET_OSGI_FOLDER = "PH_TARGET_OSGI_FOLDER";
 
   // default values
   public static final String PH_DEFAULT_TARGET_PROJECT_NAME = "my-aem-project";
   public static final String PH_DEFAULT_TARGET_JAVA_PACKAGE = "com/headwire/aemdc/samples";
+  public static final String PH_DEFAULT_TARGET_OSGI_FOLDER = "/configuration";
 
   /*
   //appsFolderName=my-aem-project
   //groupId=com.headwire.myaem
   //slingModelsPackage=com.headwire.myaem.models
-  
-  
-  
-  
   
   
   confFolderName=my-aem-project
@@ -53,9 +51,6 @@ public class ConfigPropsReplacer extends Replacer {
   
   useNewNamingConvention=yes
   bundleInBundlesDirectory=no
-
-  createAuthorAndPublishPerEnv=yes
-  createRunModeConfigFolders=yes
    */
 
   /**
@@ -79,6 +74,9 @@ public class ConfigPropsReplacer extends Replacer {
     // Get lazybones properties
     final Properties props = PropsUtil.getProperties(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
 
+    // TARGET_UI_FOLDER=ui.apps/src/main/content/jcr_root
+    // TARGET_JAVA_FOLDER=core/src/main/java
+
     // appsFolderName
     String appsFolderName = props.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);
     if (StringUtils.isBlank(appsFolderName)) {
@@ -100,6 +98,13 @@ public class ConfigPropsReplacer extends Replacer {
       }
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_JAVA_PACKAGE), javaTargetPackage);
+
+    // osgi configuration folder name
+    String osgiConfigFolder = PH_DEFAULT_TARGET_OSGI_FOLDER;
+    if (!props.isEmpty()) {
+      osgiConfigFolder = "";
+    }
+    result = result.replace(getPH(PLACEHOLDER_TARGET_OSGI_FOLDER), osgiConfigFolder);
 
     return result;
   }
