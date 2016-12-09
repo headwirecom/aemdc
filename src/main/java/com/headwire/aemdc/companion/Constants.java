@@ -56,8 +56,8 @@ public class Constants {
   }
 
   // configuration constants: target folders
+  // public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
   public static final String CONFIGPROP_TARGET_UI_FOLDER = "TARGET_UI_FOLDER";
-  public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
   public static final String CONFIGPROP_TARGET_PROJECT_APPS_FOLDER = "TARGET_PROJECT_APPS_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_CONF_FOLDER = "TARGET_PROJECT_CONF_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER = "TARGET_PROJECT_DESIGN_FOLDER";

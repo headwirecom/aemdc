@@ -20,6 +20,8 @@ public class ConfigPropsReplacer extends Replacer {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigPropsReplacer.class);
 
   // lazybones props
+  // projectName=My AEM Project
+  // contentFolderName=mynewproject
   public static final String LAZYBONES_PROP_USE_NEW_NAMING_CONVENTION = "useNewNamingConvention";
   public static final String LAZYBONES_PROP_BUNDLE_IN_BUNDLES_DIR = "bundleInBundlesDirectory";
   public static final String LAZYBONES_PROP_APPS_FOLDER_NAME = "appsFolderName";
@@ -27,8 +29,6 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String LAZYBONES_PROP_DESIGN_FOLDER_NAME = "designFolderName";
   public static final String LAZYBONES_PROP_SLING_MODELS_PACKAGRE = "slingModelsPackage";
   public static final String LAZYBONES_PROP_GROUP_ID = "groupId";
-  // projectName=My AEM Project
-  // contentFolderName=mynewproject
 
   // path placeholders
   public static final String PLACEHOLDER_TARGET_PROJECT_APPS_FOLDER = "PH_TARGET_PROJECT_APPS_FOLDER";
