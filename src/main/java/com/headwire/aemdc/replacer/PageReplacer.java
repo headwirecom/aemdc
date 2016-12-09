@@ -29,6 +29,7 @@ public class PageReplacer extends Replacer {
 
   @Override
   protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders) {
+    String result = text;
 
     // Get Config Properties from config file
     final Properties configProps = ConfigUtil.getConfigProperties();
@@ -38,14 +39,15 @@ public class PageReplacer extends Replacer {
     if (StringUtils.isBlank(jcrTitle)) {
       jcrTitle = getTargetLastName();
     }
-    String result = text.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
+    result = result.replace(getPH(Constants.PLACEHOLDER_JCR_TITLE), getCrxXMLValue(jcrTitle));
 
     // cq:template="/conf/my-aem-project/settings/wcm/templates/page"
     String cqTemplate = placeholders.get(Constants.PLACEHOLDER_CONTENT_CQ_TEMPLATE);
     if (StringUtils.isBlank(cqTemplate)) {
-      final String targetProjectName = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
-      cqTemplate = Constants.PH_DEFAULT_CONTENT_CQ_TEMPLATE.replace(getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_NAME),
-          targetProjectName);
+      final String confProjectFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_CONF_FOLDER);
+      cqTemplate = Constants.PH_DEFAULT_CONTENT_CQ_TEMPLATE.replace(
+          getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_CONF_FOLDER),
+          confProjectFolder);
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_CONTENT_CQ_TEMPLATE), cqTemplate);
 
@@ -59,20 +61,19 @@ public class PageReplacer extends Replacer {
     // cq:allowedTemplates="/conf/my-aem-project/settings/wcm/templates/.*
     String cqAllowedTemplates = placeholders.get(Constants.PLACEHOLDER_CONTENT_CQ_ALLOWED_TEMPLATES);
     if (StringUtils.isBlank(cqAllowedTemplates)) {
-      final String targetProjectName = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+      final String confProjectFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_CONF_FOLDER);
       cqAllowedTemplates = Constants.PH_DEFAULT_CONTENT_CQ_ALLOWED_TEMPLATES.replace(
-          getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_NAME),
-          targetProjectName);
+          getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_CONF_FOLDER), confProjectFolder);
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_CONTENT_CQ_ALLOWED_TEMPLATES), cqAllowedTemplates);
 
     // cq:designPath="/etc/designs/my-aem-project"
     String cqDesignPath = placeholders.get(Constants.PLACEHOLDER_CONTENT_CQ_DESIGN_PATH);
     if (StringUtils.isBlank(cqDesignPath)) {
-      final String targetProjectName = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_NAME);
+      final String designsProjectFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER);
       cqDesignPath = Constants.PH_DEFAULT_CONTENT_CQ_DESIGN_PATH.replace(
-          getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_NAME),
-          targetProjectName);
+          getPathPH(Constants.CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER),
+          designsProjectFolder);
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_CONTENT_CQ_DESIGN_PATH), cqDesignPath);
 

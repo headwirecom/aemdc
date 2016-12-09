@@ -23,11 +23,17 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String LAZYBONES_PROP_USE_NEW_NAMING_CONVENTION = "useNewNamingConvention";
   public static final String LAZYBONES_PROP_BUNDLE_IN_BUNDLES_DIR = "bundleInBundlesDirectory";
   public static final String LAZYBONES_PROP_APPS_FOLDER_NAME = "appsFolderName";
+  public static final String LAZYBONES_PROP_CONF_FOLDER_NAME = "confFolderName";
+  public static final String LAZYBONES_PROP_DESIGN_FOLDER_NAME = "designFolderName";
   public static final String LAZYBONES_PROP_SLING_MODELS_PACKAGRE = "slingModelsPackage";
   public static final String LAZYBONES_PROP_GROUP_ID = "groupId";
+  // projectName=My AEM Project
+  // contentFolderName=mynewproject
 
   // path placeholders
   public static final String PLACEHOLDER_TARGET_PROJECT_NAME = "PH_TARGET_PROJECT_NAME";
+  public static final String PLACEHOLDER_TARGET_PROJECT_CONF_FOLDER = "PH_TARGET_PROJECT_CONF_FOLDER";
+  public static final String PLACEHOLDER_TARGET_PROJECT_DESIGN_FOLDER = "PH_TARGET_PROJECT_DESIGN_FOLDER";
   public static final String PLACEHOLDER_TARGET_UI_PROJECT_FOLDER = "PH_TARGET_UI_PROJECT_FOLDER";
   public static final String PLACEHOLDER_TARGET_CORE_PROJECT_FOLDER = "PH_TARGET_CORE_PROJECT_FOLDER";
   public static final String PLACEHOLDER_TARGET_OSGI_FOLDER = "PH_TARGET_OSGI_FOLDER";
@@ -68,6 +74,20 @@ public class ConfigPropsReplacer extends Replacer {
       appsFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_NAME), appsFolderName);
+
+    // conf folder name
+    String confFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_CONF_FOLDER_NAME);
+    if (StringUtils.isBlank(confFolderName)) {
+      confFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
+    }
+    result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_CONF_FOLDER), confFolderName);
+
+    // design folder name
+    String designFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_DESIGN_FOLDER_NAME);
+    if (StringUtils.isBlank(designFolderName)) {
+      designFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
+    }
+    result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_DESIGN_FOLDER), designFolderName);
 
     // UI project folder name
     final String useNewNamingConvention = lazybonesProps.getProperty(LAZYBONES_PROP_USE_NEW_NAMING_CONVENTION);

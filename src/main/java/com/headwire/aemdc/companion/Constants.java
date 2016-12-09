@@ -58,6 +58,8 @@ public class Constants {
   // configuration constants: target folders
   public static final String CONFIGPROP_TARGET_UI_FOLDER = "TARGET_UI_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
+  public static final String CONFIGPROP_TARGET_PROJECT_CONF_FOLDER = "TARGET_PROJECT_CONF_FOLDER";
+  public static final String CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER = "TARGET_PROJECT_DESIGN_FOLDER";
   public static final String CONFIGPROP_TARGET_PROJECT_ROOT = "TARGET_PROJECT_ROOT";
   public static final String CONFIGPROP_TARGET_JAVA_FOLDER = "TARGET_JAVA_FOLDER";
   public static final String CONFIGPROP_TARGET_JAVA_PACKAGE = "TARGET_JAVA_PACKAGE";
@@ -127,8 +129,11 @@ public class Constants {
   public static final String PH_DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
   public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
-  public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{TARGET_PROJECT_NAME}}/settings/wcm/templates/page";
+  public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{" + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER
+      + "}}/settings/wcm/templates/page";
   public static final String PH_DEFAULT_CONTENT_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
-  public static final String PH_DEFAULT_CONTENT_CQ_ALLOWED_TEMPLATES = "/conf/{{TARGET_PROJECT_NAME}}/settings/wcm/templates/.*";
-  public static final String PH_DEFAULT_CONTENT_CQ_DESIGN_PATH = "/etc/designs/{{TARGET_PROJECT_NAME}}";
+  public static final String PH_DEFAULT_CONTENT_CQ_ALLOWED_TEMPLATES = "/conf/{{"
+      + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER + "}}/settings/wcm/templates/.*";
+  public static final String PH_DEFAULT_CONTENT_CQ_DESIGN_PATH = "/etc/designs/{{"
+      + CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER + "}}";
 }
