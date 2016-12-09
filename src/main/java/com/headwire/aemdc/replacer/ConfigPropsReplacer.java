@@ -7,9 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.PropsUtil;
+import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
@@ -61,27 +60,27 @@ public class ConfigPropsReplacer extends Replacer {
     String result = text;
 
     // Get lazybones properties
-    final Properties props = PropsUtil.getProperties(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    final Properties lazybonesProps = ConfigUtil.getLazybonesProperties();
 
     // apps folder name
-    String appsFolderName = props.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);
+    String appsFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);
     if (StringUtils.isBlank(appsFolderName)) {
       appsFolderName = PH_DEFAULT_TARGET_PROJECT_NAME;
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_PROJECT_NAME), appsFolderName);
 
     // UI project folder name
-    final String useNewNamingConvention = props.getProperty(LAZYBONES_PROP_USE_NEW_NAMING_CONVENTION);
+    final String useNewNamingConvention = lazybonesProps.getProperty(LAZYBONES_PROP_USE_NEW_NAMING_CONVENTION);
     String targetUIProjectFolder = PH_DEFAULT_TARGET_UI_PROJECT_FOLDER;
-    if (!"yes".equalsIgnoreCase(useNewNamingConvention)) {
+    if ("no".equalsIgnoreCase(useNewNamingConvention)) {
       targetUIProjectFolder = PH_DEFAULT_TARGET_UI_PROJECT_FOLDER_OLD;
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_UI_PROJECT_FOLDER), targetUIProjectFolder);
 
     // CORE project folder name
-    final String bundleInBundlesDirectory = props.getProperty(LAZYBONES_PROP_BUNDLE_IN_BUNDLES_DIR);
+    final String bundleInBundlesDirectory = lazybonesProps.getProperty(LAZYBONES_PROP_BUNDLE_IN_BUNDLES_DIR);
     String targetCoreProjectFolder = PH_DEFAULT_TARGET_CORE_PROJECT_FOLDER;
-    if (!"yes".equalsIgnoreCase(useNewNamingConvention)) {
+    if ("no".equalsIgnoreCase(useNewNamingConvention)) {
       targetCoreProjectFolder = PH_DEFAULT_TARGET_CORE_PROJECT_FOLDER_OLD;
     }
     if ("yes".equalsIgnoreCase(bundleInBundlesDirectory)) {
@@ -92,17 +91,17 @@ public class ConfigPropsReplacer extends Replacer {
 
     // osgi configuration folder name
     String osgiConfigFolder = PH_DEFAULT_TARGET_OSGI_FOLDER;
-    if (!props.isEmpty()) {
+    if (!lazybonesProps.isEmpty()) {
       osgiConfigFolder = "";
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_OSGI_FOLDER), osgiConfigFolder);
 
     // target java package
-    String javaTargetPackage = props.getProperty(LAZYBONES_PROP_SLING_MODELS_PACKAGRE);
+    String javaTargetPackage = lazybonesProps.getProperty(LAZYBONES_PROP_SLING_MODELS_PACKAGRE);
     if (StringUtils.isNotBlank(javaTargetPackage)) {
       javaTargetPackage = javaTargetPackage.replace('.', '/');
     } else {
-      final String groupId = props.getProperty(LAZYBONES_PROP_GROUP_ID);
+      final String groupId = lazybonesProps.getProperty(LAZYBONES_PROP_GROUP_ID);
       if (StringUtils.isBlank(groupId)) {
         javaTargetPackage = PH_DEFAULT_TARGET_JAVA_PACKAGE;
       } else {

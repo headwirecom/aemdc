@@ -129,6 +129,23 @@ public class ConfigUtil {
   }
 
   /**
+   * Get properties from lazybones configuration file
+   *
+   * @return lazybones configuration properties if props file exists
+   */
+  public static Properties getLazybonesProperties() {
+    Properties props = new Properties();
+
+    // Get lazybones properties
+    final File file = new File(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    if (file.exists()) {
+      props = PropsUtil.getProperties(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    }
+
+    return props;
+  }
+
+  /**
    * Read extentions property from configuration file
    *
    * @param configProps
