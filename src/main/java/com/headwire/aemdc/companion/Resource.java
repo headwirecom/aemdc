@@ -260,6 +260,11 @@ public class Resource {
   public Map<String, Map<String, String>> getJcrProperties() {
     if (jcrProperties == null) {
       jcrProperties = new HashMap<String, Map<String, String>>();
+
+      // set common jcr props set in any case.
+      // It allows to call Custom XML/Text PH Replacer functions from Replacer object
+      final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
+      jcrProperties.put(Constants.PLACEHOLDER_PROPS_SET_COMMON, jcrPropsCommon);
     }
     return jcrProperties;
   }
