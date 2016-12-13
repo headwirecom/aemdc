@@ -1,5 +1,5 @@
 # AEM Developer Companion (AEMDC)
-AEMDC allows the developer to create AEM templates, components, content pages, osgi configurations, AEM 6.2 editable templates structure, java models, services and servlets from predefined templates.
+AEMDC allows the developer to create AEM templates, components, content pages, osgi configurations, AEM 6.2 editable template structures, java models, services and servlets from predefined templates.
 
 # Using placeholders
 Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemdc-files for you needs. 
@@ -34,7 +34,7 @@ Source code of  .content.xml
 	        />
 	</jcr:root>
 
-To replace the placeholders used above your arguments in the command line must be like this
+To replace the placeholders used above, your arguments in the command line must be like this
 	
 	aemdc temp contentpage mycontentpage "jcr:title=my title" "jcr:description=my description" "ranking={Long}10" "sling:resourceType=my-aem-project/components/mycontentpage" "ph_1_1:property1=value1" "ph_1_1:property2=value2" "ph_1_2:property3=value3"
 
@@ -45,7 +45,7 @@ where "ph\_1\_2":
 
 # Running
 
-Download the released .zip or tar.gz file, extract it to your any tools directory and set the global PATH variable:
+Download the released .zip or tar.gz file, extract it to your tools directory and set the global PATH variable:
 
 	set AEMDC_PATH=<path to aemdc>
 	set PATH=%PATH%;%AEMDC_PATH%\bin
@@ -62,14 +62,14 @@ To create a new AEM template run:
 
 	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_1_1:singlePropExample1_1=my test&value" "ph_1_1:singlePropExample1_2=my-test-value2"  "ph_1_2:singlePropExample2_1=my-test-value2_1"
 
-A target files will be created and placeholders will be replaced with arguments 
+Target files will be created and placeholders will be replaced with arguments defined in the command line
 
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/.content.xml"
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
 
 
 # Usage
-The next command options are available:
+The following command line options are available:
 
 	aemdc [-options] [help] <type> [name] [targetname] [args...]
 	OR
@@ -111,7 +111,7 @@ To compile:
 
 	mvn clean install
 
-Extract the generated .zip or tar.gz file from target directory to any your tools directory and set the global PATH variable like:
+Extract the generated .zip or tar.gz file from target directory to your tools directory and set the global PATH variable:
 
 	set GIT_PATH=C:\Program Files\Git
 	set AEMDC_PATH=C:\mytools\aemdc
@@ -121,7 +121,7 @@ Go to your AEM maven parent project of "ui.apps" or "core" projects and run:
 
 	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_1_1:singlePropExample1_1=my test&value" "ph_1_1:singlePropExample1_2=my-test-value2"  "ph_1_2:singlePropExample2_1=my-test-value2_1"
 
-A target files will be created and placeholders will be replaced with arguments 
+Target files will be created and placeholders will be replaced with arguments defined in the command line
 
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/.content.xml"
 	"src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
