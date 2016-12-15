@@ -75,7 +75,6 @@ set AEMDC_HOME=%~dp0\..
 @REM ----------------------------------------------------------------------------
 @REM --- Clone Placeholders example project from GitHub : START -----------------
 @REM ----------------------------------------------------------------------------
-:: set PATH=%PATH%;C:\Program Files\Git\bin
 
 IF exist "aemdc-config.properties" GOTO parseConfigFile
 GOTO gitCloneEnd
@@ -100,6 +99,7 @@ GOTO gitCloneEnd
 :gitCloneCommando
 if "%GITCMD%"=="" set GITCMD=git
 %GITCMD% clone https://github.com/headwirecom/aemdc-files.git "%aemdc.SOURCE_FOLDER%"
+SET /P gitCloneFinished="Press any key to continue..."
 
 :gitCloneEnd
 @REM ----------------------------------------------------------------------------
