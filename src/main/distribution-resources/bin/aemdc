@@ -6,6 +6,7 @@
 #Required ENV vars:
 #------------------
 #  JAVA_HOME - location of a JDK home dir
+#  GIT_HOME  - location of a Git home dir
 #
 #Optional ENV vars
 #-----------------
@@ -95,12 +96,12 @@ fi
 #--- Clone Placeholders example project from GitHub : START -----------------
 #----------------------------------------------------------------------------
 AEMDC_PROPS_FILE="./aemdc-config.properties"
-function prop {
+prop() {
     grep "^\s*${1}=" ${AEMDC_PROPS_FILE}|cut -d'=' -f2
 }
 
 if [ -f  "$AEMDC_PROPS_FILE" ] ; then
-  PLACEHOLDERS_REPO="$(prop 'SOURCE_FOLDER')"
+  PLACEHOLDERS_REPO="$(prop 'SOURCE_FOLDER'|tr -d '\t\r\n')"
 fi
 
 if [ -n "$PLACEHOLDERS_REPO" ] ; then
@@ -110,8 +111,23 @@ if [ -n "$PLACEHOLDERS_REPO" ] ; then
   fi
 fi
 
+# If a specific Git binary isn't specified
 if [ "y" = "$GIT_CLONE" ] ; then
-  git clone https://github.com/headwirecom/aemdc-files.git $PLACEHOLDERS_REPO
+  if [ -z "$GITCMD" ] ; then
+    if [ -n "$GIT_HOME"  ] ; then
+      GITCMD="$GIT_HOME/bin/git"
+    fi
+  fi
+
+  if [ ! -x "$GITCMD" ] ; then
+    echo "Error: GIT_HOME is not defined correctly." 1>&2
+    echo "  We cannot execute $GITCMD" 1>&2
+    exit 1
+  fi
+
+  "$GITCMD" clone https://github.com/headwirecom/aemdc-files.git $PLACEHOLDERS_REPO
+  read -s -n 1 -p "Press any key to continue..."
+  echo
 fi
 #----------------------------------------------------------------------------
 #--- Clone Placeholders example project from GitHub : END -------------------

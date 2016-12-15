@@ -4,6 +4,7 @@
 @REM
 @REM Required ENV vars:
 @REM JAVA_HOME - location of a JDK home dir
+@REM GIT_HOME  - location of a Git home dir
 @REM
 @REM Optional ENV vars
 @REM AEMDC_BATCH_ECHO - set to 'on' to enable the echoing of the batch commands
@@ -97,7 +98,8 @@ IF "y"=="%gitClone%" GOTO gitCloneCommando
 GOTO gitCloneEnd
     
 :gitCloneCommando
-git clone https://github.com/headwirecom/aemdc-files.git "%aemdc.SOURCE_FOLDER%"
+if "%GITCMD%"=="" set GITCMD=git
+%GITCMD% clone https://github.com/headwirecom/aemdc-files.git "%aemdc.SOURCE_FOLDER%"
 
 :gitCloneEnd
 @REM ----------------------------------------------------------------------------
