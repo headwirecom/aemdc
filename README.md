@@ -45,10 +45,12 @@ where "ph\_1\_2":
 
 # Running
 
-Download the released .zip or tar.gz file, extract it to your tools directory and set the global PATH variable:
+Download the released .zip or tar.gz file, extract it to your tools directory and set the global ENV and PATH variables like:
 
-	set AEMDC_PATH=<path to aemdc>
-	set PATH=%PATH%;%AEMDC_PATH%\bin
+    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
+    set GIT_HOME=C:\Program Files\Git
+    set AEMDC_HOME=C:\Program Files\aemdc
+    set PATH=%PATH%;%JAVA_HOME%\bin;%GIT_HOME%\bin;%AEMDC_HOME%\bin
 
 Go to your AEM maven parent project of "ui.apps" or "core" projects and create a configuration file: 
 
@@ -111,11 +113,12 @@ To compile:
 
 	mvn clean install
 
-Extract the generated .zip or tar.gz file from target directory to your tools directory and set the global PATH variable:
+Extract the generated .zip or tar.gz file from target directory to your tools directory and set the global ENV and PATH variables:
 
-	set GIT_PATH=C:\Program Files\Git
-	set AEMDC_PATH=C:\mytools\aemdc
-	set PATH=%PATH%;%GIT_PATH%\bin;%AEMDC_PATH%\bin
+    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
+    set GIT_HOME=C:\Program Files\Git
+    set AEMDC_HOME=C:\Program Files\aemdc
+    set PATH=%PATH%;%JAVA_HOME%\bin;%GIT_HOME%\bin;%AEMDC_HOME%\bin
 
 Go to your AEM maven parent project of "ui.apps" or "core" projects and run: 
 
