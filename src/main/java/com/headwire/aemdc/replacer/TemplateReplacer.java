@@ -1,15 +1,14 @@
 package com.headwire.aemdc.replacer;
 
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
@@ -30,8 +29,8 @@ public class TemplateReplacer extends Replacer {
   @Override
   protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders) {
 
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    // Get Properties Config from config file
+    final Config config = new Config();
 
     // jcr:title
     String jcrTitle = placeholders.get(Constants.PLACEHOLDER_JCR_TITLE);
@@ -62,14 +61,16 @@ public class TemplateReplacer extends Replacer {
     result = result.replace(getPH(Constants.PLACEHOLDER_ALLOWED_PATHS), getCrxXMLValue(allowedPaths));
 
     // sling:resourceType
-    String slingResourceType = placeholders.get(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE);
+    final String slingResourceType = placeholders.get(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE);
     if (StringUtils.isBlank(slingResourceType)) {
       // get target components folder
-      final String targetCompFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
+      // final String targetCompFolder =
+      // config.getProperty(Constants.CONFIGPROP_TARGET_COMPONENTS_FOLDER);
 
       // set like "/apps/my-aem-project/components/contentpage";
-      final String targetUIFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
-      slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" + resource.getTargetName();
+      final String targetUIFolder = config.getProperty(Constants.CONFIGPROP_TARGET_UI_FOLDER);
+      // slingResourceType = StringUtils.substringAfter(targetCompFolder, targetUIFolder) + "/" +
+      // resource.getTargetName();
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_SLING_RESOURCE_TYPE), slingResourceType);
 

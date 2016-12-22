@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
@@ -36,7 +36,7 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String PLACEHOLDER_TARGET_PROJECT_DESIGN_FOLDER = "PH_TARGET_PROJECT_DESIGN_FOLDER";
   public static final String PLACEHOLDER_TARGET_UI_PROJECT_FOLDER = "PH_TARGET_UI_PROJECT_FOLDER";
   public static final String PLACEHOLDER_TARGET_CORE_PROJECT_FOLDER = "PH_TARGET_CORE_PROJECT_FOLDER";
-  public static final String PLACEHOLDER_TARGET_OSGI_FOLDER = "PH_TARGET_OSGI_FOLDER";
+  public static final String PLACEHOLDER_TARGET_OSGI_SUBFOLDER = "PH_TARGET_OSGI_SUBFOLDER";
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE = "PH_TARGET_JAVA_PACKAGE";
 
   // default values
@@ -47,7 +47,7 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String PH_DEFAULT_TARGET_CORE_PROJECT_FOLDER_OLD = "bundle";
   public static final String PH_DEFAULT_TARGET_CORE_BUNDLES_SUBFOLDER = "bundles";
   public static final String PH_DEFAULT_TARGET_JAVA_PACKAGE = "com/headwire/aemdc/samples";
-  public static final String PH_DEFAULT_TARGET_OSGI_FOLDER = "/configuration";
+  public static final String PH_DEFAULT_TARGET_OSGI_SUBFOLDER = "/configuration";
 
   /**
    * Constructor
@@ -66,7 +66,7 @@ public class ConfigPropsReplacer extends Replacer {
     String result = text;
 
     // Get lazybones properties
-    final Properties lazybonesProps = ConfigUtil.getLazybonesProperties();
+    final Properties lazybonesProps = Config.getLazybonesProperties();
 
     // apps folder name
     String appsFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);
@@ -110,11 +110,11 @@ public class ConfigPropsReplacer extends Replacer {
     result = result.replace(getPH(PLACEHOLDER_TARGET_CORE_PROJECT_FOLDER), targetCoreProjectFolder);
 
     // osgi configuration folder name
-    String osgiConfigFolder = PH_DEFAULT_TARGET_OSGI_FOLDER;
+    String osgiConfigFolder = PH_DEFAULT_TARGET_OSGI_SUBFOLDER;
     if (!lazybonesProps.isEmpty()) {
       osgiConfigFolder = "";
     }
-    result = result.replace(getPH(PLACEHOLDER_TARGET_OSGI_FOLDER), osgiConfigFolder);
+    result = result.replace(getPH(PLACEHOLDER_TARGET_OSGI_SUBFOLDER), osgiConfigFolder);
 
     // target java package
     String javaTargetPackage = lazybonesProps.getProperty(LAZYBONES_PROP_SLING_MODELS_PACKAGRE);

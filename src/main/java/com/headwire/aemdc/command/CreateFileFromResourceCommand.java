@@ -18,6 +18,7 @@ import com.headwire.aemdc.companion.Resource;
 public class CreateFileFromResourceCommand implements Command {
 
   private static final Logger LOG = LoggerFactory.getLogger(CreateFileFromResourceCommand.class);
+  public static final String NAME = "CREATE_FILE_FROM_RESOURCE";
 
   private final Resource resource;
 

@@ -20,6 +20,7 @@ import com.headwire.aemdc.replacer.Replacer;
 public class ReplacePathPlaceHoldersCommand implements Command {
 
   private static final Logger LOG = LoggerFactory.getLogger(ReplacePathPlaceHoldersCommand.class);
+  public static final String NAME = "REPLACE_PATH_PH";
 
   private final Resource resource;
   private final Replacer replacer;

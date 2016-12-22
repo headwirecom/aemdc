@@ -11,12 +11,13 @@ import com.headwire.aemdc.companion.Resource;
 
 
 /**
- * Concrete command to create file
+ * Concrete command to copy file
  *
  */
-public class CreateFileCommand implements Command {
+public class CopyFileCommand implements Command {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CreateFileCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CopyFileCommand.class);
+  public static final String NAME = "COPY_FILE";
 
   private final Resource resource;
 
@@ -26,7 +27,7 @@ public class CreateFileCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CreateFileCommand(final Resource resource) {
+  public CopyFileCommand(final Resource resource) {
     this.resource = resource;
   }
 

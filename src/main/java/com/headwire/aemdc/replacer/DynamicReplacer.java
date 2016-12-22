@@ -9,17 +9,17 @@ import com.headwire.aemdc.companion.Resource;
 
 
 /**
- * OSGI Config place holders replacer.
+ * Dynamic place holders replacer.
  *
  */
-public class OsgiReplacer extends Replacer {
+public class DynamicReplacer extends Replacer {
 
-  private static final Logger LOG = LoggerFactory.getLogger(OsgiReplacer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DynamicReplacer.class);
 
   /**
    * Constructor
    */
-  public OsgiReplacer(final Resource resource) {
+  public DynamicReplacer(final Resource resource) {
     this.resource = resource;
   }
 

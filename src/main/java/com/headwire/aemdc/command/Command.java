@@ -9,5 +9,7 @@ import java.io.IOException;
  */
 interface Command {
 
-  public void execute() throws IOException;
+  String NAME = "SET_OWN_COMMAND_NAME";
+
+  void execute() throws IOException;
 }

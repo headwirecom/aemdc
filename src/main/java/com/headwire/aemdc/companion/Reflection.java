@@ -9,7 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.runner.BasisRunner;
-import com.headwire.aemdc.util.PropsUtil;
+import com.headwire.aemdc.runner.DynamicRunner;
+import com.headwire.aemdc.util.FilesDirsUtil;
 
 
 /**
@@ -22,14 +23,19 @@ public class Reflection {
   private static final Logger LOG = LoggerFactory.getLogger(Reflection.class);
 
   private final Properties props;
+  private final Config config;
 
   /**
    * Constructor
    *
+   * @param config
+   *          - properties config
    */
-  public Reflection() {
+  public Reflection(final Config config) {
+    this.config = config;
+
     // Get properties from reflection file
-    props = PropsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_PROPS_FILE_PATH);
+    props = FilesDirsUtil.getPropertiesFromContextClassLoader(Constants.REFLECTION_PROPS_FILE_PATH);
   }
 
   /**
@@ -57,6 +63,8 @@ public class Reflection {
             | SecurityException | IllegalArgumentException | InvocationTargetException e) {
           LOG.error("Can't get class instance for template type [{}]. ", type, e);
         }
+      } else if (config.getDynamicTypes().contains(type)) {
+        runner = new DynamicRunner(resource);
       } else {
         LOG.error("Unknown <type> argument [{}].", type);
       }

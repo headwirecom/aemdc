@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.HelpUtil;
+import com.headwire.aemdc.util.Help;
 
 
 /**
@@ -16,6 +16,7 @@ import com.headwire.aemdc.util.HelpUtil;
 public class HelpCommand implements Command {
 
   private static final Logger LOG = LoggerFactory.getLogger(HelpCommand.class);
+  public static final String NAME = "HELP";
 
   private final Resource resource;
 
@@ -32,6 +33,7 @@ public class HelpCommand implements Command {
   @Override
   public void execute() throws IOException {
     LOG.debug("Showing help...");
-    HelpUtil.showHelp(resource);
+    final Help help = new Help();
+    help.showHelp(resource);
   }
 }

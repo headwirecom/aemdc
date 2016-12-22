@@ -1,1 +1,0 @@
-    Source content page name under ../content folder.

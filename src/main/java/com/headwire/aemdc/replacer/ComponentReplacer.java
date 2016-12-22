@@ -1,15 +1,14 @@
 package com.headwire.aemdc.replacer;
 
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
@@ -30,8 +29,8 @@ public class ComponentReplacer extends Replacer {
   @Override
   protected String replaceCustomXmlPlaceHolders(final String text, final Map<String, String> placeholders) {
 
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    // Get Properties Config from config file
+    final Config config = new Config();
 
     // jcr:title
     String jcrTitle = placeholders.get(Constants.PLACEHOLDER_JCR_TITLE);
@@ -51,7 +50,7 @@ public class ComponentReplacer extends Replacer {
     String componentGroup = placeholders.get(Constants.PLACEHOLDER_COMPONENT_GROUP);
     if (StringUtils.isBlank(componentGroup)) {
       // get target project name
-      componentGroup = configProps.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
+      componentGroup = config.getProperty(Constants.CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
     }
     result = result.replace(getPH(Constants.PLACEHOLDER_COMPONENT_GROUP), getCrxXMLValue(componentGroup));
 

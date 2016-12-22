@@ -1,16 +1,15 @@
 package com.headwire.aemdc.replacer;
 
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.util.ConfigUtil;
 
 
 /**
@@ -37,8 +36,8 @@ public class JavaReplacer extends Replacer {
   protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
     String result = text;
 
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    // Get Properties Config from config file
+    final Config config = new Config();
 
     // {{ java-class }}
     final String javaClassName = FilenameUtils.getBaseName(resource.getTargetName());
@@ -47,7 +46,7 @@ public class JavaReplacer extends Replacer {
     // {{ java-package }}
     final String javaClassFileName = FilenameUtils.getName(resource.getTargetName());
     final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
-    final String targetJavaSrcFolder = configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+    final String targetJavaSrcFolder = config.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
 
     // cut java file name, replace "/" with "."
     String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");

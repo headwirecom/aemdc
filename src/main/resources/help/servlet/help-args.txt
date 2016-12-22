@@ -1,2 +1,0 @@
-    <placeholder name>=<value>
-        Placeholder used in the servlet java class file.

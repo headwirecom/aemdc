@@ -11,7 +11,7 @@ import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
-import com.headwire.aemdc.util.HelpUtil;
+import com.headwire.aemdc.util.Help;
 
 
 /**
@@ -40,7 +40,7 @@ public class HelpRunner extends BasisRunner {
     LOG.debug("Help runner starting...");
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand("ShowHelp", new HelpCommand(resource));
+    menu.setCommand(1, new HelpCommand(resource));
   }
 
   /**
@@ -49,14 +49,14 @@ public class HelpRunner extends BasisRunner {
    * @throws IOException
    */
   @Override
-  protected void run() throws IOException {
+  public void run() throws IOException {
     // Invoker invokes command
-    menu.runCommand("ShowHelp");
+    menu.runCommand(1);
   }
 
   @Override
   public String getHelpFolder() {
-    return HelpUtil.HELP_COMMON_FOLDER;
+    return Help.HELP_COMMON_FOLDER;
   }
 
   @Override
@@ -68,11 +68,6 @@ public class HelpRunner extends BasisRunner {
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
     return null;
-  }
-
-  @Override
-  public boolean checkConfiguration() {
-    return true;
   }
 
   @Override

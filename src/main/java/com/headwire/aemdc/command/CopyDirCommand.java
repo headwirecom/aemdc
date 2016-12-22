@@ -11,12 +11,13 @@ import com.headwire.aemdc.companion.Resource;
 
 
 /**
- * Concrete command to create directory
+ * Concrete command to copy directory
  *
  */
-public class CreateDirCommand implements Command {
+public class CopyDirCommand implements Command {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CreateDirCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CopyDirCommand.class);
+  public static final String NAME = "COPY_DIR";
 
   private final Resource resource;
 
@@ -26,7 +27,7 @@ public class CreateDirCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CreateDirCommand(final Resource resource) {
+  public CopyDirCommand(final Resource resource) {
     this.resource = resource;
   }
 

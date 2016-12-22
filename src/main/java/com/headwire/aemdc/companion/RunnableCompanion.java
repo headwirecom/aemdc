@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.runner.BasisRunner;
 import com.headwire.aemdc.runner.HelpRunner;
-import com.headwire.aemdc.util.ConfigUtil;
 
 import ch.qos.logback.classic.Level;
 
@@ -21,6 +20,10 @@ import ch.qos.logback.classic.Level;
 public class RunnableCompanion {
 
   private static final Logger LOG = LoggerFactory.getLogger(RunnableCompanion.class);
+  private static final ch.qos.logback.classic.Logger ROOT_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory
+      .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+
+  private static Config config;
 
   /**
    * Main start method.
@@ -32,10 +35,16 @@ public class RunnableCompanion {
    */
   public static void main(final String[] args) throws IOException {
 
-    // setup log level
-    if (setupLogLevel()) {
+    // set default INFO log level to avoid logging from ConfigUtil
+    ROOT_LOGGER.setLevel(Level.INFO);
+
+    // Get Properties Config from config file
+    config = new Config();
+
+    // setup custom log level
+    if (setupCustomLogLevel()) {
       // Check configuration from configuration properties file
-      ConfigUtil.checkConfiguration();
+      config.checkConfiguration();
     }
 
     // set mandatories from arguments
@@ -44,7 +53,7 @@ public class RunnableCompanion {
     // Get Runner
     BasisRunner runner = new HelpRunner(resource);
     if (!resource.isHelp()) {
-      final Reflection reflection = new Reflection();
+      final Reflection reflection = new Reflection(config);
       runner = reflection.getRunner(resource);
       if (runner == null) {
         runner = new HelpRunner(resource);
@@ -52,50 +61,43 @@ public class RunnableCompanion {
     }
 
     // Run to create template structure
-    runner.globalRun();
+    runner.run();
   }
 
   /**
-   * Setup log level based on the LOG_LEVEL configuration parameter.
+   * Setup custom log level based on the LOG_LEVEL configuration parameter.
    * Possible values: ALL/TRACE/DEBUG/INFO/WARN/ERROR/OFF
    *
    * @return true if can setup log level from configuration file
    */
-  private static boolean setupLogLevel() {
+  private static boolean setupCustomLogLevel() {
     boolean status = true;
 
-    final ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-        .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-
-    // set default INFO log level to avoid logging from ConfigUtil
-    rootLogger.setLevel(Level.INFO);
-
-    // Get Config Properties from config file
-    final Properties configProps = ConfigUtil.getConfigProperties();
+    final Properties configProps = config.getProperties();
 
     if (!configProps.isEmpty()) {
       final String logLevel = configProps.getProperty(Constants.CONFIGPROP_LOG_LEVEL);
 
       if (!Level.INFO.toString().equalsIgnoreCase(logLevel)) {
         if (Level.ALL.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.ALL);
+          ROOT_LOGGER.setLevel(Level.ALL);
         } else if (Level.TRACE.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.TRACE);
+          ROOT_LOGGER.setLevel(Level.TRACE);
         } else if (Level.DEBUG.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.DEBUG);
+          ROOT_LOGGER.setLevel(Level.DEBUG);
         } else if (Level.WARN.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.WARN);
+          ROOT_LOGGER.setLevel(Level.WARN);
         } else if (Level.ERROR.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.ERROR);
+          ROOT_LOGGER.setLevel(Level.ERROR);
         } else if (Level.OFF.toString().equalsIgnoreCase(logLevel)) {
-          rootLogger.setLevel(Level.OFF);
+          ROOT_LOGGER.setLevel(Level.OFF);
         }
       }
     } else {
       status = false;
     }
 
-    LOG.debug("Current LOG Level: {}", rootLogger.getLevel());
+    LOG.debug("Current LOG Level: {}", ROOT_LOGGER.getLevel());
 
     return status;
   }
