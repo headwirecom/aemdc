@@ -2,10 +2,8 @@ package com.headwire.aemdc.companion;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -319,11 +317,9 @@ public class Resource {
     if (source != null) {
       newMap = new HashMap<String, Map<String, String>>();
 
-      final Iterator<Entry<String, Map<String, String>>> iter = source.entrySet().iterator();
-      while (iter.hasNext()) {
-        final Entry<String, Map<String, String>> element = iter.next();
-        final String key = element.getKey();
-        final Map<String, String> value = element.getValue();
+      for (final Map.Entry<String, Map<String, String>> entry : source.entrySet()) {
+        final String key = entry.getKey();
+        final Map<String, String> value = entry.getValue();
 
         // clone single map
         final Map<String, String> newValueMap = new HashMap<String, String>();

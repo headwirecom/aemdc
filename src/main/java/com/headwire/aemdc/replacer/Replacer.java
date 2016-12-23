@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,18 +138,26 @@ public abstract class Replacer {
 
     // get Jcr Properties Sets
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
-    final Iterator<Entry<String, Map<String, String>>> iter = jcrPropsSets.entrySet().iterator();
 
-    while (iter.hasNext()) {
-      final Entry<String, Map<String, String>> propsSet = iter.next();
-      final String propsSetKey = propsSet.getKey();
-
+    for (final Map.Entry<String, Map<String, String>> entry : jcrPropsSets.entrySet()) {
+      final String propsSetKey = entry.getKey();
+      final Map<String, String> propsSet = entry.getValue();
       LOG.debug("propsSetKey={}", propsSetKey);
 
       if (Constants.PLACEHOLDER_PROPS_SET_COMMON.equals(propsSetKey)) {
-        result = replaceCustomXmlPlaceHolders(result, propsSet.getValue());
+        // replace all placeholders defined by argument params at first
+        for (final Map.Entry<String, String> prop : propsSet.entrySet()) {
+          final String ph = getPH(prop.getKey());
+          final String phValue = getCrxXMLValue(prop.getValue());
+          result = result.replace(ph, phValue);
+          LOG.debug("'{}' replacing with '{}'", ph, phValue);
+        }
+
+        // replace all other custom placeholders
+        result = replaceCustomXmlPlaceHolders(result, propsSet);
+
       } else {
-        result = replaceXmlPlaceHoldersSets(result, propsSetKey, propsSet.getValue());
+        result = replaceXmlPlaceHoldersSets(result, propsSetKey, propsSet);
       }
     }
     return result;
@@ -172,17 +179,16 @@ public abstract class Replacer {
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
     final Map<String, String> commonProps = jcrPropsSets.get(Constants.PLACEHOLDER_PROPS_SET_COMMON);
 
-    // replace custom placeholders
-    result = replaceCustomTextPlaceHolders(result, commonProps);
-
-    // replace all other placeholders
-    final Iterator<Entry<String, String>> iter = commonProps.entrySet().iterator();
-    while (iter.hasNext()) {
-      final Entry<String, String> prop = iter.next();
+    // replace all placeholders defined by argument params at first
+    for (final Map.Entry<String, String> prop : commonProps.entrySet()) {
       final String ph = getPH(prop.getKey());
       result = result.replace(ph, prop.getValue());
       LOG.debug("'{}' replacing with '{}'", ph, prop.getValue());
     }
+
+    // replace all other custom placeholders
+    result = replaceCustomTextPlaceHolders(result, commonProps);
+
     return result;
   }
 
@@ -208,16 +214,14 @@ public abstract class Replacer {
     // offset = number * 4 blanks
     final int offset = Integer.valueOf(propsSetKey.substring(pos + 1)) * 4;
 
-    final Iterator<Entry<String, String>> iter = jcrProperties.entrySet().iterator();
     boolean first = true;
-    while (iter.hasNext()) {
+    for (final Map.Entry<String, String> entry : jcrProperties.entrySet()) {
       if (!first) {
         phValue.append("\n");
         for (int i = 0; i < offset; i++) {
           phValue.append(" ");
         }
       }
-      final Entry<String, String> entry = iter.next();
       final String key = entry.getKey();
       final String value = entry.getValue();
       phValue.append(key);
