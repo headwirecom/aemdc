@@ -33,7 +33,6 @@ public class Constants {
   public static final String CONFIGPROP_SOURCE_UI_FOLDER = "SOURCE_UI_FOLDER";
   public static final String CONFIGPROP_SOURCE_PROJECT_ROOT = "SOURCE_PROJECT_ROOT";
   public static final String CONFIGPROP_SOURCE_JAVA_FOLDER = "SOURCE_JAVA_FOLDER";
-  public static final String CONFIGPROP_SOURCE_CONF_FOLDER = "SOURCE_CONF_FOLDER";
 
   // configuration constants: target folders
   // public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
@@ -46,7 +45,6 @@ public class Constants {
   public static final String CONFIGPROP_TARGET_JAVA_PACKAGE = "TARGET_JAVA_PACKAGE";
   public static final String CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER = "TARGET_JAVA_PACKAGE_FOLDER";
   public static final String CONFIGPROP_TARGET_OSGI_SUBFOLDER = "TARGET_OSGI_SUBFOLDER";
-  public static final String CONFIGPROP_TARGET_CONF_FOLDER = "TARGET_CONF_FOLDER";
 
   // configuration constants: others
   public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
@@ -61,7 +59,6 @@ public class Constants {
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_UI_FOLDER);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_PROJECT_ROOT);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_JAVA_FOLDER);
-    SOURCE_PATHS.add(CONFIGPROP_SOURCE_CONF_FOLDER);
 
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_UI_FOLDER);
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
@@ -106,25 +103,17 @@ public class Constants {
   public static final String PARAM_TEMPLATE_NAME = "templateName";
   public static final String PARAM_TARGET_NAME = "targetName";
 
+  // static template types
   public static final String TYPE_CONFIG_PROPS = "config";
 
   // arguments constants
   public static final String PLACEHOLDER_PROPS_SET_COMMON = "common";
   public static final String PLACEHOLDER_PROPS_SET_PREFIX = "ph_";
   public static final String PLACEHOLDER_RUNMODE = "runmode";
-  public static final String PLACEHOLDER_JCR_TITLE = "jcr:title";
-  public static final String PLACEHOLDER_RANKING = "ranking";
-  public static final String PLACEHOLDER_COMPONENT_GROUP = "componentGroup";
   public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
   public static final String PLACEHOLDER_TARGET_NAME = "targetname";
   public static final String PLACEHOLDER_TARGET_COMP_MODEL = "targetCompModel";
-  public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
-  public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
-  public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";
 
   // default values
-  public static final String PH_DEFAULT_RANKING = "{Long}100";
-  public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
-  public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
 }
