@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,29 +31,27 @@ public class DynamicRunner extends BasisRunner {
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
+  private final Config config = new Config();
   private final Resource resource;
-  private final Config config;
-  private final Properties dynProps;
+  private final Replacer replacer;
 
   /**
    * Constructor
    *
-   * @param resource
+   * @param pResource
    *          - resource object
    */
-  public DynamicRunner(final Resource resource) {
-    this.resource = resource;
+  public DynamicRunner(final Resource pResource) {
+    LOG.debug("Dynamic runner for type [{}] starting...", pResource.getType());
+    resource = pResource;
+    replacer = new DynamicReplacer(resource);
 
-    // Get Properties Config from config file
-    config = new Config();
-
-    LOG.debug("Dynamic runner for type [{}] starting...", resource.getType());
-
-    dynProps = config.getDynamicProperties(resource.getType());
-
+    final Properties dynProps = config.getDynamicProperties(resource.getType());
     resource.setSourceFolderPath(dynProps.getProperty(Constants.DYN_CONFIGPROP_SOURCE_TYPE_FOLDER));
-    resource
-        .setTargetFolderPath(dynProps.getProperty(Constants.DYN_CONFIGPROP_TARGET_TYPE_FOLDER) + getRunmodeSuffix());
+
+    final String targetPath = replacer
+        .replacePathPlaceHolders(dynProps.getProperty(Constants.DYN_CONFIGPROP_TARGET_TYPE_FOLDER));
+    resource.setTargetFolderPath(targetPath);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(config, resource);
@@ -101,28 +97,6 @@ public class DynamicRunner extends BasisRunner {
 
   @Override
   public Replacer getPlaceHolderReplacer() {
-    return new DynamicReplacer(resource);
+    return replacer;
   }
-
-  /**
-   * Get runmode suffix to add to the target path
-   * like ".&lt;runmode&gt;"
-   *
-   * @return runmode suffix
-   */
-  private String getRunmodeSuffix() {
-    String runmode = "";
-    final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDER_PROPS_SET_COMMON);
-    if (commonJcrProps != null) {
-      runmode = commonJcrProps.get(Constants.PLACEHOLDER_RUNMODE);
-      if (StringUtils.isNotBlank(runmode)) {
-        // add ".<runmode>" to the target path
-        runmode = "." + runmode;
-      } else {
-        runmode = "";
-      }
-    }
-    return runmode;
-  }
-
 }

@@ -80,8 +80,14 @@ public abstract class Replacer {
    * @return replaced path
    */
   public String replacePathPlaceHolders(final String path) {
-    // {{ targetname }}
-    final String result = path.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
+    String result = path;
+
+    // {{targetname}}
+    result = result.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
+
+    // {{runmode}}
+    result = result.replace(getPathPH(Constants.PLACEHOLDER_RUNMODE), getRunmodeSuffix());
+
     return result;
   }
 
@@ -261,10 +267,37 @@ public abstract class Replacer {
 
     // get target name w/o target subfolders
     // ex. "page/contentpage" --> "contentpage"
-    if (targetName.contains("/")) {
+    if (StringUtils.isNotBlank(targetName) && targetName.contains("/")) {
       targetName = StringUtils.substringAfterLast(targetName, "/");
     }
+
+    // to avoid NullPointerException
+    if (StringUtils.isBlank(targetName)) {
+      targetName = "";
+    }
+
     return targetName;
+  }
+
+  /**
+   * Get runmode suffix to add to the target path
+   * like ".&lt;runmode&gt;"
+   *
+   * @return runmode suffix
+   */
+  protected String getRunmodeSuffix() {
+    String runmode = "";
+    final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDER_PROPS_SET_COMMON);
+    if (commonJcrProps != null) {
+      runmode = commonJcrProps.get(Constants.PLACEHOLDER_RUNMODE);
+      if (StringUtils.isNotBlank(runmode)) {
+        // add ".<runmode>" to the target path
+        runmode = "." + runmode;
+      } else {
+        runmode = "";
+      }
+    }
+    return runmode;
   }
 
   /**
@@ -274,7 +307,7 @@ public abstract class Replacer {
    *          - placeholder name
    * @return placeholder as string in placeholder format.
    */
-  protected String getPH(final String phName) {
+  public String getPH(final String phName) {
     final String result = "{{ " + phName + " }}";
     return result;
   }
@@ -286,7 +319,7 @@ public abstract class Replacer {
    *          - placeholder name
    * @return placeholder as string in path placeholder format.
    */
-  protected String getPathPH(final String phName) {
+  public String getPathPH(final String phName) {
     final String result = "{{" + phName + "}}";
     return result;
   }
