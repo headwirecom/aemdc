@@ -1,1 +1,0 @@
-    confstr     Editable templates structure to be created.

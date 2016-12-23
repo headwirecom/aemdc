@@ -1,1 +1,2 @@
     config      Create configuration properties file.
+    confstr     Editable templates structure to be created.
