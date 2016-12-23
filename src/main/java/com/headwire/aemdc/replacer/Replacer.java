@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
 
@@ -28,6 +29,9 @@ import com.headwire.aemdc.companion.Resource;
 public abstract class Replacer {
 
   private static final Logger LOG = LoggerFactory.getLogger(Replacer.class);
+
+  // Get Properties Config from config file
+  protected Config config = new Config();
 
   protected Resource resource;
 

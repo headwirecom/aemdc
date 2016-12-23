@@ -105,16 +105,6 @@ public class Constants {
   public static final String PARAM_TARGET_NAME = "targetName";
 
   public static final String TYPE_CONFIG_PROPS = "config";
-  public static final String TYPE_TEMPLATE = "temp";
-  public static final String TYPE_TEMPLATE_FULL = "template";
-  public static final String TYPE_COMPONENT = "comp";
-  public static final String TYPE_COMPONENT_FULL = "component";
-  public static final String TYPE_OSGI = "osgi";
-  public static final String TYPE_EDITABLE_TEMPLATE_STRUCTURE = "confstr";
-  public static final String TYPE_PAGE = "page";
-  public static final String TYPE_MODEL = "model";
-  public static final String TYPE_SERVICE = "service";
-  public static final String TYPE_SERVLET = "servlet";
 
   // arguments constants
   public static final String PLACEHOLDER_PROPS_SET_COMMON = "common";
@@ -140,9 +130,7 @@ public class Constants {
 
   // default values
   public static final String PH_DEFAULT_RANKING = "{Long}100";
-  public static final String PH_DEFAULT_COMP_SLING_RESOURCE_SUPER_TYPE = "/libs/wcm/foundation/components/page";
   public static final String PH_DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
-  public static final String PH_DEFAULT_COMP_MODEL = "com.headwire.aemdc.samples.models.HeroModel";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
   public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
   public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{" + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER
