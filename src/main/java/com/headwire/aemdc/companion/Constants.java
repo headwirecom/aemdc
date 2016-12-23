@@ -44,6 +44,7 @@ public class Constants {
   public static final String CONFIGPROP_TARGET_PROJECT_ROOT = "TARGET_PROJECT_ROOT";
   public static final String CONFIGPROP_TARGET_JAVA_FOLDER = "TARGET_JAVA_FOLDER";
   public static final String CONFIGPROP_TARGET_JAVA_PACKAGE = "TARGET_JAVA_PACKAGE";
+  public static final String CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER = "TARGET_JAVA_PACKAGE_FOLDER";
   public static final String CONFIGPROP_TARGET_OSGI_SUBFOLDER = "TARGET_OSGI_SUBFOLDER";
   public static final String CONFIGPROP_TARGET_CONF_FOLDER = "TARGET_CONF_FOLDER";
 
@@ -69,6 +70,7 @@ public class Constants {
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_PROJECT_ROOT);
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_JAVA_FOLDER);
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_JAVA_PACKAGE);
+    CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER);
     CONFIGPROPS_OTHER.add(CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
     CONFIGPROPS_OTHER.add(CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT);
     CONFIGPROPS_OTHER.add(CONFIGPROP_LOG_LEVEL);
@@ -116,6 +118,7 @@ public class Constants {
   public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
   public static final String PLACEHOLDER_TARGET_NAME = "targetname";
+  public static final String PLACEHOLDER_TARGET_COMP_MODEL = "targetCompModel";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
   public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";

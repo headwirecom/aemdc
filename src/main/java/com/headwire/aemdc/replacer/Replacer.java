@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -309,6 +310,31 @@ public abstract class Replacer {
   }
 
   /**
+   * Get target component model name incl. target subpackage.
+   * For example "page/hero" will be "page.Hero".
+   *
+   * @return target component model name
+   */
+  protected String getTargetCompModelName() {
+    String compModel = "";
+
+    // like "page/hero"
+    final String targetName = resource.getTargetName();
+
+    if (StringUtils.isNotBlank(targetName)) {
+      // to "Hero"
+      compModel = FilenameUtils.getBaseName(targetName);
+      compModel = WordUtils.capitalize(compModel);
+
+      if (targetName.contains("/")) {
+        compModel = StringUtils.substringBeforeLast(targetName, "/") + "." + compModel;
+        compModel = StringUtils.replace(compModel, "/", ".");
+      }
+    }
+    return compModel;
+  }
+
+  /**
    * Get target java class name
    *
    * @return name of java class
@@ -321,7 +347,7 @@ public abstract class Replacer {
 
   /**
    * Get target java package
-   * 
+   *
    * @return java package
    */
   protected String getTargetJavaPackage() {

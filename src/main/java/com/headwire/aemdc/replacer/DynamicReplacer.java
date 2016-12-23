@@ -72,6 +72,9 @@ public class DynamicReplacer extends Replacer {
         // {{targetname}}
         phValue = phValue.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
 
+        // {{targetCompModel}}
+        phValue = phValue.replace(getPathPH(Constants.PLACEHOLDER_TARGET_COMP_MODEL), getTargetCompModelName());
+
         // convert to XML format?
         phValue = xmlType ? getCrxXMLValue(phValue) : phValue;
 
