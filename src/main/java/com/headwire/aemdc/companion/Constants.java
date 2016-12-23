@@ -113,14 +113,11 @@ public class Constants {
   public static final String PLACEHOLDER_JCR_TITLE = "jcr:title";
   public static final String PLACEHOLDER_JCR_DESCRIPTION = "jcr:description";
   public static final String PLACEHOLDER_RANKING = "ranking";
-  public static final String PLACEHOLDER_ALLOWED_PATHS = "allowedPaths";
   public static final String PLACEHOLDER_SLING_RESOURCE_TYPE = "sling:resourceType";
-  public static final String PLACEHOLDER_SLING_RESOURCE_SUPER_TYPE = "sling:resourceSuperType";
   public static final String PLACEHOLDER_COMPONENT_GROUP = "componentGroup";
   public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
   public static final String PLACEHOLDER_TARGET_NAME = "targetname";
-  public static final String PLACEHOLDER_COMP_MODEL = "comp-model";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
   public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";
@@ -130,7 +127,6 @@ public class Constants {
 
   // default values
   public static final String PH_DEFAULT_RANKING = "{Long}100";
-  public static final String PH_DEFAULT_ALLOWED_PATHS = "/content(/.*)?";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
   public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
   public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{" + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER
