@@ -309,6 +309,36 @@ public abstract class Replacer {
   }
 
   /**
+   * Get target java class name
+   *
+   * @return name of java class
+   */
+  protected String getTargetJavaClassName() {
+    // {{ java-class }}
+    final String javaClassName = FilenameUtils.getBaseName(resource.getTargetName());
+    return javaClassName;
+  }
+
+  /**
+   * Get target java package
+   * 
+   * @return java package
+   */
+  protected String getTargetJavaPackage() {
+    // {{ java-package }}
+    final String javaClassFileName = FilenameUtils.getName(resource.getTargetName());
+    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
+    final String targetJavaSrcFolder = config.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+
+    // cut java file name, replace "/" with "."
+    String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
+    javaPackage = StringUtils.substringBefore(javaPackage, "/" + javaClassFileName);
+    javaPackage = StringUtils.replace(javaPackage, "/", ".");
+
+    return javaPackage;
+  }
+
+  /**
    * Get text in placeholder format like "{{ phName }}"
    *
    * @param phName

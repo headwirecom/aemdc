@@ -37,7 +37,14 @@ public class DynamicReplacer extends Replacer {
 
   @Override
   protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
-    final String result = replaceDynamicPlaceHolders(text, false);
+    String result = replaceDynamicPlaceHolders(text, false);
+
+    // {{ java-class }}
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_CLASS), getTargetJavaClassName());
+
+    // {{ java-package }}
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_PACKAGE), getTargetJavaPackage());
+
     return result;
   }
 
@@ -65,7 +72,7 @@ public class DynamicReplacer extends Replacer {
         // {{targetname}}
         phValue = phValue.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
 
-        // convert to XML format
+        // convert to XML format?
         phValue = xmlType ? getCrxXMLValue(phValue) : phValue;
 
         result = result.replace(ph, phValue);

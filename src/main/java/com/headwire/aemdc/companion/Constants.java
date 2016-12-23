@@ -111,9 +111,7 @@ public class Constants {
   public static final String PLACEHOLDER_PROPS_SET_PREFIX = "ph_";
   public static final String PLACEHOLDER_RUNMODE = "runmode";
   public static final String PLACEHOLDER_JCR_TITLE = "jcr:title";
-  public static final String PLACEHOLDER_JCR_DESCRIPTION = "jcr:description";
   public static final String PLACEHOLDER_RANKING = "ranking";
-  public static final String PLACEHOLDER_SLING_RESOURCE_TYPE = "sling:resourceType";
   public static final String PLACEHOLDER_COMPONENT_GROUP = "componentGroup";
   public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
@@ -121,19 +119,9 @@ public class Constants {
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_TITLE = "aemdc-page-title";
   public static final String PLACEHOLDER_TEMPL_TYPE_JCR_DESCRIPTION = "aemdc-page-description";
   public static final String PLACEHOLDER_TEMPL_TYPE_SLING_RESOURCE_TYPE = "aemdc-page-resourceType";
-  public static final String PLACEHOLDER_CONTENT_CQ_TEMPLATE = "cq:template";
-  public static final String PLACEHOLDER_CONTENT_CQ_ALLOWED_TEMPLATES = "cq:allowedTemplates";
-  public static final String PLACEHOLDER_CONTENT_CQ_DESIGN_PATH = "cq:designPath";
 
   // default values
   public static final String PH_DEFAULT_RANKING = "{Long}100";
   public static final String PH_DEFAULT_TEMPL_TYPE_JCR_TITLE = "AEMDC HTML5 Page";
   public static final String PH_DEFAULT_TEMPL_TYPE_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
-  public static final String PH_DEFAULT_CONTENT_CQ_TEMPLATE = "/conf/{{" + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER
-      + "}}/settings/wcm/templates/page";
-  public static final String PH_DEFAULT_CONTENT_SLING_RESOURCE_TYPE = "wcm/foundation/components/page";
-  public static final String PH_DEFAULT_CONTENT_CQ_ALLOWED_TEMPLATES = "/conf/{{"
-      + CONFIGPROP_TARGET_PROJECT_CONF_FOLDER + "}}/settings/wcm/templates/.*";
-  public static final String PH_DEFAULT_CONTENT_CQ_DESIGN_PATH = "/etc/designs/{{"
-      + CONFIGPROP_TARGET_PROJECT_DESIGN_FOLDER + "}}";
 }
