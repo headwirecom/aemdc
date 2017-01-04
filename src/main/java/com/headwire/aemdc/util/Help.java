@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -279,6 +280,7 @@ public class Help {
     } else {
       placeHolders.append("Found next placeholders: \n");
 
+      // List<String> listPlaceholders = getPlaceHoldersAsList(dir);
       if (dir.isDirectory()) {
         // get files list recursive only with predefined extentions
         final String[] extentions = config.getFileExtensions();
@@ -295,6 +297,37 @@ public class Help {
       }
     }
     return placeHolders.toString();
+  }
+
+  public List<String> getPlaceHoldersAsList(File dir) {
+    System.out.println(dir);
+    ArrayList<String> placeholders = new ArrayList<>();
+
+    if (dir.isDirectory()) {
+      // get files list recursive only with predefined extentions
+      final String[] extentions = config.getFileExtensions();
+      final Collection<File> fileList = FileUtils.listFiles(dir, extentions, true);
+      final Iterator<File> iter = fileList.iterator();
+      while (iter.hasNext()) {
+        final File nextFile = iter.next();
+        // find place holders
+        placeholders.addAll(getPlaceHoldersFromFileAsList(nextFile));
+      }
+    } else {
+      // find place holders
+      placeholders.addAll(getPlaceHoldersFromFileAsList(dir));
+    }
+
+    ArrayList<String> ret = new ArrayList<>();
+
+    for (String ph: placeholders
+         ) {
+      if(!ret.contains(ph) && !"targetname".equals(ph)) {
+        ret.add(ph);
+      }
+    }
+
+    return ret;
   }
 
   /**
@@ -323,6 +356,29 @@ public class Help {
     return placeHolders.toString();
   }
 
+  private List<String> getPlaceHoldersFromFileAsList(final File file) {
+    final ArrayList<String> placeHolders = new ArrayList<>();
+    try {
+      final String text = FileUtils.readFileToString(file, Constants.ENCODING);
+      // find placeholders
+      final List<String> phList = Replacer.findTextPlaceHolders(text);
+      final Iterator<String> iter = phList.iterator();
+      while (iter.hasNext()) {
+        // add offset for help
+        String ph = iter.next();
+        ph = ph.replace("{{", "");
+        ph = ph.replace("}}", "");
+        ph = ph.trim();
+        if(!placeHolders.contains(ph)) {
+          placeHolders.add(ph);
+        }
+      }
+    } catch (final IOException e) {
+      LOG.error("Can't get place holders from {}", file);
+    }
+    return placeHolders;
+  }
+
   /**
    * Get list of all existing templates as String.
    *
@@ -330,7 +386,7 @@ public class Help {
    *          - template runner
    * @return list of all existing templates
    */
-  private String getTemplatesAsString(final BasisRunner runner) {
+  public String getTemplatesAsString(final BasisRunner runner) {
     final StringBuilder templs = new StringBuilder();
 
     templs.append("available names: \n");
@@ -355,5 +411,36 @@ public class Help {
     }
 
     return templs.toString();
+  }
+
+
+  /**
+   * Get list of all existing templates as String.
+   *
+   * @param runner
+   *          - template runner
+   * @return list of all existing templates
+   */
+  public List<String> getTemplatesAsList(final BasisRunner runner) {
+
+    final ArrayList<String> ret = new ArrayList<>();
+    final String sourceFolder = runner.getSourceFolder();
+
+    if (StringUtils.isNotBlank(sourceFolder)) {
+      final File sourceDir = new File(runner.getSourceFolder());
+
+      // find available templates
+      final Collection<File> fileList = runner.getAvailableTemplates();
+      final Iterator<File> iter = fileList.iterator();
+      while (iter.hasNext()) {
+        final File templateFile = iter.next();
+        final String templateName = FilesDirsUtil.getTemplateName(sourceDir, templateFile);
+        ret.add(templateName);
+      }
+    } else {
+      LOG.error("Can't get available names. Source directory is blank.");
+    }
+
+    return ret;
   }
 }
