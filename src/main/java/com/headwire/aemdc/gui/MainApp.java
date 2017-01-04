@@ -70,14 +70,18 @@ public class MainApp extends Application {
 
     // hook to execute aemdc
     private void performAction(ArrayList<String> parameters) {
-        System.out.println(model.getValue("template", "contentpage", "targetName"));
+        System.out.println(parameters);
         Serializer serializer = new Persister();
         try {
             serializer.write(model, new File("aemdcgui.xml"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(parameters);
+        try {
+            RunnableCompanion.main(parameters.toArray(new String[parameters.size()]));
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     // setup of the UI
@@ -272,12 +276,12 @@ public class MainApp extends Application {
         btn.setOnAction((ActionEvent e) -> {
             model.reset(type, template);
             ArrayList<String> params = collectParameters(type, template, grid);
-            if(params.size() < 1) {
+            if(params.size() < 3) {
                 System.out.println("not enough parameters to run the command");
-            } else if(!params.get(0).startsWith("targetName=")) {
+            } else if(!params.get(2).startsWith("targetName=")) {
                 System.out.println("no target name specified but required");
             } else {
-                params.set(0, params.get(0).substring("targetName=".length()));
+                params.set(2, params.get(2).substring("targetName=".length()));
                 performAction(params);
             }
         });
@@ -299,6 +303,10 @@ public class MainApp extends Application {
     private ArrayList<String> collectParameters(String type, String template, GridPane grid) {
         ArrayList<String> params = new ArrayList<String>();
         ArrayList<Node> visitor = new ArrayList<Node>();
+
+        params.add(type);
+        params.add(template);
+
         visitor.addAll(grid.getChildren());
         for (int i = 0; i < visitor.size(); i++)
         {
