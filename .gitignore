@@ -3,3 +3,5 @@
 .project
 /target/
 .idea/
+aemdc.iml
+aemdcgui.xml
