@@ -182,7 +182,7 @@ public class MainApp extends Application {
         String path = "";
         while(parent != null) {
             if(parent != item) {
-                path = "." + path;
+                path = ":" + path;
             }
             path = parent.getValue() + path;
             parent = parent.getParent();
@@ -192,7 +192,7 @@ public class MainApp extends Application {
 
     private void showPanelForPath(String path) {
 
-        String[] p = path.split("\\.");
+        String[] p = path.split(":");
 
         Node node = nodeCache.get(path);
         if(node == null) {
