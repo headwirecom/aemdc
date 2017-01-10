@@ -1,0 +1,169 @@
+#!/bin/sh
+#
+#----------------------------------------------------------------------------
+#AEMDC Test Batch script
+#
+#Required:
+#------------------
+#  Lazybones project creator installation.
+#----------------------------------------------------------------------------
+
+TESTVALID=true
+
+# define test directory
+TESTDIR="aemdctest"
+
+# delete old test directory
+if [ -d  "$TESTDIR" ] ; then
+  read -r -p "Would you like to delete test directory $TESTDIR? (y/n)" TESTDIR_DELETE
+
+  if [ "y" = "$TESTDIR_DELETE" ] ; then
+    rm -rf "$TESTDIR"
+  else
+    echo "Error: please delete test directory."
+    exit 1
+  fi
+fi
+
+# create "aemdctest" dir
+mkdir -p "$TESTDIR"
+cd "$TESTDIR"
+
+# create "my-test-project" using the Lazybones project creator.
+lazybones create aem-multimodule-project my-test-project -PgroupId=com.headwire.myaem -PartifactId=my-test-project -PuseNewNamingConvention=yes -PbundleInBundlesDirectory=no -PbundleArtifactId=my-test-project.core -PcontentArtifactId=my-test-project.ui.apps -Pversion=1.0.0-SNAPSHOT -PprojectName="My AEM Project" -PpackageGroup=my-test-project -PaemVersion=6.2 -PappsFolderName=my-test-project -PcontentFolderName=my-test-project -PcreateEditableTemplatesStructure=yes -PconfFolderName=my-test-project -PcreateDesign=yes -PdesignFolderName=my-test-project -PcreateMainClientLib=yes -PcreateDependenciesClientLib=no -PenableCodeQuality=no -PcreateRunModeConfigFolders=no -PcreateAuthorAndPublishPerEnv=no -PreconfigureRootMapping=no -PincludeAcsAemCommons=no -PusingSlingModels=yes -PslingModelsPackage=com.headwire.myaem.core -PpurgeDamWorkflows=no
+
+cd my-test-project
+
+# create aemdc-config.properties
+aemdc config
+
+# create and check TEMPLATE
+aemdc template contentpage homepage "jcr:title=Home"
+
+# TEMPLATE check
+TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/templates/homepage"
+if [ ! -f  "$TARGETDIR/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no template definition in the target directory $TARGETDIR/.content.xml"
+fi
+if [ ! -f  "$TARGETDIR/thumbnail.png" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no template thumbnail in the target directory $TARGETDIR/thumbnail.png"
+fi
+
+
+# create and check COMPONENT
+aemdc component contentpage page/page "jcr:title=CompContentPage"
+aemdc component component-js content/CompJS "jcr:title=CompJSTitle"
+aemdc component component-model content/hero "jcr:title=Hero Title" "comp-model=com.headwire.myaem.models.Hero"
+
+# COMPONENT check
+TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/components"
+if [ ! -f  "$TARGETDIR/page/page/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/page/.content.xml"
+fi
+if [ ! -f  "$TARGETDIR/content/CompJS/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/content/CompJS/.content.xml"
+fi
+if [ ! -f  "$TARGETDIR/content/hero/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/content/hero/.content.xml"
+fi
+
+
+# create and check OSGI
+aemdc osgi osgi.1.PID.xml com.day.cq.mypkg.impl.MyService.xml "runmode=author.prod" "ph_1_1:mobile.resourceTypes=[my-test-project/components/medianewsletter]" "ph_1_1:README=Use these configuration settings to indicate..."
+
+# OSGI check
+TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/config.author.prod"
+if [ ! -f  "$TARGETDIR/com.day.cq.mypkg.impl.MyService.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no osgi config definition in the target directory $TARGETDIR/com.day.cq.mypkg.impl.MyService.xml"
+fi
+
+
+# create and check PAGE
+aemdc page siteroot my-test-site "jcr:title=My Site Root Page"
+
+# PAGE check
+TARGETDIR="ui.apps/src/main/content/jcr_root/content/my-test-site"
+if [ ! -f  "$TARGETDIR/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no Content Page definition in the target directory $TARGETDIR/.content.xml"
+fi
+
+
+# create and check CONFIG STRUCTURE
+aemdc confstr project my-test-project "jcr:title=My TEST Project"
+aemdc confstr project-with-template-type my-test-project2 "ranking={Long}5"
+
+# CONFIG STRUCTURE check
+TARGETDIR="ui.apps/src/main/content/jcr_root/conf/my-test-project"
+if [ ! -f  "$TARGETDIR/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no Editable Template Structure definition in the target directory $TARGETDIR/.content.xml"
+fi
+
+TARGETDIR="ui.apps/src/main/content/jcr_root/conf/my-test-project2/settings/wcm/template-types/aemdc-page"
+if [ ! -f  "$TARGETDIR/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no Editable Template Type definition in the target directory $TARGETDIR/.content.xml"
+fi
+
+
+# create and check MODEL
+aemdc model HeroModel.java hero/Hero.java
+aemdc model SampleSlingModel.java list/GraphicList.java
+
+# MODEL check
+TARGETDIR="core/src/main/java/com/headwire/myaem/core/models"
+if [ ! -f  "$TARGETDIR/hero/Hero.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/hero/Hero.java"
+fi
+if [ ! -f  "$TARGETDIR/list/GraphicList.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/list/GraphicList.java"
+fi
+
+
+# create and check SERVICE
+aemdc service SampleService.java MySampleService.java
+aemdc service impl/SampleServiceImpl.java impl/MySampleServiceImpl.java
+
+# SERVICE check
+TARGETDIR="core/src/main/java/com/headwire/myaem/core/services"
+if [ ! -f  "$TARGETDIR/MySampleService.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/MySampleService.java"
+fi
+if [ ! -f  "$TARGETDIR/impl/MySampleServiceImpl.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/impl/MySampleServiceImpl.java"
+fi
+
+
+# create and check SERVLET
+aemdc servlet impl/SampleSafeMethodsServlet.java MyServlet.java
+aemdc servlet impl/SampleSafeMethodsServlet.java impl/MySampleSafeMethodsServlet.java
+
+# SERVLET check
+TARGETDIR="core/src/main/java/com/headwire/myaem/core/servlets"
+if [ ! -f  "$TARGETDIR/MyServlet.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/MyServlet.java"
+fi
+if [ ! -f  "$TARGETDIR/impl/MySampleSafeMethodsServlet.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no servlet definition in the target directory $TARGETDIR/impl/MySampleSafeMethodsServlet.java"
+fi
+
+
+# LAST CHECK MESSAGE 
+if [ "false" = "$TESTVALID" ] ; then
+  echo "ERROR: not all tests are valid"
+  exit 1
+fi
+echo "Congratulation! All tests are valid."
