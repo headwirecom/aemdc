@@ -90,7 +90,10 @@ public class MainApp extends Application {
 
         Serializer serializer = new Persister();
         try {
-            model = serializer.read(Model.class, new File("aemdcgui.xml"));
+            File aemdcguiConfigFile = new File("aemdcgui.xml");
+            if(aemdcguiConfigFile.exists()) {
+                model = serializer.read(Model.class, aemdcguiConfigFile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
