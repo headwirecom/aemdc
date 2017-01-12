@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -437,15 +438,23 @@ public class Resource {
 
     Param(final String arg) {
       // check for valid params like "paramName=paramValue"
+      final String message = "Parameter [" + arg + "] must be in form \"paramName=paramValue\"";
+      if (StringUtils.isBlank(arg)) {
+        throw new IllegalArgumentException(message);
+      }
       final int splitPos = arg.indexOf("=");
       if (splitPos < 1) {
-        throw new IllegalArgumentException("Parameter must be in form \"paramName=paramValue\"");
+        throw new IllegalArgumentException(message);
       }
 
       // get param key and value
-      key = arg.substring(0, splitPos);
+      key = StringUtils.trim(arg.substring(0, splitPos));
+      if (StringUtils.isBlank(key)) {
+        throw new IllegalArgumentException(message);
+      }
+
       if (arg.length() > (splitPos + 1)) {
-        value = arg.substring(splitPos + 1);
+        value = StringUtils.trim(arg.substring(splitPos + 1));
       } else {
         value = "";
       }
