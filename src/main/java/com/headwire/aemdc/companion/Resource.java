@@ -17,16 +17,17 @@ public class Resource {
 
   private static final Logger LOG = LoggerFactory.getLogger(Resource.class);
 
-  private boolean help;
   private String type;
   private String sourceName;
   private String targetName;
+  private Map<String, Map<String, String>> jcrProperties;
+  private boolean help;
+  private String tempFolder;
   private String sourceFolderPath;
   private String targetFolderPath;
   private String[] extentions;
   private boolean toDeleteDestDir;
   private boolean toWarnDestDir;
-  private Map<String, Map<String, String>> jcrProperties;
 
   /**
    * Constructor
@@ -48,8 +49,11 @@ public class Resource {
     } else {
       // 1 arg
       if (cmdArgs.length == 1) {
-        if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
+        if (Constants.PARAM_OPTION_HELP.equals(cmdArgs[0])) {
           setHelp(true);
+        } else if (cmdArgs[0].startsWith(Constants.PARAM_OPTION_TEMP)) {
+          setHelp(true);
+          setTempFolder(new Param(cmdArgs[0]).getValue());
         } else if (Constants.TYPE_CONFIG_PROPS.equals(cmdArgs[0])) {
           setType(cmdArgs[0]);
         } else {
@@ -60,8 +64,14 @@ public class Resource {
 
       // 2 args
       if (cmdArgs.length == 2) {
-        if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
+        if (Constants.PARAM_OPTION_HELP.equals(cmdArgs[0])) {
           setHelp(true);
+          setType(cmdArgs[1]);
+        } else if (cmdArgs[0].startsWith(Constants.PARAM_OPTION_TEMP)) {
+          if (!Constants.TYPE_CONFIG_PROPS.equals(cmdArgs[1])) {
+            setHelp(true);
+          }
+          setTempFolder(new Param(cmdArgs[0]).getValue());
           setType(cmdArgs[1]);
         } else {
           setHelp(true);
@@ -72,8 +82,15 @@ public class Resource {
 
       // 3 args
       if (cmdArgs.length == 3) {
-        if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
+        if (Constants.PARAM_OPTION_HELP.equals(cmdArgs[0])) {
           setHelp(true);
+          setType(cmdArgs[1]);
+          setSourceName(cmdArgs[2]);
+        } else if (cmdArgs[0].startsWith(Constants.PARAM_OPTION_TEMP)) {
+          if (!Constants.TYPE_CONFIG_PROPS.equals(cmdArgs[1])) {
+            setHelp(true);
+          }
+          setTempFolder(new Param(cmdArgs[0]).getValue());
           setType(cmdArgs[1]);
           setSourceName(cmdArgs[2]);
         } else {
@@ -88,8 +105,17 @@ public class Resource {
 
       // > 3 args
       if (cmdArgs.length > 3) {
-        if (Constants.PARAM_HELP.equals(cmdArgs[0])) {
+        if (Constants.PARAM_OPTION_HELP.equals(cmdArgs[0])) {
           setHelp(true);
+          setType(cmdArgs[1]);
+          setSourceName(cmdArgs[2]);
+          setTargetName(cmdArgs[3]);
+
+          // Set JCR Properties from arguments
+          setJcrProperties(convertArgsToMaps(cmdArgs, 4));
+
+        } else if (cmdArgs[0].startsWith(Constants.PARAM_OPTION_TEMP)) {
+          setTempFolder(new Param(cmdArgs[0]).getValue());
           setType(cmdArgs[1]);
           setSourceName(cmdArgs[2]);
           setTargetName(cmdArgs[3]);
@@ -107,21 +133,6 @@ public class Resource {
         }
       }
     }
-  }
-
-  /**
-   * @return the help
-   */
-  public boolean isHelp() {
-    return help;
-  }
-
-  /**
-   * @param help
-   *          the help to set
-   */
-  public void setHelp(final boolean help) {
-    this.help = help;
   }
 
   /**
@@ -167,6 +178,68 @@ public class Resource {
    */
   public void setTargetName(final String targetName) {
     this.targetName = targetName;
+  }
+
+  /**
+   * @return the jcrProperties
+   */
+  public Map<String, Map<String, String>> getJcrProperties() {
+    if (jcrProperties == null) {
+      jcrProperties = new HashMap<String, Map<String, String>>();
+
+      // set common jcr props set in any case.
+      // It allows to call Custom XML/Text PH Replacer functions from Replacer object
+      final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
+      jcrProperties.put(Constants.PLACEHOLDER_PROPS_SET_COMMON, jcrPropsCommon);
+    }
+    return jcrProperties;
+  }
+
+  /**
+   * @param key
+   *          properties set key
+   * @return the jcrPropertiesSet by key
+   */
+  public Map<String, String> getJcrPropsSet(final String key) {
+    return getJcrProperties().get(key);
+  }
+
+  /**
+   * @param jcrProperties
+   *          the jcrProperties to set
+   */
+  public void setJcrProperties(final Map<String, Map<String, String>> jcrProperties) {
+    this.jcrProperties = jcrProperties;
+  }
+
+  /**
+   * @return the help
+   */
+  public boolean isHelp() {
+    return help;
+  }
+
+  /**
+   * @param help
+   *          the help to set
+   */
+  public void setHelp(final boolean help) {
+    this.help = help;
+  }
+
+  /**
+   * @return the tempFolder
+   */
+  public String getTempFolder() {
+    return tempFolder;
+  }
+
+  /**
+   * @param tempFolder
+   *          the tempFolder to set
+   */
+  public void setTempFolder(final String tempFolder) {
+    this.tempFolder = tempFolder;
   }
 
   /**
@@ -252,54 +325,29 @@ public class Resource {
     this.toWarnDestDir = toWarnDestDir;
   }
 
-  /**
-   * @return the jcrProperties
-   */
-  public Map<String, Map<String, String>> getJcrProperties() {
-    if (jcrProperties == null) {
-      jcrProperties = new HashMap<String, Map<String, String>>();
-
-      // set common jcr props set in any case.
-      // It allows to call Custom XML/Text PH Replacer functions from Replacer object
-      final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
-      jcrProperties.put(Constants.PLACEHOLDER_PROPS_SET_COMMON, jcrPropsCommon);
-    }
-    return jcrProperties;
-  }
-
-  /**
-   * @param key
-   *          properties set key
-   * @return the jcrPropertiesSet by key
-   */
-  public Map<String, String> getJcrPropsSet(final String key) {
-    return getJcrProperties().get(key);
-  }
-
-  /**
-   * @param jcrProperties
-   *          the jcrProperties to set
-   */
-  public void setJcrProperties(final Map<String, Map<String, String>> jcrProperties) {
-    this.jcrProperties = jcrProperties;
-  }
-
   @Override
   public Resource clone() {
     final Resource newResource = new Resource();
-    newResource.setHelp(isHelp());
+
+    // clone params
     newResource.setType(getType());
     newResource.setSourceName(getSourceName());
     newResource.setTargetName(getTargetName());
+
+    // clone Jcr Properties as Args
+    final Map<String, Map<String, String>> props = shallowCopy(getJcrProperties());
+    newResource.setJcrProperties(props);
+
+    // clone options
+    newResource.setHelp(isHelp());
+    newResource.setTempFolder(getTempFolder());
+
+    // clone other properties
     newResource.setSourceFolderPath(getSourceFolderPath());
     newResource.setTargetFolderPath(getTargetFolderPath());
     newResource.setExtentions(getExtentions());
     newResource.setToDeleteDestDir(isToDeleteDestDir());
     newResource.setToWarnDestDir(isToWarnDestDir());
-
-    // clone Jcr Properties
-    final Map<String, Map<String, String>> props = shallowCopy(getJcrProperties());
-    newResource.setJcrProperties(props);
 
     return newResource;
   }
@@ -348,18 +396,9 @@ public class Resource {
     final Map<String, String> jcrPropsCommon = new HashMap<String, String>();
     for (int i = start; i < args.length; i++) {
 
-      // check for valid params like "paramName=paramValue"
-      final int splitPos = args[i].indexOf("=");
-      if (splitPos < 1) {
-        throw new IllegalArgumentException("Params must be in form \"paramName=paramValue\"");
-      }
-
-      // get param key and value
-      final String key = args[i].substring(0, splitPos);
-      String value = "";
-      if (args[i].length() > (splitPos + 1)) {
-        value = args[i].substring(splitPos + 1);
-      }
+      final Param param = new Param(args[i]);
+      final String key = param.getKey();
+      final String value = param.getValue();
 
       if (key.startsWith(Constants.PLACEHOLDER_PROPS_SET_PREFIX)) {
         // get "ph_" jcr props set
@@ -387,4 +426,44 @@ public class Resource {
 
     return jcrPropAllSets;
   }
+
+  /**
+   * Argumets parameter
+   */
+  class Param {
+
+    String key;
+    String value;
+
+    Param(final String arg) {
+      // check for valid params like "paramName=paramValue"
+      final int splitPos = arg.indexOf("=");
+      if (splitPos < 1) {
+        throw new IllegalArgumentException("Parameter must be in form \"paramName=paramValue\"");
+      }
+
+      // get param key and value
+      key = arg.substring(0, splitPos);
+      if (arg.length() > (splitPos + 1)) {
+        value = arg.substring(splitPos + 1);
+      } else {
+        value = "";
+      }
+    }
+
+    /**
+     * @return the key
+     */
+    String getKey() {
+      return key;
+    }
+
+    /**
+     * @return the value
+     */
+    String getValue() {
+      return value;
+    }
+  }
+
 }

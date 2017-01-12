@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,11 @@ public class DynamicRunner extends BasisRunner {
 
     final String targetPath = replacer
         .replacePathPlaceHolders(dynProps.getProperty(Constants.DYN_CONFIGPROP_TARGET_TYPE_FOLDER));
-    resource.setTargetFolderPath(targetPath);
+    if (StringUtils.isNotBlank(resource.getTempFolder())) {
+      resource.setTargetFolderPath(resource.getTempFolder() + "/" + targetPath);
+    } else {
+      resource.setTargetFolderPath(targetPath);
+    }
 
     // Set global config properties in the resource
     setGlobalConfigProperties(config, resource);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,11 @@ public class ConfigPropsRunner extends BasisRunner {
 
     resource.setSourceFolderPath(Constants.CONFIG_PROPS_FOLDER);
     resource.setSourceName(Constants.CONFIG_PROPS_FILENAME);
-    resource.setTargetFolderPath(".");
+    if (StringUtils.isNotBlank(resource.getTempFolder())) {
+      resource.setTargetFolderPath(resource.getTempFolder());
+    } else {
+      resource.setTargetFolderPath(".");
+    }
     resource.setTargetName(Constants.CONFIG_PROPS_FILENAME);
 
     // Set global config properties in the resource

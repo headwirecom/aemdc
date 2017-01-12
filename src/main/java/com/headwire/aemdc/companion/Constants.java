@@ -98,7 +98,8 @@ public class Constants {
   public static final String TEMPLATE_STRUCTURE_FILE = "FILE";
 
   // params constants
-  public static final String PARAM_HELP = "help";
+  public static final String PARAM_OPTION_HELP = "help";
+  public static final String PARAM_OPTION_TEMP = "-temp";
   public static final String PARAM_TYPE = "type";
   public static final String PARAM_TEMPLATE_NAME = "templateName";
   public static final String PARAM_TARGET_NAME = "targetName";
