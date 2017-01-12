@@ -224,7 +224,7 @@ public class Config {
       Collection<String> list = new ArrayList<String>();
 
       // Get types dir
-      final String typesDirPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPE_CONFIG_FOLDER);
+      final String typesDirPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER);
 
       if (StringUtils.isNotBlank(typesDirPath)) {
         final File dir = new File(typesDirPath);
@@ -310,7 +310,7 @@ public class Config {
    * @return dynamic configuration properties file path
    */
   private String getDynamicConfigPath(final String type) {
-    final String dynConfigPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPE_CONFIG_FOLDER) + "/" + type
+    final String dynConfigPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type
         + "/" + Constants.DYNAMIC_CONFIG_PROPS_FILENAME;
     return dynConfigPath;
   }
@@ -330,6 +330,8 @@ public class Config {
       // source path placeholder values
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
+      dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
+          configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,
@@ -376,6 +378,8 @@ public class Config {
       // source path placeholder values
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
+      newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
+          newProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,

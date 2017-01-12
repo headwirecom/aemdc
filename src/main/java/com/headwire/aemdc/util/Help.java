@@ -102,7 +102,7 @@ public class Help {
 
     // adding the all type helps
     for (final String type : config.getDynamicTypes()) {
-      final String helpPath = config.getProperty(Constants.CONFIGPROP_SOURCE_TYPE_CONFIG_FOLDER) + "/" + type + "/"
+      final String helpPath = config.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type + "/"
           + HELP_ROOT_FOLDER + "/" + HELP_FILE_TYPE;
       helpText.append(getTextFromFile(helpPath));
     }
