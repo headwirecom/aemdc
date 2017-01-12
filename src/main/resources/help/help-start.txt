@@ -1,2 +1,2 @@
 Usage:
-      aemdc [help] <type> [name] [targetname] [args...]
+      aemdc [options] <type> [name] [targetname] [args...]

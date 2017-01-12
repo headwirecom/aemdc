@@ -36,7 +36,6 @@ public class Help {
   public static final String HELP_COMMON_FOLDER = "common";
   public static final String HELP_FILE_START = "help-start.txt";
   public static final String HELP_FILE_OPTIONS = "help-options.txt";
-  public static final String HELP_FILE_HELP = "help-help.txt";
   public static final String HELP_FILE_TYPE = "help-type.txt";
   public static final String HELP_FILE_NAME = "help-name.txt";
   public static final String HELP_FILE_TARGET_NAME = "help-targetname.txt";
@@ -98,7 +97,6 @@ public class Help {
     // get complete help
     helpText.append(getTextFromResourceFile(HELP_FILE_START));
     helpText.append(getTextFromResourceFile(HELP_FILE_OPTIONS));
-    helpText.append(getTextFromResourceFile(HELP_FILE_HELP));
     helpText.append(getTextFromResourceFile(HELP_FILE_TYPE));
     helpText.append(getTextFromResourceFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_TYPE));
 
@@ -299,9 +297,9 @@ public class Help {
     return placeHolders.toString();
   }
 
-  public List<String> getPlaceHoldersAsList(File dir) {
+  public List<String> getPlaceHoldersAsList(final File dir) {
     System.out.println(dir);
-    ArrayList<String> placeholders = new ArrayList<>();
+    final ArrayList<String> placeholders = new ArrayList<>();
 
     if (dir.isDirectory()) {
       // get files list recursive only with predefined extentions
@@ -318,11 +316,10 @@ public class Help {
       placeholders.addAll(getPlaceHoldersFromFileAsList(dir));
     }
 
-    ArrayList<String> ret = new ArrayList<>();
+    final ArrayList<String> ret = new ArrayList<>();
 
-    for (String ph: placeholders
-         ) {
-      if(!ret.contains(ph) && !"targetname".equals(ph)) {
+    for (final String ph : placeholders) {
+      if (!ret.contains(ph) && !"targetname".equals(ph)) {
         ret.add(ph);
       }
     }
@@ -369,7 +366,7 @@ public class Help {
         ph = ph.replace("{{", "");
         ph = ph.replace("}}", "");
         ph = ph.trim();
-        if(!placeHolders.contains(ph)) {
+        if (!placeHolders.contains(ph)) {
           placeHolders.add(ph);
         }
       }
@@ -412,7 +409,6 @@ public class Help {
 
     return templs.toString();
   }
-
 
   /**
    * Get list of all existing templates as String.

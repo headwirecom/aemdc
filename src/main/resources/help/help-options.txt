@@ -1,2 +1,6 @@
--options:
-    Includes usual for java command options.
+options:
+    help               This help text.
+    help config        Shows initial default configuration properties.
+    help <type>        Shows list of possible templates.
+    help <type> <name> Shows list of possible place holders.
+    -temp=<path>       Create all templates under temp folder.
