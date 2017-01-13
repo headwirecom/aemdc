@@ -214,6 +214,17 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
 
+        Scene scene = getMainScene();
+        stage.setTitle("AEM Developer Companion");
+        stage.setWidth(800);
+        stage.setHeight(600);
+
+        stage.setScene(scene);
+
+        stage.show();
+    }
+
+    private Scene getMainScene() {
         Serializer serializer = new Persister();
         try {
             File aemdcguiConfigFile = new File("aemdcgui.xml");
@@ -229,9 +240,6 @@ public class MainApp extends Application {
         // show the panel that will be used on the root node of the tree even if there is no selection
         showPanelForPath("commands");
 
-        stage.setTitle("AEM Developer Companion");
-        stage.setWidth(800);
-        stage.setHeight(600);
 
         container.setLeft(tree);
 
@@ -246,8 +254,7 @@ public class MainApp extends Application {
         borderPane.setBottom(lastLogMessage);
 
         Scene scene = new Scene(borderPane);
-        stage.setScene(scene);
-        stage.show();
+        return scene;
     }
 
     // creates a log viewer wrapping system.out and system.err
