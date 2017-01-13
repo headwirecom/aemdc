@@ -224,7 +224,7 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    private Scene getMainScene() {
+    public Scene getMainScene() {
         Serializer serializer = new Persister();
         try {
             File aemdcguiConfigFile = new File("aemdcgui.xml");
