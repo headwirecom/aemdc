@@ -22,15 +22,13 @@ import javafx.scene.layout.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +55,12 @@ public class MainApp extends Application {
     // main container, we will replace the center with the selection from the tree
     private BorderPane container = new BorderPane();
 
+    // main tab pane containing the tree and command panel
+    private TabPane tabPane;
+
     // label for the bottom showing last log message
     private Label lastLogMessage = new Label("last log message: ");
+    private Console console;
 
     // launch of the application
     public static void main(String[] args) {
@@ -69,18 +71,142 @@ public class MainApp extends Application {
     }
 
     // hook to execute aemdc
-    private void performAction(ArrayList<String> parameters) {
-        System.out.println(parameters);
+    private void performAction(ArrayList<String> parameters, boolean preview) {
+
+        console.clear();
+
+        tabPane.getSelectionModel().select(1);
+
         Serializer serializer = new Persister();
         try {
             serializer.write(model, new File("aemdcgui.xml"));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("failed to write current state of UI to aemdcgui.xml",e);
         }
         try {
+
+            LOG.info("aemdc "+String.join(" ", parameters));
             RunnableCompanion.main(parameters.toArray(new String[parameters.size()]));
+            LOG.info("aemdc completed");
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            LOG.error("failed to perform aemdc command", ioe);
+        }
+
+        if(preview) {
+            hidePreviewPane();
+            showPreviewPane();
+        } else {
+            hidePreviewPane();
+        }
+    }
+
+    // show the preview panel (file tree with a textare displaying the selected file)
+    private void showPreviewPane() {
+        BorderPane preview = new BorderPane();
+        TextArea ta = new TextArea();
+        ta.setWrapText(false);
+        ta.setStyle("-fx-font-family: Monospaced;");
+        preview.setCenter(ta);
+
+        TreeItem root = new TreeItem("root");
+        root.setExpanded(true);
+
+        TreeItem firstFile = makePreviewTree(root);
+
+        TreeView tree = new TreeView(root);
+        tree.setShowRoot(false);
+        tree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                if(tree.getSelectionModel().getSelectedIndex() < 0) return;
+                TreeItemFileWrapper item = (TreeItemFileWrapper) ((TreeItem) newValue).getValue();
+                if(!item.getFile().isDirectory()) {
+                    showFileInTextArea(item.getFile(), ta);
+                }
+            }
+        });
+        if(firstFile != null) {
+            tree.getSelectionModel().select(firstFile);
+        }
+        preview.setLeft(tree);
+
+        Tab tab = new Tab("preview");
+        tab.setContent(preview);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+    }
+
+    // load file into a textarea
+    private void showFileInTextArea(File file, TextArea ta) {
+        final StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = br.readLine();
+            while(line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            br.close();
+        } catch(Exception e) {
+            LOG.error("problem reading file for preview pane {}", file);
+        }
+        ta.setText(sb.toString());
+    }
+
+    // make a preview tree of all files in the temp/aemdc folder
+    private TreeItem makePreviewTree(TreeItem root) {
+
+        final File tempDir = new File(System.getProperty("java.io.tmpdir"));
+        final File tempAemDCFolder = new File(tempDir, "aemdc");
+
+        final TreeItem firstFile = makePreviewTreeFromFile(root, tempAemDCFolder);
+
+        return firstFile;
+    }
+
+    // create treeitems from file structure
+    private TreeItem makePreviewTreeFromFile(TreeItem node, File folder) {
+        TreeItem firstFile = null;
+        for (File file: folder.listFiles()
+             ) {
+            TreeItem child = new TreeItem(new TreeItemFileWrapper(file));
+            node.getChildren().add(child);
+            if(file.isDirectory()) {
+                child.setExpanded(true);
+                TreeItem first = makePreviewTreeFromFile(child, file);
+                if(firstFile == null) {
+                    firstFile = first;
+                }
+            } else {
+                if(firstFile == null) {
+                    firstFile = child;
+                }
+            }
+        }
+        return firstFile;
+    }
+
+    // wrapper class for tree item to handle a file
+    static class TreeItemFileWrapper {
+        private File file;
+        public TreeItemFileWrapper(File file) {
+            this.file = file;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public String toString() {
+            return file.getName();
+        }
+    }
+
+    // remove the preview pane from the tabs
+    private void hidePreviewPane() {
+        if(tabPane.getTabs().size() > 2) {
+            tabPane.getTabs().remove(2, 3);
         }
     }
 
@@ -95,7 +221,7 @@ public class MainApp extends Application {
                 model = serializer.read(Model.class, aemdcguiConfigFile);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.info("encountered a problem while reading the state of the UI from aemdcgui.xml", e);
         }
 
         final TreeView tree = setupCommandTree();
@@ -112,7 +238,7 @@ public class MainApp extends Application {
         Tab workspace = createWorkspaceTab();
         Tab logView = createLogViewTab();
 
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
         tabPane.getTabs().addAll(workspace, logView);
 
         BorderPane borderPane = new BorderPane();
@@ -124,13 +250,15 @@ public class MainApp extends Application {
         stage.show();
     }
 
+    // creates a log viewer wrapping system.out and system.err
     private Tab createLogViewTab() {
         Tab logView = new Tab("log");
 
         TextArea ta = new TextArea();
-        ta.setWrapText(true);
+        ta.setWrapText(false);
 
-        Console console = new Console(ta, lastLogMessage);
+        console = new Console(ta, lastLogMessage);
+        ta.setStyle("-fx-font-family: Monospaced;");
         PrintStream ps = new PrintStream(console, true);
         System.setOut(ps);
         System.setErr(ps);
@@ -140,6 +268,7 @@ public class MainApp extends Application {
         return logView;
     }
 
+    // create the basic main tab
     private Tab createWorkspaceTab() {
         Tab workspace = new Tab("workspace");
         workspace.setClosable(false);
@@ -147,12 +276,14 @@ public class MainApp extends Application {
         return workspace;
     }
 
+    // create the command tree
     private TreeView setupCommandTree() {
 
         makeTreeItems();
         return makeTreeView();
     }
 
+    // make tree items for command tree from the model
     private void makeTreeItems() {
         rootNode.setExpanded(true);
         model.getTypes().forEach(name -> {
@@ -166,6 +297,7 @@ public class MainApp extends Application {
         });
     }
 
+    // create the actual tree view for the commands
     private TreeView makeTreeView() {
         final TreeView tree = new TreeView(rootNode);
 
@@ -180,6 +312,7 @@ public class MainApp extends Application {
         return tree;
     }
 
+    // convert a tree item to a path separated by ':'
     private String treeNodeToPath(TreeItem<String> item) {
         TreeItem<String> parent = item;
         String path = "";
@@ -193,6 +326,7 @@ public class MainApp extends Application {
         return path;
     }
 
+    // shows a panel for a given path (commands:<type>:<command>) (uses a cache)
     private void showPanelForPath(String path) {
 
         String[] p = path.split(":");
@@ -214,19 +348,21 @@ public class MainApp extends Application {
         container.setCenter(node);
     }
 
+    // show the help text for a given command (commands[:<type>[:<template>]]
     private Node getHelpFor(String command) {
         webEngine.loadContent(model.getHelpTextForType(command));
         return browser;
     }
 
+    // load the intro text
     private Node intro() {
         String path;
         path = MainApp.class.getResource("/index.html").toExternalForm();
-        System.out.println("loading "+path);
         webEngine.load(path);
         return browser;
     }
 
+    // create the pane for a given type/template
     private Region getPaneForPath(String type, String template) {
         List<String> placeholders = model.getPlaceHoldersForName(type, template);
         final GridPane grid = new GridPane();
@@ -277,20 +413,27 @@ public class MainApp extends Application {
 
         Button btn = new Button("create");
         btn.setOnAction((ActionEvent e) -> {
+            collectAndCreate(type, template, grid, false);
+        });
+
+        Button clear = new Button("clear");
+        clear.setOnAction((ActionEvent e) -> {
+            nodeCache.remove("commands:"+type+":"+template);
             model.reset(type, template);
-            ArrayList<String> params = collectParameters(type, template, grid);
-            if(params.size() < 3) {
-                System.out.println("not enough parameters to run the command");
-            } else if(!params.get(2).startsWith("targetName=")) {
-                System.out.println("no target name specified but required");
-            } else {
-                params.set(2, params.get(2).substring("targetName=".length()));
-                performAction(params);
-            }
+            Object obj = ((TreeView)container.getLeft()).getSelectionModel().getSelectedItem();
+            ((TreeView)container.getLeft()).getSelectionModel().select(null);
+            ((TreeView)container.getLeft()).getSelectionModel().select(obj);
+        });
+
+        Button preview = new Button("preview");
+        preview.setOnAction((ActionEvent e) -> {
+            collectAndCreate(type, template, grid, true);
         });
 
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(clear);
+        hbBtn.getChildren().add(preview);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, row);
 
@@ -298,12 +441,45 @@ public class MainApp extends Application {
 
     }
 
+    // collect the values entered on the UI for the given type/template and execute aemdc if appropriate
+    private void collectAndCreate(String type, String template, GridPane grid, boolean preview) {
+        model.reset(type, template);
+        ArrayList<String> params = collectParameters(type, template, grid, false);
+        if(params.size() < 3) {
+            LOG.info("not enough parameters to run the command");
+        } else if(!params.get(2).startsWith("targetName=")) {
+            LOG.info("no target name specified but required");
+        } else {
+            params.set(2, params.get(2).substring("targetName=".length()));
+            if(preview) {
+                File tempDir = new File(System.getProperty("java.io.tmpdir"));
+                File tempAemDCFolder = new File(tempDir, "aemdc");
+                tempAemDCFolder.mkdirs();
+                if(tempAemDCFolder.exists()) {
+                    try {
+                        FileUtils.deleteDirectory(tempAemDCFolder);
+                    } catch (IOException e) {
+                        LOG.error("not able to remove temp file folder for preview", e);
+                    } finally {
+                        params.add(0, "-temp="+tempAemDCFolder.getAbsolutePath());
+                        performAction(params, preview);
+                    }
+                }
+            }
+            else {
+                performAction(params, preview);
+            }
+        }
+    }
+
+    // set the stored content based on what placeholder this field is linked to
     public void setValue(TextField field, String type, String template) {
         String value = model.getValue(type, template, field.getUserData().toString());
         field.setText(value);
     }
 
-    private ArrayList<String> collectParameters(String type, String template, GridPane grid) {
+    // collect the parameters entered and create the arguments to call aemdc from it
+    private ArrayList<String> collectParameters(String type, String template, GridPane grid, boolean clear) {
         ArrayList<String> params = new ArrayList<String>();
         ArrayList<Node> visitor = new ArrayList<Node>();
 
@@ -343,6 +519,7 @@ public class MainApp extends Application {
         return params;
     }
 
+    // get a list of all the placeholders for a given type/template
     public HashMap<String, String> getPlaceholders(String type, String template, String phName) {
         return model.getPlaceHolders(type, template, phName);
     }
@@ -371,6 +548,10 @@ class Console extends OutputStream
             line = "";
         }
         output.appendText(ch);
+    }
+
+    public void clear() {
+        output.clear();
     }
 
 }
