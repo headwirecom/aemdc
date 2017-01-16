@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
 
@@ -29,7 +30,8 @@ public class CommandMenu {
     menuItems.get(operationNumber).execute();
   }
 
-  public void setCommands(final String[] operations, final Resource resource, final Replacer replacer) {
+  public void setCommands(final String[] operations, final Resource resource, final Replacer replacer,
+      final Config config) {
     int i = 0;
     for (final String operation : operations) {
       final Command command;
@@ -40,14 +42,17 @@ public class CommandMenu {
         case CopyFileCommand.NAME:
           command = new CopyFileCommand(resource);
           break;
+        case CopyFilesCommand.NAME:
+          command = new CopyFilesCommand(resource);
+          break;
         case CreateFileFromResourceCommand.NAME:
           command = new CreateFileFromResourceCommand(resource);
           break;
         case ReplacePlaceHoldersCommand.NAME:
-          command = new ReplacePlaceHoldersCommand(resource, replacer);
+          command = new ReplacePlaceHoldersCommand(resource, replacer, config);
           break;
         case ReplacePathPlaceHoldersCommand.NAME:
-          command = new ReplacePathPlaceHoldersCommand(resource, replacer);
+          command = new ReplacePathPlaceHoldersCommand(resource, replacer, config);
           break;
         case HelpCommand.NAME:
           command = new HelpCommand(resource);

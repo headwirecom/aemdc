@@ -1,0 +1,2 @@
+Usage:
+    aemdc [options] <type> [name] [targetname] [args...]

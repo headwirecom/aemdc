@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -196,4 +197,35 @@ public class FilesDirsUtil {
 
     return name;
   }
+
+  /**
+   * Get template names incl. subfolders.
+   *
+   * @param sourceDir
+   *          - source templates directory
+   * @return template names
+   */
+  public static List<String> getTemplateNames(final File sourceDir) {
+    final Collection<File> fileList = FileUtils.listFiles(sourceDir, null, true);
+    final List<String> names = getTemplateNames(sourceDir, fileList);
+    return names;
+  }
+
+  /**
+   * Get template names incl. subfolders.
+   *
+   * @param sourceDir
+   *          - source templates directory
+   * @param templateFiles
+   *          - list of template files under the directory
+   * @return template names
+   */
+  public static List<String> getTemplateNames(final File sourceDir, final Collection<File> templateFiles) {
+    final List<String> names = new ArrayList<String>();
+    for (final File nextFile : templateFiles) {
+      names.add(getTemplateName(sourceDir, nextFile));
+    }
+    return names;
+  }
+
 }

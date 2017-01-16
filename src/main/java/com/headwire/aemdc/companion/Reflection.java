@@ -55,16 +55,16 @@ public class Reflection {
       if (StringUtils.isNotBlank(fullyQualifiedClassName)) {
         try {
           final Class<?> c = Class.forName(fullyQualifiedClassName);
-          final Constructor<?> ctor = c.getDeclaredConstructor(Resource.class);
+          final Constructor<?> ctor = c.getDeclaredConstructor(Resource.class, Config.class);
           ctor.setAccessible(true);
-          runner = (BasisRunner) ctor.newInstance(resource);
+          runner = (BasisRunner) ctor.newInstance(resource, config);
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
             | SecurityException | IllegalArgumentException | InvocationTargetException e) {
           LOG.error("Can't get class instance for template type [{}]. ", type, e);
         }
       } else if (config.getDynamicTypes().contains(type)) {
-        runner = new DynamicRunner(resource);
+        runner = new DynamicRunner(resource, config);
       } else {
         LOG.error("Unknown <type> argument [{}].", type);
       }

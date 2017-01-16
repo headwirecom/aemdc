@@ -26,13 +26,17 @@ import com.headwire.aemdc.replacer.Replacer;
 public class ConfigPropsRunner extends BasisRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigPropsRunner.class);
-  private static final String HELP_FOLDER = "config";
+  private static final String HELP_FOLDER = "help";
+  public static final String SOURCE_TYPE_FOLDER = Constants.TYPES_STATIC_FOLDER + "/" + Constants.TYPE_CONFIG_PROPS;
+  public static final String SOURCE_NAME_FOLDER = SOURCE_TYPE_FOLDER + "/aemdc/files";
+  public static final String CONFIG_PROPS_FILENAME = "aemdc-config.properties";
 
   /**
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -40,29 +44,27 @@ public class ConfigPropsRunner extends BasisRunner {
    * @param resource
    *          - resource object
    */
-  public ConfigPropsRunner(final Resource resource) {
+  public ConfigPropsRunner(final Resource resource, final Config config) {
     this.resource = resource;
-
-    // Get Properties Config from config file
-    final Config config = new Config();
+    this.config = config;
 
     LOG.debug("AEMDC Config Properties runner starting...");
 
-    resource.setSourceFolderPath(Constants.CONFIG_PROPS_FOLDER);
-    resource.setSourceName(Constants.CONFIG_PROPS_FILENAME);
+    resource.setSourceFolderPath(SOURCE_NAME_FOLDER);
+    resource.setSourceName(CONFIG_PROPS_FILENAME);
     if (StringUtils.isNotBlank(resource.getTempFolder())) {
       resource.setTargetFolderPath(resource.getTempFolder());
     } else {
       resource.setTargetFolderPath(".");
     }
-    resource.setTargetName(Constants.CONFIG_PROPS_FILENAME);
+    resource.setTargetName(CONFIG_PROPS_FILENAME);
 
     // Set global config properties in the resource
     setGlobalConfigProperties(config, resource);
 
     // Creates Invoker object, command object and configure them
     menu.setCommand(1, new CreateFileFromResourceCommand(resource));
-    menu.setCommand(2, new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer()));
+    menu.setCommand(2, new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer(), config));
   }
 
   /**
@@ -78,7 +80,8 @@ public class ConfigPropsRunner extends BasisRunner {
 
   @Override
   public String getHelpFolder() {
-    return HELP_FOLDER;
+    final String helpPath = SOURCE_TYPE_FOLDER + "/" + HELP_FOLDER;
+    return helpPath;
   }
 
   @Override

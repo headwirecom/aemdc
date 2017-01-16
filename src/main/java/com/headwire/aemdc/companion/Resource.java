@@ -29,6 +29,7 @@ public class Resource {
   private String[] extentions;
   private boolean toDeleteDestDir;
   private boolean toWarnDestDir;
+  private List<String> copiedTemplateNames;
 
   /**
    * Constructor
@@ -324,6 +325,21 @@ public class Resource {
    */
   public void setToWarnDestDir(final boolean toWarnDestDir) {
     this.toWarnDestDir = toWarnDestDir;
+  }
+
+  /**
+   * @return the copiedTemplateNames
+   */
+  public List<String> getCopiedTemplateNames() {
+    return copiedTemplateNames;
+  }
+
+  /**
+   * @param copiedTemplateNames
+   *          the copiedTemplateNames to set
+   */
+  public void setCopiedTemplateNames(final List<String> copiedTemplateNames) {
+    this.copiedTemplateNames = copiedTemplateNames;
   }
 
   @Override

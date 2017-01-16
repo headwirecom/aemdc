@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.runner.ConfigPropsRunner;
 import com.headwire.aemdc.util.FilesDirsUtil;
 
 
@@ -34,17 +35,26 @@ public class Config {
    * Constructor
    */
   public Config() {
-    // INIT default configuration file properties from resources folder
+    // init default configuration file properties from resources folder
     defaultConfigProps = FilesDirsUtil
-        .getPropertiesFromContextClassLoader(Constants.CONFIG_PROPS_FOLDER + "/" + Constants.CONFIG_PROPS_FILENAME);
+        .getPropertiesFromContextClassLoader(
+            ConfigPropsRunner.SOURCE_NAME_FOLDER + "/" + ConfigPropsRunner.CONFIG_PROPS_FILENAME);
 
-    // INIT config properties
-    configProps = replacePathPlaceHolders(FilesDirsUtil.getProperties(Constants.CONFIG_PROPS_FILENAME));
+    // init config properties
+    configProps = replacePathPlaceHolders(FilesDirsUtil.getProperties(ConfigPropsRunner.CONFIG_PROPS_FILENAME));
 
-    // INIT dynamic configs
+    // init dynamic configs
     for (final String type : getDynamicTypes()) {
-      final Properties dynProps = readDynamicProperties(type);
-      dynamicConfigs.put(type, dynProps);
+      Properties dynProps = readDynamicProperties(type, null);
+
+      Key key = new Key(type, "");
+      dynamicConfigs.put(key.getKey(), dynProps);
+
+      for (final String name : getTemplateNames(type)) {
+        dynProps = readDynamicProperties(type, name);
+        key = new Key(type, name);
+        dynamicConfigs.put(key.getKey(), dynProps);
+      }
     }
   }
 
@@ -63,13 +73,13 @@ public class Config {
         if (StringUtils.isBlank(path)) {
           LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
               pathKey,
-              Constants.CONFIG_PROPS_FILENAME);
+              ConfigPropsRunner.CONFIG_PROPS_FILENAME);
           status = false;
         } else {
           final File file = new File(path);
           if (!file.exists()) {
             LOG.error("The path [{}] from configuration properties file [{}] doesn't exist.", path,
-                Constants.CONFIG_PROPS_FILENAME);
+                ConfigPropsRunner.CONFIG_PROPS_FILENAME);
             status = false;
           }
         }
@@ -80,7 +90,7 @@ public class Config {
         if (StringUtils.isBlank(path)) {
           LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
               pathKey,
-              Constants.CONFIG_PROPS_FILENAME);
+              ConfigPropsRunner.CONFIG_PROPS_FILENAME);
           status = false;
         }
       }
@@ -88,21 +98,24 @@ public class Config {
       // validate dynamic config properties
       for (final Map.Entry<String, Properties> entry : dynamicConfigs.entrySet()) {
         final Properties dynProps = entry.getValue();
-        final String dynType = entry.getKey();
+        final Key key = new Key(entry.getKey());
+        final String dynType = key.getType();
+        final String dynName = key.getName();
 
         for (final String pathKey : Constants.DYN_SOURCE_PATHS) {
           final String path = dynProps.getProperty(pathKey);
           if (StringUtils.isBlank(path)) {
             LOG.error(
-                "Please configurate the key [{}] for the template type [{}] in the configuration properties file [{}].",
-                pathKey, dynType, getDynamicConfigPath(dynType));
+                "Please configurate the key [{}] for the template type [{}] and name [{}] in the configuration properties file [{}].",
+                pathKey, dynType, dynName, getDynamicConfigPath(dynType, dynName));
             status = false;
           } else {
             final File file = new File(path);
             if (!file.exists()) {
               LOG.error(
-                  "The path [{}] for the template type [{}] from the configuration properties file [{}] doesn't exist.",
-                  pathKey, dynType, getDynamicConfigPath(dynType));
+                  "The path [{}] for the template type [{}] and name [{}] from the configuration property files [{}] and [{}] doesn't exist.",
+                  pathKey, dynType, dynName, getDynamicConfigPath(dynType, null),
+                  getDynamicConfigPath(dynType, dynName));
               status = false;
             }
           }
@@ -112,8 +125,8 @@ public class Config {
           final String path = dynProps.getProperty(pathKey);
           if (StringUtils.isBlank(path)) {
             LOG.error(
-                "Please configurate the key [{}] for the template type [{}] in the configuration properties file [{}].",
-                pathKey, dynType, getDynamicConfigPath(dynType));
+                "Please configurate the key [{}] for the template type [{}] and name [{}]  in the configuration property files [{}] or [{}].",
+                pathKey, dynType, dynName, getDynamicConfigPath(dynType, null), getDynamicConfigPath(dynType, dynName));
             status = false;
           }
         }
@@ -208,10 +221,13 @@ public class Config {
    *
    * @param type
    *          - dynamic template type
+   * @param name
+   *          - dynamic template name
    * @return dynamic type configuration properties
    */
-  public Properties getDynamicProperties(final String type) {
-    return dynamicConfigs.get(type);
+  public Properties getDynamicProperties(final String type, final String name) {
+    final Key key = new Key(type, name);
+    return dynamicConfigs.get(key.getKey());
   }
 
   /**
@@ -232,9 +248,41 @@ public class Config {
           list = FilesDirsUtil.listRootDirNames(dir);
         }
       }
+
+      // remove forbidden types
+      for (final String type : getForbiddenTypes()) {
+        list.remove(type);
+      }
+
       dynamicTypes = list;
     }
     return dynamicTypes;
+  }
+
+  /**
+   * Get template names from placeholders aemdc-files project
+   *
+   * @return template names list
+   */
+  public Collection<String> getTemplateNames(final String type) {
+    Collection<String> list = new ArrayList<String>();
+
+    // Get type templates dir
+    final String path = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type;
+
+    if (StringUtils.isNotBlank(path)) {
+      final File dir = new File(path);
+      if (dir.exists()) {
+        list = FilesDirsUtil.listRootDirNames(dir);
+      }
+    }
+
+    // remove forbidden types
+    for (final String denyType : getForbiddenTypes()) {
+      list.remove(denyType);
+    }
+
+    return list;
   }
 
   /**
@@ -269,15 +317,31 @@ public class Config {
   }
 
   /**
+   * Get forbidden template types
+   *
+   * @return forbidden template type list
+   */
+  public String[] getForbiddenTypes() {
+    final String typesAsString = configProps.getProperty(Constants.CONFIGPROP_FORBIDDEN_TEMPLATE_TYPES);
+    String[] types = Constants.FORBIDDEN_TYPES_DEFAULT;
+    if (StringUtils.isNotBlank(typesAsString)) {
+      types = typesAsString.split(",");
+    }
+    return types;
+  }
+
+  /**
    * Get menu command for the type
    *
    * @param type
    *          - dynamic template type
+   * @param name
+   *          - dynamic template name
    * @return menu commands
    */
-  public String[] getCommands(final String type) {
+  public String[] getCommands(final String type, final String name) {
     String[] cmds = {};
-    final Properties props = getDynamicProperties(type);
+    final Properties props = getDynamicProperties(type, name);
     final String cmdsAsString = props.getProperty(Constants.DYN_CONFIGPROP_COMMAND_MENU);
     if (StringUtils.isNotBlank(cmdsAsString)) {
       cmds = cmdsAsString.split(",");
@@ -290,14 +354,18 @@ public class Config {
    *
    * @param type
    *          - dynamic template type
+   * @param name
+   *          - dynamic template name
    * @return true - if DIR template structure, false - if FILE
    */
-  public boolean isDirTemplateStructure(final String type) {
+  public boolean isDirTemplateStructure(final String type, final String name) {
     boolean result = true;
-    final Properties dynProps = getDynamicProperties(type);
-    final String structure = dynProps.getProperty(Constants.DYN_CONFIGPROP_TEMPLATE_STRUCTURE);
-    if (StringUtils.isNotBlank(structure) && Constants.TEMPLATE_STRUCTURE_FILE.equals(structure)) {
-      result = false;
+    final Properties dynProps = getDynamicProperties(type, name);
+    if (dynProps != null) {
+      final String structure = dynProps.getProperty(Constants.DYN_CONFIGPROP_TEMPLATE_STRUCTURE);
+      if (StringUtils.isNotBlank(structure) && Constants.TEMPLATE_STRUCTURE_FILE.equals(structure)) {
+        result = false;
+      }
     }
     return result;
   }
@@ -307,11 +375,16 @@ public class Config {
    *
    * @param type
    *          - dynamic template type
+   * @param nyme
+   *          - template name
    * @return dynamic configuration properties file path
    */
-  private String getDynamicConfigPath(final String type) {
-    final String dynConfigPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type
-        + "/" + Constants.DYNAMIC_CONFIG_PROPS_FILENAME;
+  private String getDynamicConfigPath(final String type, final String name) {
+    String dynConfigPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type;
+    if (StringUtils.isNotBlank(name)) {
+      dynConfigPath += "/" + name;
+    }
+    dynConfigPath += "/" + Constants.DYNAMIC_CONFIG_PROPS_FILENAME;
     return dynConfigPath;
   }
 
@@ -323,7 +396,22 @@ public class Config {
    * @return dynamic configuration properties if props file exists
    */
   private Properties readDynamicProperties(final String type) {
-    Properties dynProps = FilesDirsUtil.getProperties(getDynamicConfigPath(type));
+    final Properties dynProps = readDynamicProperties(type, null);
+    return dynProps;
+  }
+
+  /**
+   * Read properties from dynamic configuration file
+   *
+   * @param type
+   *          - dynamic template type
+   * @param nyme
+   *          - template name
+   * @return dynamic configuration properties if props file exists
+   */
+  private Properties readDynamicProperties(final String type, final String name) {
+    Properties dynProps = FilesDirsUtil.getProperties(getDynamicConfigPath(type, null));
+    dynProps.putAll(FilesDirsUtil.getProperties(getDynamicConfigPath(type, name)));
 
     // replace path place holders
     if (!dynProps.isEmpty()) {
@@ -332,12 +420,14 @@ public class Config {
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
+      /*
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_PROJECT_ROOT));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_JAVA_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER));
+      */
 
       // target path placeholder values
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_TARGET_UI_FOLDER,
@@ -380,12 +470,14 @@ public class Config {
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
+      /*
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_PROJECT_ROOT));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_JAVA_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER));
+      */
 
       // target path placeholder values
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_UI_FOLDER,
@@ -440,5 +532,58 @@ public class Config {
       newProps.put(key, value);
     }
     return newProps;
+  }
+
+  /**
+   * Dynamic config key
+   */
+  class Key {
+
+    String key;
+    String type;
+    String name;
+
+    Key(final String type, final String name) {
+      this.type = type;
+
+      if (StringUtils.isNotBlank(name)) {
+        this.name = name;
+      } else {
+        this.name = "";
+      }
+
+      this.key = getType() + ":" + getName();
+    }
+
+    Key(final String key) {
+      this.key = key;
+
+      final String[] splited = key.split(":");
+      type = splited[0];
+      if (splited.length == 2) {
+        name = splited[1];
+      }
+    }
+
+    /**
+     * @return the key
+     */
+    String getKey() {
+      return key;
+    }
+
+    /**
+     * @return the type
+     */
+    String getType() {
+      return type;
+    }
+
+    /**
+     * @return the name
+     */
+    String getName() {
+      return name;
+    }
   }
 }

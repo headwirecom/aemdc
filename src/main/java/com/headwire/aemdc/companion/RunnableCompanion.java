@@ -51,12 +51,12 @@ public class RunnableCompanion {
     final Resource resource = new Resource(args);
 
     // Get Runner
-    BasisRunner runner = new HelpRunner(resource);
+    BasisRunner runner = new HelpRunner(resource, config);
     if (!resource.isHelp()) {
       final Reflection reflection = new Reflection(config);
       runner = reflection.getRunner(resource);
       if (runner == null) {
-        runner = new HelpRunner(resource);
+        runner = new HelpRunner(resource, config);
       }
     }
 

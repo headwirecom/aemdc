@@ -31,9 +31,7 @@ public abstract class Replacer {
 
   private static final Logger LOG = LoggerFactory.getLogger(Replacer.class);
 
-  // Get Properties Config from config file
-  protected Config config = new Config();
-
+  protected Config config;
   protected Resource resource;
 
   /**
@@ -88,6 +86,9 @@ public abstract class Replacer {
 
     // {{targetname}}
     result = result.replace(getPathPH(Constants.PLACEHOLDER_TARGET_NAME), getTargetLastName());
+
+    // {{java-class}}
+    result = result.replace(getPathPH(Constants.PLACEHOLDER_JAVA_CLASS), getTargetJavaClassName());
 
     // {{runmode}}
     result = result.replace(getPathPH(Constants.PLACEHOLDER_RUNMODE), getRunmodeSuffix());
@@ -326,8 +327,11 @@ public abstract class Replacer {
       compModel = FilenameUtils.getBaseName(targetName);
       compModel = WordUtils.capitalize(compModel);
 
+      compModel = targetName + "." + compModel;
+
       if (targetName.contains("/")) {
-        compModel = StringUtils.substringBeforeLast(targetName, "/") + "." + compModel;
+        // compModel = StringUtils.substringBeforeLast(targetName, "/") + "." + compModel;
+        // compModel = targetName + "." + compModel;
         compModel = StringUtils.replace(compModel, "/", ".");
       }
     }
@@ -340,8 +344,16 @@ public abstract class Replacer {
    * @return name of java class
    */
   protected String getTargetJavaClassName() {
-    // {{ java-class }}
-    final String javaClassName = FilenameUtils.getBaseName(resource.getTargetName());
+    String javaClassName = "";
+    final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDER_PROPS_SET_COMMON);
+    if (commonJcrProps != null) {
+      // {{ java-class }}
+      javaClassName = commonJcrProps.get(Constants.PLACEHOLDER_JAVA_CLASS);
+      if (StringUtils.isBlank(javaClassName)) {
+        javaClassName = getTargetCompModelName();
+        javaClassName = StringUtils.substringAfterLast(javaClassName, ".");
+      }
+    }
     return javaClassName;
   }
 
@@ -352,13 +364,11 @@ public abstract class Replacer {
    */
   protected String getTargetJavaPackage() {
     // {{ java-package }}
-    final String javaClassFileName = FilenameUtils.getName(resource.getTargetName());
     final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
     final String targetJavaSrcFolder = config.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
 
     // cut java file name, replace "/" with "."
     String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
-    javaPackage = StringUtils.substringBefore(javaPackage, "/" + javaClassFileName);
     javaPackage = StringUtils.replace(javaPackage, "/", ".");
 
     return javaPackage;

@@ -11,8 +11,6 @@ public class Constants {
 
   public static final String ENCODING = "UTF-8";
 
-  public static final String CONFIG_PROPS_FOLDER = "config";
-  public static final String CONFIG_PROPS_FILENAME = "aemdc-config.properties";
   public static final String DYNAMIC_CONFIG_PROPS_FILENAME = "config.properties";
   public static final String LAZYBONES_CONFIG_PROPS_FILE_PATH = ".lazybones/stored-params.properties";
   public static final String REFLECTION_PROPS_FILE_PATH = "reflection/typeRunner.properties";
@@ -30,10 +28,12 @@ public class Constants {
   // configuration constants: source folders
   public static final String CONFIGPROP_SOURCE_FOLDER = "SOURCE_FOLDER";
   public static final String CONFIGPROP_SOURCE_TYPES_FOLDER = "SOURCE_TYPES_FOLDER";
+  /*
   public static final String CONFIGPROP_SOURCE_STRUCTURE_FOLDER = "SOURCE_STRUCTURE_FOLDER";
   public static final String CONFIGPROP_SOURCE_UI_FOLDER = "SOURCE_UI_FOLDER";
   public static final String CONFIGPROP_SOURCE_PROJECT_ROOT = "SOURCE_PROJECT_ROOT";
   public static final String CONFIGPROP_SOURCE_JAVA_FOLDER = "SOURCE_JAVA_FOLDER";
+  */
 
   // configuration constants: target folders
   // public static final String CONFIGPROP_TARGET_PROJECT_NAME = "TARGET_PROJECT_NAME";
@@ -49,6 +49,7 @@ public class Constants {
 
   // configuration constants: others
   public static final String CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS = "FILES_WITH_PLACEHOLDERS_EXTENSIONS";
+  public static final String CONFIGPROP_FORBIDDEN_TEMPLATE_TYPES = "FORBIDDEN_TEMPLATE_TYPES";
   public static final String CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT = "EXISTING_DESTINATION_RESOURCES_REPLACEMENT";
   public static final String CONFIGPROP_LOG_LEVEL = "LOG_LEVEL";
 
@@ -57,10 +58,12 @@ public class Constants {
   static {
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_FOLDER);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_TYPES_FOLDER);
+    /*
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_STRUCTURE_FOLDER);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_UI_FOLDER);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_PROJECT_ROOT);
     SOURCE_PATHS.add(CONFIGPROP_SOURCE_JAVA_FOLDER);
+    */
 
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_UI_FOLDER);
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_PROJECT_APPS_FOLDER);
@@ -71,6 +74,7 @@ public class Constants {
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_JAVA_PACKAGE);
     CONFIGPROPS_OTHER.add(CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER);
     CONFIGPROPS_OTHER.add(CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
+    CONFIGPROPS_OTHER.add(CONFIGPROP_FORBIDDEN_TEMPLATE_TYPES);
     CONFIGPROPS_OTHER.add(CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT);
     CONFIGPROPS_OTHER.add(CONFIGPROP_LOG_LEVEL);
   }
@@ -107,7 +111,17 @@ public class Constants {
   public static final String PARAM_TARGET_NAME = "targetName";
 
   // static template types
+  public static final String TYPES_STATIC_FOLDER = "types";
   public static final String TYPE_CONFIG_PROPS = "config";
+
+  // forbidden template types
+  public static final String FORBIDDEN_TYPE_GIT = ".git";
+  public static final String FORBIDDEN_TYPE_SETTINGS = ".settings";
+  public static final String FORBIDDEN_TYPE_TARGET = "target";
+  public static final String FORBIDDEN_TYPE_HELP = "help";
+  // ALSO ADD FORBIDDEN TYPES TO THE PROPERTIES FILE!!!
+  public static final String[] FORBIDDEN_TYPES_DEFAULT = { FORBIDDEN_TYPE_GIT, FORBIDDEN_TYPE_SETTINGS,
+      FORBIDDEN_TYPE_TARGET, FORBIDDEN_TYPE_HELP };
 
   // arguments constants
   public static final String PLACEHOLDER_PROPS_SET_COMMON = "common";

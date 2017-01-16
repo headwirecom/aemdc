@@ -2,12 +2,14 @@ package com.headwire.aemdc.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.util.FilesDirsUtil;
 
 
 /**
@@ -71,6 +73,10 @@ public class CopyDirCommand implements Command {
       if (!srcDir.exists()) {
         LOG.error("Can't get available templates. Directory {} doesn't exist.", srcDir);
       } else {
+        // set copied template names
+        final List<String> copiedTemplateNames = FilesDirsUtil.getTemplateNames(srcDir);
+        resource.setCopiedTemplateNames(copiedTemplateNames);
+
         FileUtils.copyDirectory(srcDir, destDir);
         LOG.info("Directory {} created.", destDir);
       }

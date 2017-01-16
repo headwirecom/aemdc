@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
 
@@ -24,9 +25,10 @@ public class DynamicReplacer extends Replacer {
   /**
    * Constructor
    */
-  public DynamicReplacer(final Resource resource) {
+  public DynamicReplacer(final Resource resource, final Config config) {
     this.resource = resource;
-    dynProps = config.getDynamicProperties(resource.getType());
+    this.config = config;
+    dynProps = config.getDynamicProperties(resource.getType(), resource.getSourceName());
   }
 
   @Override

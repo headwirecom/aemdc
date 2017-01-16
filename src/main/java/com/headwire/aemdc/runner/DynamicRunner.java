@@ -32,7 +32,7 @@ public class DynamicRunner extends BasisRunner {
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private final Config config = new Config();
+  private final Config config;
   private final Resource resource;
   private final Replacer replacer;
 
@@ -42,12 +42,13 @@ public class DynamicRunner extends BasisRunner {
    * @param pResource
    *          - resource object
    */
-  public DynamicRunner(final Resource pResource) {
+  public DynamicRunner(final Resource pResource, final Config pConfig) {
     LOG.debug("Dynamic runner for type [{}] starting...", pResource.getType());
     resource = pResource;
-    replacer = new DynamicReplacer(resource);
+    config = pConfig;
+    replacer = new DynamicReplacer(resource, config);
 
-    final Properties dynProps = config.getDynamicProperties(resource.getType());
+    final Properties dynProps = config.getDynamicProperties(resource.getType(), resource.getSourceName());
     resource.setSourceFolderPath(dynProps.getProperty(Constants.DYN_CONFIGPROP_SOURCE_TYPE_FOLDER));
 
     final String targetPath = replacer
@@ -62,8 +63,8 @@ public class DynamicRunner extends BasisRunner {
     setGlobalConfigProperties(config, resource);
 
     // Creates Invoker object, command object and configure them
-    final String[] operations = config.getCommands(resource.getType());
-    menu.setCommands(operations, resource, getPlaceHolderReplacer());
+    final String[] operations = config.getCommands(resource.getType(), resource.getSourceName());
+    menu.setCommands(operations, resource, getPlaceHolderReplacer(), config);
   }
 
   /**
@@ -92,7 +93,7 @@ public class DynamicRunner extends BasisRunner {
   @Override
   public Collection<File> listAvailableTemplates(final File dir) {
     Collection<File> fileList = new ArrayList<File>();
-    if (config.isDirTemplateStructure(resource.getType())) {
+    if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
       fileList = FilesDirsUtil.listRootDirs(dir);
     } else {
       fileList = FilesDirsUtil.listFiles(dir);

@@ -32,7 +32,8 @@ import com.headwire.aemdc.runner.DynamicRunner;
 public class Help {
 
   private static final Logger LOG = LoggerFactory.getLogger(Help.class);
-  public static final String HELP_ROOT_FOLDER = "help";
+  public static final String HELP_FOLDER = "help";
+  public static final String HELP_FOLDER_PATH = Constants.TYPES_STATIC_FOLDER + "/" + HELP_FOLDER;
   public static final String HELP_COMMON_FOLDER = "common";
   public static final String HELP_FILE_START = "help-start.txt";
   public static final String HELP_FILE_OPTIONS = "help-options.txt";
@@ -98,12 +99,12 @@ public class Help {
     helpText.append(getTextFromResourceFile(HELP_FILE_START));
     helpText.append(getTextFromResourceFile(HELP_FILE_OPTIONS));
     helpText.append(getTextFromResourceFile(HELP_FILE_TYPE));
-    helpText.append(getTextFromResourceFile(HELP_COMMON_FOLDER + "/" + HELP_FILE_TYPE));
+    helpText.append(getTextFromResourceFile(HELP_FILE_TYPE, Constants.TYPE_CONFIG_PROPS));
 
     // adding the all type helps
     for (final String type : config.getDynamicTypes()) {
       final String helpPath = config.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type + "/"
-          + HELP_ROOT_FOLDER + "/" + HELP_FILE_TYPE;
+          + HELP_FOLDER + "/" + HELP_FILE_TYPE;
       helpText.append(getTextFromFile(helpPath));
     }
 
@@ -145,12 +146,15 @@ public class Help {
       helpText.append(getCompleteHelpText());
 
     } else {
-      final String templateSrcPath = runner.getSourceFolder() + "/" + name;
+      String templateSrcPath = runner.getSourceFolder();
+      if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
+        templateSrcPath += "/" + name;
+      }
 
       // config type
       if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
         // show default config properties
-        helpText.append(getTextFromFile(runner, HELP_FILE_START));
+        helpText.append(getTextFromResourceFile(HELP_FILE_START, Constants.TYPE_CONFIG_PROPS));
         helpText.append(config.getDefaultPropertiesAsText());
 
       } else if (StringUtils.isBlank(name)) {
@@ -163,7 +167,7 @@ public class Help {
         helpText.append(getTextFromResourceFile(HELP_FILE_ARGS));
         helpText.append(getTextFromFile(runner, HELP_FILE_ARGS));
         // get all available templates
-        helpText.append(getTemplatesAsString(runner));
+        helpText.append(getTemplatesAsString(resource));
 
       } else if (StringUtils.isNotBlank(name) && StringUtils.isBlank(targetname)) {
         // if <type> + <name>
@@ -202,7 +206,7 @@ public class Help {
     if (runner instanceof DynamicRunner) {
       helpText = getTextFromFile(filePath);
     } else {
-      helpText = getTextFromResourceFile(filePath);
+      helpText = getTextFromResourceFileByPath(filePath);
     }
     return helpText;
   }
@@ -235,7 +239,35 @@ public class Help {
    * @return help text
    */
   private String getTextFromResourceFile(final String fileName) {
-    final String filePath = HELP_ROOT_FOLDER + "/" + fileName;
+    return getTextFromResourceFile(fileName, null);
+  }
+
+  /**
+   * Read help text from helper file from resources.
+   *
+   * @param fileName
+   *          - help file name
+   * @param type
+   *          - template type
+   * @return help text
+   */
+  private String getTextFromResourceFile(final String fileName, final String type) {
+    String filePath = Constants.TYPES_STATIC_FOLDER;
+    if (StringUtils.isNotBlank(type)) {
+      filePath += "/" + type;
+    }
+    filePath += "/" + HELP_FOLDER + "/" + fileName;
+    return getTextFromResourceFileByPath(filePath);
+  }
+
+  /**
+   * Read help text from helper file from project resources.
+   *
+   * @param filePath
+   *          - help file path
+   * @return help text
+   */
+  private String getTextFromResourceFileByPath(final String filePath) {
     final StringBuilder helpText = new StringBuilder();
     InputStream in = null;
     try {
@@ -379,64 +411,22 @@ public class Help {
   /**
    * Get list of all existing templates as String.
    *
-   * @param runner
-   *          - template runner
+   * @param resource
+   *          - template resource
    * @return list of all existing templates
    */
-  public String getTemplatesAsString(final BasisRunner runner) {
+  public String getTemplatesAsString(final Resource resource) {
     final StringBuilder templs = new StringBuilder();
-
     templs.append("available names: \n");
-    final String sourceFolder = runner.getSourceFolder();
 
-    if (StringUtils.isNotBlank(sourceFolder)) {
-      final File sourceDir = new File(runner.getSourceFolder());
-
-      // find available templates
-      final Collection<File> fileList = runner.getAvailableTemplates();
-      final Iterator<File> iter = fileList.iterator();
-      while (iter.hasNext()) {
-        final File templateFile = iter.next();
-        final String templateName = FilesDirsUtil.getTemplateName(sourceDir, templateFile);
-        templs.append("    ");
-        templs.append(templateName);
-        templs.append("\n");
-        LOG.debug("Found: {}", templateFile);
-      }
-    } else {
-      LOG.error("Can't get available names. Source directory is blank.");
+    // get available templates
+    for (final String templateName : config.getTemplateNames(resource.getType())) {
+      templs.append("    ");
+      templs.append(templateName);
+      templs.append("\n");
+      LOG.debug("For type [{}] found: [{}]", resource.getType(), templateName);
     }
 
     return templs.toString();
-  }
-
-  /**
-   * Get list of all existing templates as String.
-   *
-   * @param runner
-   *          - template runner
-   * @return list of all existing templates
-   */
-  public List<String> getTemplatesAsList(final BasisRunner runner) {
-
-    final ArrayList<String> ret = new ArrayList<>();
-    final String sourceFolder = runner.getSourceFolder();
-
-    if (StringUtils.isNotBlank(sourceFolder)) {
-      final File sourceDir = new File(runner.getSourceFolder());
-
-      // find available templates
-      final Collection<File> fileList = runner.getAvailableTemplates();
-      final Iterator<File> iter = fileList.iterator();
-      while (iter.hasNext()) {
-        final File templateFile = iter.next();
-        final String templateName = FilesDirsUtil.getTemplateName(sourceDir, templateFile);
-        ret.add(templateName);
-      }
-    } else {
-      LOG.error("Can't get available names. Source directory is blank.");
-    }
-
-    return ret;
   }
 }

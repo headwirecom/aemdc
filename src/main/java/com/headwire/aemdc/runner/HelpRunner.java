@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.util.Help;
@@ -27,6 +28,7 @@ public class HelpRunner extends BasisRunner {
    */
   private final CommandMenu menu = new CommandMenu();
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -34,8 +36,9 @@ public class HelpRunner extends BasisRunner {
    * @param resource
    *          - resource object
    */
-  public HelpRunner(final Resource resource) {
+  public HelpRunner(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
 
     LOG.debug("Help runner starting...");
 

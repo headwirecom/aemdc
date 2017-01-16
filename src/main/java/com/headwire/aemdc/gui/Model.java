@@ -1,201 +1,197 @@
 package com.headwire.aemdc.gui;
 
-import com.headwire.aemdc.companion.Config;
-import com.headwire.aemdc.companion.Reflection;
-import com.headwire.aemdc.companion.Resource;
-import com.headwire.aemdc.runner.BasisRunner;
-import com.headwire.aemdc.runner.HelpRunner;
-import com.headwire.aemdc.util.Help;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementMap;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementMap;
+
+import com.headwire.aemdc.companion.Config;
+import com.headwire.aemdc.companion.Reflection;
+import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.runner.BasisRunner;
+import com.headwire.aemdc.runner.HelpRunner;
+import com.headwire.aemdc.util.Help;
+
+
 /**
  * Created by rr on 12/29/2016.
  */
 public class Model {
 
-    private transient Config config = new Config();
+  private transient Config config = new Config();
 
-    // setup of types that will be available
-    private ArrayList<String> types = new ArrayList<String>();
+  // setup of types that will be available
+  private final ArrayList<String> types = new ArrayList<String>();
 
-    public Model() {
-    }
+  public Model() {
+  }
 
-    @ElementMap(entry="config", key="type", attribute = true, inline = true)
-    private HashMap<String, TypeRoot> values = new HashMap<>();
+  @ElementMap(entry = "config", key = "type", attribute = true, inline = true)
+  private final HashMap<String, TypeRoot> values = new HashMap<>();
 
-    public List<String> getTypes() {
+  public List<String> getTypes() {
 
-        return new ArrayList<String>(config.getDynamicTypes());
-    }
+    return new ArrayList<String>(config.getDynamicTypes());
+  }
 
-    public List<String> getTemplatesForType(String type) {
-        Resource resource = new Resource(new String[] {type} );
-        BasisRunner helpRunner = new HelpRunner(resource);
+  public List<String> getTemplatesForType(final String type) {
+    return new ArrayList<String>(config.getTemplateNames(type));
+  }
 
-        final Reflection reflection = new Reflection(config);
-        final BasisRunner runner = reflection.getRunner(resource);
+  public List<String> getPlaceHoldersForName(final String type, final String template) {
+    final Resource resource = new Resource(new String[] { type, template });
+    final BasisRunner helpRunner = new HelpRunner(resource, config);
 
-        Help helper = new Help();
-        return (helper.getTemplatesAsList(runner));
-    }
+    final Reflection reflection = new Reflection(config);
+    final BasisRunner runner = reflection.getRunner(resource);
 
-    public List<String> getPlaceHoldersForName(String type, String template) {
-        Resource resource = new Resource(new String[] {type, template} );
-        BasisRunner helpRunner = new HelpRunner(resource);
+    final Help helper = new Help();
 
-        final Reflection reflection = new Reflection(config);
-        final BasisRunner runner = reflection.getRunner(resource);
+    final String name = resource.getSourceName();
+    final String templateSrcPath = runner.getSourceFolder() + "/" + name;
 
-        Help helper = new Help();
+    return (helper.getPlaceHoldersAsList(new File(templateSrcPath)));
 
-        final String name = resource.getSourceName();
-        final String templateSrcPath = runner.getSourceFolder() + "/" + name;
+  }
 
-        return (helper.getPlaceHoldersAsList(new File(templateSrcPath)));
-
-    }
-
-    public String getValue(String type, String template, String placeholder) {
-        TypeRoot typeMap = values.get(type);
-        if(typeMap != null) {
-            Template templateMap = typeMap.get(template);
-            if(templateMap != null) {
-                String value = templateMap.get(placeholder);
-                if(value != null) return value;
-            }
+  public String getValue(final String type, final String template, final String placeholder) {
+    final TypeRoot typeMap = values.get(type);
+    if (typeMap != null) {
+      final Template templateMap = typeMap.get(template);
+      if (templateMap != null) {
+        final String value = templateMap.get(placeholder);
+        if (value != null) {
+          return value;
         }
-        return "";
+      }
     }
+    return "";
+  }
 
-    public String getHelpTextForType(String type) {
-        return "help for "+type;
+  public String getHelpTextForType(final String type) {
+    return "help for " + type;
+  }
+
+  public String getHelpTextForTemplate(final String type, final String template) {
+    return "help for " + type + " " + template;
+  }
+
+  public void setValue(final String type, final String template, final String paramName, final String paramValue) {
+    TypeRoot typeMap = values.get(type);
+    if (typeMap == null) {
+      typeMap = new TypeRoot();
+      values.put(type, typeMap);
     }
-
-    public String getHelpTextForTemplate(String type, String template) {
-        return "help for "+type+" "+template;
+    Template templateMap = typeMap.get(template);
+    if (templateMap == null) {
+      templateMap = new Template();
+      typeMap.put(template, templateMap);
     }
+    templateMap.put(paramName, paramValue);
+  }
 
-
-    public void setValue(String type, String template, String paramName, String paramValue) {
-        TypeRoot typeMap = values.get(type);
-        if(typeMap == null) {
-            typeMap = new TypeRoot();
-            values.put(type, typeMap);
+  public HashMap<String, String> getPlaceHolders(final String type, final String template, final String phName) {
+    final TypeRoot typeMap = values.get(type);
+    if (typeMap != null) {
+      final Template templateMap = typeMap.get(template);
+      if (templateMap != null) {
+        final Value value = templateMap.getValue(phName);
+        if (value != null) {
+          return value.getEntries();
         }
-        Template templateMap = typeMap.get(template);
-        if(templateMap == null) {
-            templateMap = new Template();
-            typeMap.put(template, templateMap);
-        }
-        templateMap.put(paramName, paramValue);
+      }
     }
+    return new HashMap<>();
+  }
 
-    public HashMap<String, String> getPlaceHolders(String type, String template, String phName) {
-        TypeRoot typeMap = values.get(type);
-        if(typeMap != null) {
-            Template templateMap = typeMap.get(template);
-            if(templateMap != null) {
-                Value value = templateMap.getValue(phName);
-                if(value != null) {
-                    return value.getEntries();
-                }
-            }
-        }
-        return new HashMap<>();
+  public void reset(final String type, final String template) {
+    final TypeRoot typeMap = values.get(type);
+    if (typeMap != null) {
+      typeMap.put(template, new Template());
     }
+  }
 
-    public void reset(String type, String template) {
-        TypeRoot typeMap = values.get(type);
-        if(typeMap != null) {
-            typeMap.put(template, new Template());
-        }
-    }
-
-    public void setTypes(Collection<String> dynamicTypes) {
-        types.addAll(dynamicTypes);
-    }
+  public void setTypes(final Collection<String> dynamicTypes) {
+    types.addAll(dynamicTypes);
+  }
 }
 
 class TypeRoot {
 
-    @ElementMap(entry="template", key="name", attribute = true, inline = true)
-    private HashMap<String, Template> templates = new HashMap<String, Template>();
+  @ElementMap(entry = "template", key = "name", attribute = true, inline = true)
+  private final HashMap<String, Template> templates = new HashMap<String, Template>();
 
-    public Template get(String template) {
-        return templates.get(template);
-    }
+  public Template get(final String template) {
+    return templates.get(template);
+  }
 
-    public void put(String template, Template templateMap) {
-        templates.put(template, templateMap);
-    }
+  public void put(final String template, final Template templateMap) {
+    templates.put(template, templateMap);
+  }
 }
 
 class Template {
 
-    @ElementMap(entry="params", key="name", attribute = true, inline = true)
-    private HashMap<String, Value> params = new HashMap<String, Value>();
+  @ElementMap(entry = "params", key = "name", attribute = true, inline = true)
+  private final HashMap<String, Value> params = new HashMap<String, Value>();
 
-    public void put(String paramName, String paramValue) {
-        if(paramName.startsWith("ph_")) {
-            String placeholder = paramName.substring(0, paramName.indexOf(':'));
-            String name = paramName.substring(paramName.indexOf(':')+1);
-            Value val = params.get(placeholder);
-            if(val == null) {
-                val = new Value(placeholder);
-                params.put(placeholder, val);
-            }
-            val.add(name, paramValue);
-        } else {
-            params.put(paramName, new Value(paramValue));
-        }
+  public void put(final String paramName, final String paramValue) {
+    if (paramName.startsWith("ph_")) {
+      final String placeholder = paramName.substring(0, paramName.indexOf(':'));
+      final String name = paramName.substring(paramName.indexOf(':') + 1);
+      Value val = params.get(placeholder);
+      if (val == null) {
+        val = new Value(placeholder);
+        params.put(placeholder, val);
+      }
+      val.add(name, paramValue);
+    } else {
+      params.put(paramName, new Value(paramValue));
     }
+  }
 
-    public String get(String placeholder) {
-        Value val = params.get(placeholder);
-        return val == null? "" : val.getValue();
-    }
+  public String get(final String placeholder) {
+    final Value val = params.get(placeholder);
+    return val == null ? "" : val.getValue();
+  }
 
-    public Value getValue(String name) {
-        return params.get(name);
-    }
+  public Value getValue(final String name) {
+    return params.get(name);
+  }
 }
 
 class Value {
 
-    @Element(required = false)
-    private String name;
+  @Element(required = false)
+  private String name;
 
-    @Element
-    private String value;
+  @Element
+  private String value;
 
-    @ElementMap(entry="entries", key="name", attribute = true, inline = true, required = false)
-    private HashMap<String, String> entries = new HashMap<String, String>();
+  @ElementMap(entry = "entries", key = "name", attribute = true, inline = true, required = false)
+  private final HashMap<String, String> entries = new HashMap<String, String>();
 
-    public Value() {
+  public Value() {
 
-    }
+  }
 
-    public Value(String value) {
-        this.value = value;
-    }
+  public Value(final String value) {
+    this.value = value;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public void add(String name, String paramValue) {
-        entries.put(name, paramValue);
-    }
+  public void add(final String name, final String paramValue) {
+    entries.put(name, paramValue);
+  }
 
-    public HashMap<String, String> getEntries() {
-        return entries;
-    }
+  public HashMap<String, String> getEntries() {
+    return entries;
+  }
 }

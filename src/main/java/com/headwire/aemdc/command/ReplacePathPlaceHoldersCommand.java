@@ -2,13 +2,14 @@ package com.headwire.aemdc.command;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
 
@@ -24,6 +25,7 @@ public class ReplacePathPlaceHoldersCommand implements Command {
 
   private final Resource resource;
   private final Replacer replacer;
+  private final Config config;
 
   /**
    * Constructor
@@ -31,14 +33,19 @@ public class ReplacePathPlaceHoldersCommand implements Command {
    * @param resource
    *          - resource
    */
-  public ReplacePathPlaceHoldersCommand(final Resource resource, final Replacer replacer) {
+  public ReplacePathPlaceHoldersCommand(final Resource resource, final Replacer replacer, final Config config) {
     this.resource = resource;
     this.replacer = replacer;
+    this.config = config;
   }
 
   @Override
   public void execute() throws IOException {
-    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
+    String targetPath = resource.getTargetFolderPath();
+    if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
+      targetPath += "/" + resource.getTargetName();
+    }
+
     LOG.debug("Replacing path place holders in the directory/file [{}] ...", targetPath);
 
     final File dest = new File(targetPath);
@@ -49,7 +56,10 @@ public class ReplacePathPlaceHoldersCommand implements Command {
       throw new IllegalStateException(message);
     }
 
+    final List<String> allExtList = resource.getExtentionsList();
+
     if (dest.isDirectory()) {
+      /*
       // get complete file list recursive
       final Collection<File> fileList = FileUtils.listFiles(dest, null, true);
       final Iterator<File> iter = fileList.iterator();
@@ -59,8 +69,22 @@ public class ReplacePathPlaceHoldersCommand implements Command {
         // replace path place holders
         replacePathPlaceHolders(nextFile);
       }
+      */
+
+      final List<String> copiedTemplateNames = resource.getCopiedTemplateNames();
+      for (final String nextName : copiedTemplateNames) {
+        final File targetFile = new File(targetPath + "/" + nextName);
+        final String extention = FilenameUtils.getExtension(targetFile.getName());
+        if (allExtList.contains(extention)) {
+          // replace path place holders
+          replacePathPlaceHolders(targetFile);
+        }
+      }
     } else {
-      replacePathPlaceHolders(dest);
+      final String extention = FilenameUtils.getExtension(dest.getName());
+      if (allExtList.contains(extention)) {
+        replacePathPlaceHolders(dest);
+      }
     }
   }
 
