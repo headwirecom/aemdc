@@ -226,8 +226,15 @@ public class Config {
    * @return dynamic type configuration properties
    */
   public Properties getDynamicProperties(final String type, final String name) {
-    final Key key = new Key(type, name);
-    return dynamicConfigs.get(key.getKey());
+    Key key = new Key(type, name);
+    Properties dynProps = dynamicConfigs.get(key.getKey());
+
+    if (dynProps == null) {
+      LOG.debug("Unknown [name] argument [{}].", name);
+      key = new Key(type, null);
+      dynProps = dynamicConfigs.get(key.getKey());
+    }
+    return dynProps;
   }
 
   /**
@@ -420,14 +427,6 @@ public class Config {
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
-      /*
-      dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
-          configProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
-      dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,
-          configProps.getProperty(Constants.CONFIGPROP_SOURCE_PROJECT_ROOT));
-      dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_SOURCE_JAVA_FOLDER,
-          configProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER));
-      */
 
       // target path placeholder values
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_TARGET_UI_FOLDER,
@@ -470,14 +469,6 @@ public class Config {
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_FOLDER));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_TYPES_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER));
-      /*
-      newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_UI_FOLDER,
-          newProps.getProperty(Constants.CONFIGPROP_SOURCE_UI_FOLDER));
-      newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_PROJECT_ROOT,
-          newProps.getProperty(Constants.CONFIGPROP_SOURCE_PROJECT_ROOT));
-      newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_SOURCE_JAVA_FOLDER,
-          newProps.getProperty(Constants.CONFIGPROP_SOURCE_JAVA_FOLDER));
-      */
 
       // target path placeholder values
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_UI_FOLDER,

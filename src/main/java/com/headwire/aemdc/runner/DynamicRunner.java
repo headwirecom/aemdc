@@ -49,6 +49,11 @@ public class DynamicRunner extends BasisRunner {
     replacer = new DynamicReplacer(resource, config);
 
     final Properties dynProps = config.getDynamicProperties(resource.getType(), resource.getSourceName());
+    if (dynProps == null) {
+      LOG.error("Unknown <type>=[{}] and [name]=[{}] argument.", resource.getType(), resource.getSourceName());
+      return;
+    }
+
     resource.setSourceFolderPath(dynProps.getProperty(Constants.DYN_CONFIGPROP_SOURCE_TYPE_FOLDER));
 
     final String targetPath = replacer

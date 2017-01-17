@@ -53,24 +53,13 @@ public class ReplacePathPlaceHoldersCommand implements Command {
     if (!dest.exists()) {
       final String message = "Can't replace path place holders. Directory/file " + dest + " doesn't exist.";
       LOG.error(message);
-      throw new IllegalStateException(message);
+      return;
     }
 
     final List<String> allExtList = resource.getExtentionsList();
 
     if (dest.isDirectory()) {
-      /*
-      // get complete file list recursive
-      final Collection<File> fileList = FileUtils.listFiles(dest, null, true);
-      final Iterator<File> iter = fileList.iterator();
-      while (iter.hasNext()) {
-        final File nextFile = iter.next();
-
-        // replace path place holders
-        replacePathPlaceHolders(nextFile);
-      }
-      */
-
+      // replace PH in only copied files
       final List<String> copiedTemplateNames = resource.getCopiedTemplateNames();
       for (final String nextName : copiedTemplateNames) {
         final File targetFile = new File(targetPath + "/" + nextName);

@@ -327,13 +327,11 @@ public abstract class Replacer {
       compModel = FilenameUtils.getBaseName(targetName);
       compModel = WordUtils.capitalize(compModel);
 
-      compModel = targetName + "." + compModel;
+      // "page/hero" to "page.hero"
+      compModel = StringUtils.replace(compModel, "/", ".");
 
-      if (targetName.contains("/")) {
-        // compModel = StringUtils.substringBeforeLast(targetName, "/") + "." + compModel;
-        // compModel = targetName + "." + compModel;
-        compModel = StringUtils.replace(compModel, "/", ".");
-      }
+      // to "page.hero.Hero"
+      compModel = targetName + "." + compModel;
     }
     return compModel;
   }
