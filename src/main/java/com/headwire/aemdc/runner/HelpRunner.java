@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.headwire.aemdc.command.CommandMenu;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Config;
+import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
-import com.headwire.aemdc.util.Help;
 
 
 /**
@@ -22,6 +22,7 @@ import com.headwire.aemdc.util.Help;
 public class HelpRunner extends BasisRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(HelpRunner.class);
+  private static final String HELP_FOLDER = "help";
 
   /**
    * Invoker
@@ -59,7 +60,12 @@ public class HelpRunner extends BasisRunner {
 
   @Override
   public String getHelpFolder() {
-    return Help.HELP_COMMON_FOLDER;
+    return Constants.TYPES_STATIC_FOLDER + "/" + HELP_FOLDER;
+  }
+
+  @Override
+  public String getTemplateHelpFolder() {
+    return getHelpFolder();
   }
 
   @Override

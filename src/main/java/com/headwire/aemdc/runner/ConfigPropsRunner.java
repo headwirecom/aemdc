@@ -80,8 +80,12 @@ public class ConfigPropsRunner extends BasisRunner {
 
   @Override
   public String getHelpFolder() {
-    final String helpPath = SOURCE_TYPE_FOLDER + "/" + HELP_FOLDER;
-    return helpPath;
+    return SOURCE_TYPE_FOLDER + "/" + HELP_FOLDER;
+  }
+
+  @Override
+  public String getTemplateHelpFolder() {
+    return getHelpFolder();
   }
 
   @Override

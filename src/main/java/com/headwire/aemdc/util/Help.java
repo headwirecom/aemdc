@@ -201,12 +201,19 @@ public class Help {
    * @return help text
    */
   private String getTextFromFile(final BasisRunner runner, final String fileName) {
-    final String filePath = runner.getHelpFolder() + "/" + fileName;
+    final String typeHelpPath = runner.getHelpFolder() + "/" + fileName;
+    final String templateHelpPath = runner.getTemplateHelpFolder() + "/" + fileName;
+
     String helpText = "";
     if (runner instanceof DynamicRunner) {
-      helpText = getTextFromFile(filePath);
+      final File file = new File(templateHelpPath);
+      if (file.exists()) {
+        helpText = getTextFromFile(templateHelpPath);
+      } else {
+        helpText = getTextFromFile(typeHelpPath);
+      }
     } else {
-      helpText = getTextFromResourceFileByPath(filePath);
+      helpText = getTextFromResourceFileByPath(templateHelpPath);
     }
     return helpText;
   }

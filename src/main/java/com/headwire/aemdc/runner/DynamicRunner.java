@@ -86,6 +86,16 @@ public class DynamicRunner extends BasisRunner {
   }
 
   @Override
+  public String getTemplateHelpFolder() {
+    String helpPath = getHelpFolder();
+    if (StringUtils.isNoneBlank(resource.getSourceName())) {
+      helpPath = config.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/"
+          + resource.getType() + "/" + resource.getSourceName() + "/" + HELP_FOLDER;
+    }
+    return helpPath;
+  }
+
+  @Override
   public String getSourceFolder() {
     return resource.getSourceFolderPath();
   }

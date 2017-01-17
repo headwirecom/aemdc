@@ -32,11 +32,20 @@ public abstract class BasisRunner {
 
   /**
    * Get help folder name for template type.
-   * Help folders are under /resources/help/..
+   * Help folders files are under /resources/types/<type>/help/..
+   * or /aemdc-files/<type>/help/..
    *
-   * @return help folder name
+   * @return help folder path
    */
   public abstract String getHelpFolder();
+
+  /**
+   * Get help folder name for template name.
+   * Help folders files are under /aemdc-files/<type>/<template name>/help/..
+   *
+   * @return help folder path
+   */
+  public abstract String getTemplateHelpFolder();
 
   /**
    * Get template type source folder path.
