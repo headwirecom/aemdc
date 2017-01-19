@@ -207,6 +207,30 @@ if [ ! -f  "$TARGETDIR/myhero/TempHero.java" ] ; then
 fi
 
 
+# create and check COMPOUND
+aemdc compound component-and-model page/MyHeroComp "java-class=MyHero"
+aemdc compound component-and-model page/MyComps/MyList
+
+# COMPOUND check
+TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/components"
+if [ ! -f  "$TARGETDIR/page/MyHeroComp/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/MyHeroComp/.content.xml"
+fi
+if [ ! -f  "$TARGETDIR/page/MyComps/MyList/.content.xml" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/MyComps/MyList/.content.xml"
+fi
+TARGETDIR="core/src/main/java/com/headwire/myaem/core/models"
+if [ ! -f  "$TARGETDIR/page/myherocomp/MyHero.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/myherocomp/MyHero.java"
+fi
+if [ ! -f  "$TARGETDIR/page/mycomps/mylist/MyList.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/mycomps/mylist/MyList.java"
+fi
+
 
 # LAST CHECK MESSAGE 
 if [ "false" = "$TESTVALID" ] ; then

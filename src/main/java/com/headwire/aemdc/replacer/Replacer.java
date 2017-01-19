@@ -320,19 +320,29 @@ public abstract class Replacer {
     String compModel = "";
 
     // like "page/HeRo"
-    String targetName = resource.getTargetName();
+    final String targetName = resource.getTargetName();
 
     if (StringUtils.isNotBlank(targetName)) {
+      // get Java Class Name from arguments
+      String javaClassName = "";
+      final Map<String, String> commonJcrProps = resource.getJcrPropsSet(Constants.PLACEHOLDER_PROPS_SET_COMMON);
+      if (commonJcrProps != null) {
+        // {{ java-class }}
+        javaClassName = commonJcrProps.get(Constants.PLACEHOLDER_JAVA_CLASS);
+      }
+
+      // generate Java Class Name from targetName
       // "page/HeRo" to "Hero"
-      compModel = FilenameUtils.getBaseName(targetName);
-      compModel = WordUtils.capitalize(compModel);
+      if (StringUtils.isBlank(javaClassName)) {
+        javaClassName = FilenameUtils.getBaseName(targetName);
+        javaClassName = WordUtils.capitalize(javaClassName);
+      }
 
       // "page/HeRo" to "page.hero"
-      targetName = StringUtils.replace(targetName, "/", ".");
-      targetName = targetName.toLowerCase();
+      compModel = StringUtils.replace(targetName, "/", ".").toLowerCase();
 
       // to "page.hero.Hero"
-      compModel = targetName + "." + compModel;
+      compModel += "." + javaClassName;
     }
     return compModel;
   }
