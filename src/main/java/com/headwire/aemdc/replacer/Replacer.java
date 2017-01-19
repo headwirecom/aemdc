@@ -319,16 +319,17 @@ public abstract class Replacer {
   protected String getTargetCompModelName() {
     String compModel = "";
 
-    // like "page/hero"
-    final String targetName = resource.getTargetName();
+    // like "page/HeRo"
+    String targetName = resource.getTargetName();
 
     if (StringUtils.isNotBlank(targetName)) {
-      // to "Hero"
+      // "page/HeRo" to "Hero"
       compModel = FilenameUtils.getBaseName(targetName);
       compModel = WordUtils.capitalize(compModel);
 
-      // "page/hero" to "page.hero"
-      compModel = StringUtils.replace(compModel, "/", ".");
+      // "page/HeRo" to "page.hero"
+      targetName = StringUtils.replace(targetName, "/", ".");
+      targetName = targetName.toLowerCase();
 
       // to "page.hero.Hero"
       compModel = targetName + "." + compModel;
@@ -368,6 +369,7 @@ public abstract class Replacer {
     // cut java file name, replace "/" with "."
     String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
     javaPackage = StringUtils.replace(javaPackage, "/", ".");
+    javaPackage = javaPackage.toLowerCase();
 
     return javaPackage;
   }
