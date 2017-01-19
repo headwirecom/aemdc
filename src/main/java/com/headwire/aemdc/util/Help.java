@@ -21,7 +21,6 @@ import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.runner.BasisRunner;
-import com.headwire.aemdc.runner.DynamicRunner;
 
 
 /**
@@ -203,9 +202,10 @@ public class Help {
   private String getTextFromFile(final BasisRunner runner, final String fileName) {
     final String typeHelpPath = runner.getHelpFolder() + "/" + fileName;
     final String templateHelpPath = runner.getTemplateHelpFolder() + "/" + fileName;
+    final String type = runner.getResource().getType();
 
     String helpText = "";
-    if (runner instanceof DynamicRunner) {
+    if (config.isDynamicType(type)) {
       final File file = new File(templateHelpPath);
       if (file.exists()) {
         helpText = getTextFromFile(templateHelpPath);

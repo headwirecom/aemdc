@@ -1,5 +1,6 @@
 package com.headwire.aemdc.companion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Resource {
 
   private static final Logger LOG = LoggerFactory.getLogger(Resource.class);
 
+  private String[] args;
   private String type;
   private String sourceName;
   private String targetName;
@@ -44,6 +46,8 @@ public class Resource {
    *          - all command arguments
    */
   public Resource(final String[] cmdArgs) {
+    this.args = cmdArgs;
+
     // check for mandatory arguments
     if (cmdArgs == null || cmdArgs.length == 0) {
       setHelp(true);
@@ -135,6 +139,21 @@ public class Resource {
         }
       }
     }
+  }
+
+  /**
+   * @return the args
+   */
+  public String[] getArgs() {
+    return args;
+  }
+
+  /**
+   * @param args
+   *          the args to set
+   */
+  public void setArgs(final String[] args) {
+    this.args = args;
   }
 
   /**
@@ -331,6 +350,9 @@ public class Resource {
    * @return the copiedTemplateNames
    */
   public List<String> getCopiedTemplateNames() {
+    if (copiedTemplateNames == null) {
+      copiedTemplateNames = new ArrayList<String>();
+    }
     return copiedTemplateNames;
   }
 
@@ -345,6 +367,9 @@ public class Resource {
   @Override
   public Resource clone() {
     final Resource newResource = new Resource();
+
+    // clone args
+    newResource.setArgs(getArgs());
 
     // clone params
     newResource.setType(getType());
@@ -365,6 +390,11 @@ public class Resource {
     newResource.setExtentions(getExtentions());
     newResource.setToDeleteDestDir(isToDeleteDestDir());
     newResource.setToWarnDestDir(isToWarnDestDir());
+
+    // clone copied template names
+    final List<String> newCopiedTemplNames = new ArrayList<String>();
+    newCopiedTemplNames.addAll(getCopiedTemplateNames());
+    newResource.setCopiedTemplateNames(newCopiedTemplNames);
 
     return newResource;
   }

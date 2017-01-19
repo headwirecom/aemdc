@@ -106,7 +106,7 @@ public class Config {
           final String path = dynProps.getProperty(pathKey);
           if (StringUtils.isBlank(path)) {
             LOG.error(
-                "Please configurate the key [{}] for the template type [{}] and name [{}] in the configuration properties file [{}].",
+                "Please configurate the source key [{}] for the template type [{}] and name [{}] in the configuration properties file [{}].",
                 pathKey, dynType, dynName, getDynamicConfigPath(dynType, dynName));
             status = false;
           } else {
@@ -122,8 +122,7 @@ public class Config {
         }
 
         for (final String pathKey : Constants.DYN_CONFIGPROPS_OTHER) {
-          final String path = dynProps.getProperty(pathKey);
-          if (StringUtils.isBlank(path)) {
+          if (!dynProps.containsKey(pathKey)) {
             LOG.error(
                 "Please configurate the key [{}] for the template type [{}] and name [{}]  in the configuration property files [{}] or [{}].",
                 pathKey, dynType, dynName, getDynamicConfigPath(dynType, null), getDynamicConfigPath(dynType, dynName));
@@ -267,6 +266,15 @@ public class Config {
   }
 
   /**
+   * Is dynamic type
+   *
+   * @return true - if dynamic type
+   */
+  public boolean isDynamicType(final String type) {
+    return getDynamicTypes().contains(type);
+  }
+
+  /**
    * Get template names from placeholders aemdc-files project
    *
    * @return template names list
@@ -338,7 +346,7 @@ public class Config {
   }
 
   /**
-   * Get menu command for the type
+   * Get menu command for the dynamic type
    *
    * @param type
    *          - dynamic template type
@@ -348,12 +356,46 @@ public class Config {
    */
   public String[] getCommands(final String type, final String name) {
     String[] cmds = {};
-    final Properties props = getDynamicProperties(type, name);
-    final String cmdsAsString = props.getProperty(Constants.DYN_CONFIGPROP_COMMAND_MENU);
-    if (StringUtils.isNotBlank(cmdsAsString)) {
-      cmds = cmdsAsString.split(",");
+    final Properties dynProps = getDynamicProperties(type, name);
+    if (dynProps != null) {
+      final String cmdsAsString = dynProps.getProperty(Constants.DYN_CONFIGPROP_COMMAND_MENU);
+      if (StringUtils.isNotBlank(cmdsAsString)) {
+        cmds = cmdsAsString.split(",");
+      }
     }
     return cmds;
+  }
+
+  /**
+   * Get compound list for the compound type
+   *
+   * @param name
+   *          - compound template name
+   * @return compound list
+   */
+  public Map<String, String> getCompoundList(final String name) {
+    final Map<String, String> list = new HashMap<String, String>();
+
+    final Properties dynProps = getDynamicProperties(Constants.TYPE_COMPOUND, name);
+
+    if (dynProps != null) {
+      final String compoundsAsString = dynProps.getProperty(Constants.DYN_CONFIGPROP_COMPOUND);
+
+      if (StringUtils.isNotBlank(compoundsAsString)) {
+        final String[] compounds = compoundsAsString.split(",");
+
+        for (final String compound : compounds) {
+          final String[] splited = compound.split(":");
+          final String templateType = splited[0];
+          String templateName = "";
+          if (splited.length == 2) {
+            templateName = splited[1];
+          }
+          list.put(templateType, templateName);
+        }
+      }
+    }
+    return list;
   }
 
   /**

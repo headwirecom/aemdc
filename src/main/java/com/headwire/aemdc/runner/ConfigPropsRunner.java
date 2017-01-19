@@ -35,7 +35,6 @@ public class ConfigPropsRunner extends BasisRunner {
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private final Resource resource;
   private final Config config;
 
   /**
@@ -60,7 +59,7 @@ public class ConfigPropsRunner extends BasisRunner {
     resource.setTargetName(CONFIG_PROPS_FILENAME);
 
     // Set global config properties in the resource
-    setGlobalConfigProperties(config, resource);
+    setGlobalConfigProperties(config);
 
     // Creates Invoker object, command object and configure them
     menu.setCommand(1, new CreateFileFromResourceCommand(resource));

@@ -72,6 +72,7 @@ public class Constants {
   public static final String DYN_CONFIGPROP_TARGET_TYPE_FOLDER = "TARGET_TYPE_FOLDER";
   public static final String DYN_CONFIGPROP_COMMAND_MENU = "COMMAND_MENU";
   public static final String DYN_CONFIGPROP_TEMPLATE_STRUCTURE = "TEMPLATE_STRUCTURE";
+  public static final String DYN_CONFIGPROP_COMPOUND = "COMPOUND";
   public static final List<String> DYN_SOURCE_PATHS = new ArrayList<String>();
   public static final List<String> DYN_CONFIGPROPS_OTHER = new ArrayList<String>();
   static {
@@ -101,6 +102,7 @@ public class Constants {
   // static template types
   public static final String TYPES_STATIC_FOLDER = "types";
   public static final String TYPE_CONFIG_PROPS = "config";
+  public static final String TYPE_COMPOUND = "compound";
 
   // forbidden template types
   public static final String FORBIDDEN_TYPE_GIT = ".git";

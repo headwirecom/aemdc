@@ -28,7 +28,6 @@ public class HelpRunner extends BasisRunner {
    * Invoker
    */
   private final CommandMenu menu = new CommandMenu();
-  private final Resource resource;
   private final Config config;
 
   /**
@@ -70,7 +69,6 @@ public class HelpRunner extends BasisRunner {
 
   @Override
   public String getSourceFolder() {
-    // return HELP_ROOT_FOLDER;
     return resource.getSourceFolderPath();
   }
 

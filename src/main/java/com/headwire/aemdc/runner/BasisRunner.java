@@ -23,6 +23,8 @@ public abstract class BasisRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(BasisRunner.class);
 
+  protected Resource resource;
+
   /**
    * Invoker invokes commands here
    *
@@ -69,6 +71,15 @@ public abstract class BasisRunner {
   public abstract Replacer getPlaceHolderReplacer();
 
   /**
+   * Get resource
+   *
+   * @return resource
+   */
+  public Resource getResource() {
+    return resource;
+  }
+
+  /**
    * Get list of all available templates.
    *
    * @return list of all existing templates
@@ -102,21 +113,19 @@ public abstract class BasisRunner {
    *
    * @param config
    *          - properties config
-   * @param resource
-   *          - resource to set properties
    */
-  public void setGlobalConfigProperties(final Config config, final Resource resource) {
+  public void setGlobalConfigProperties(final Config config) {
     // Set extentions from config file
     final String[] extentions = config.getFileExtensions();
-    resource.setExtentions(extentions);
+    getResource().setExtentions(extentions);
 
     // Set overwriting methods from config file
     if (Constants.EXISTING_DESTINATION_RESOURCES_WARN
         .equals(config.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT))) {
-      resource.setToWarnDestDir(true);
+      getResource().setToWarnDestDir(true);
     } else if (Constants.EXISTING_DESTINATION_RESOURCES_DELETE
         .equals(config.getProperty(Constants.CONFIGPROP_EXISTING_DESTINATION_RESOURCES_REPLACEMENT))) {
-      resource.setToDeleteDestDir(true);
+      getResource().setToDeleteDestDir(true);
     }
   }
 }
