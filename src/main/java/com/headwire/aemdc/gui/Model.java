@@ -52,7 +52,10 @@ public class Model {
     final Help helper = new Help(config);
 
     final String name = resource.getSourceName();
-    final String templateSrcPath = runner.getSourceFolder() + "/" + name;
+    String templateSrcPath = runner.getSourceFolder();
+    if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
+      templateSrcPath += "/" + name;
+    }
 
     return (helper.getPlaceHoldersAsList(new File(templateSrcPath)));
 
