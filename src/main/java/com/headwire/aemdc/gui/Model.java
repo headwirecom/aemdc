@@ -25,13 +25,13 @@ public class Model {
   private transient Config config = new Config();
 
   // setup of types that will be available
-  private final ArrayList<String> types = new ArrayList<String>();
+  private ArrayList<String> types = new ArrayList<String>();
 
   public Model() {
   }
 
   @ElementMap(entry = "config", key = "type", attribute = true, inline = true)
-  private final HashMap<String, TypeRoot> values = new HashMap<>();
+  private HashMap<String, TypeRoot> values = new HashMap<>();
 
   public List<String> getTypes() {
 
@@ -123,7 +123,7 @@ public class Model {
 class TypeRoot {
 
   @ElementMap(entry = "template", key = "name", attribute = true, inline = true)
-  private final HashMap<String, Template> templates = new HashMap<String, Template>();
+  private HashMap<String, Template> templates = new HashMap<String, Template>();
 
   public Template get(final String template) {
     return templates.get(template);
@@ -137,7 +137,7 @@ class TypeRoot {
 class Template {
 
   @ElementMap(entry = "params", key = "name", attribute = true, inline = true)
-  private final HashMap<String, Value> params = new HashMap<String, Value>();
+  private HashMap<String, Value> params = new HashMap<String, Value>();
 
   public void put(final String paramName, final String paramValue) {
     if (paramName.startsWith("ph_")) {
@@ -173,7 +173,7 @@ class Value {
   private String value;
 
   @ElementMap(entry = "entries", key = "name", attribute = true, inline = true, required = false)
-  private final HashMap<String, String> entries = new HashMap<String, String>();
+  private HashMap<String, String> entries = new HashMap<String, String>();
 
   public Value() {
 
