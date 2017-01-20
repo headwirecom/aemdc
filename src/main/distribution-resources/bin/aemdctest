@@ -69,7 +69,7 @@ fi
 
 
 # create and check COMPONENT
-aemdc component contentpage page/page "jcr:title=CompContentPage"
+aemdc component component-page page/page "jcr:title=CompContentPage"
 aemdc component component-js content/CompJS "jcr:title=CompJSTitle"
 aemdc component component-model content/hero "jcr:title=Hero Title" "comp-model=com.headwire.myaem.models.hero.Hero"
 
@@ -90,7 +90,7 @@ fi
 
 
 # create and check OSGI
-aemdc osgi osgi.pid com.day.cq.mypkg.impl.MyService "runmode=author.prod" "ph_1_1:mobile.resourceTypes=[my-test-project/components/medianewsletter]" "ph_1_1:README=Use these configuration settings to indicate..."
+aemdc osgi osgi.pid com.day.cq.mypkg.impl.MyService "runmode=author.prod" "ph_osgi.pid_1:mobile.resourceTypes=[my-test-project/components/medianewsletter]" "ph_osgi.pid_1:README=Use these configuration settings to indicate..."
 
 # OSGI check
 TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/config.author.prod"
@@ -186,7 +186,7 @@ fi
 
 # create and check im TEMP folder
 aemdc -temp=temp/folder config
-aemdc -temp=temp/folder component contentpage page/myTempContentPage "jcr:title=CompContentPage"
+aemdc -temp=temp/folder component component-page page/myTempCompPage "jcr:title=CompPage"
 aemdc -temp=temp/folder model hero myhero "java-class=TempHero"
 
 # TEMP folder check
@@ -196,9 +196,9 @@ if [ ! -f  "$TARGETDIR/aemdc-config.properties" ] ; then
   echo "ERROR: there is no config definition in the target directory $TARGETDIR/aemdc-config.properties"
 fi
 TARGETDIR="temp/folder/ui.apps/src/main/content/jcr_root/apps/my-test-project/components"
-if [ ! -f  "$TARGETDIR/page/myTempContentPage/.content.xml" ] ; then
+if [ ! -f  "$TARGETDIR/page/myTempCompPage/.content.xml" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/myTempContentPage/.content.xml"
+  echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/myTempCompPage/.content.xml"
 fi
 TARGETDIR="temp/folder/core/src/main/java/com/headwire/myaem/core/models"
 if [ ! -f  "$TARGETDIR/myhero/TempHero.java" ] ; then

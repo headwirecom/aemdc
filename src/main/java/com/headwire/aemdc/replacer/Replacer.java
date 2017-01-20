@@ -214,7 +214,7 @@ public abstract class Replacer {
 
     final StringBuilder phValue = new StringBuilder();
 
-    // get second number from ph key "ph_1_XXX"
+    // get second number from ph key "ph_<name>_XXX"
     final int pos = propsSetKey.lastIndexOf("_");
 
     // offset = number * 4 blanks
@@ -276,7 +276,7 @@ public abstract class Replacer {
     String targetName = resource.getTargetName();
 
     // get target name w/o target subfolders
-    // ex. "page/contentpage" --> "contentpage"
+    // ex. "page/comppage" --> "comppage"
     if (StringUtils.isNotBlank(targetName) && targetName.contains("/")) {
       targetName = StringUtils.substringAfterLast(targetName, "/");
     }

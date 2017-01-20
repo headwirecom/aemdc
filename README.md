@@ -12,9 +12,9 @@ In the XML templates you can define placeholders with similar names as the argum
     {{ jcr:description }}
     {{ ranking }}
     {{ allowedPaths }}
-    {{ ph_1_1 }}
+    {{ ph_contentpage_1 }}
     {{ sling:resourceType }}
-    {{ ph_1_2 }}
+    {{ ph_contentpage_2 }}
 
 Source code of  .content.xml 
 
@@ -25,22 +25,22 @@ Source code of  .content.xml
 	    jcr:description="{{ jcr:description }}"
 	    ranking="{{ ranking }}"
 	    allowedPaths="[{{ allowedPaths }}]"
-	    {{ ph_1_1 }}
+	    {{ ph_contentpage_1 }}
 	    >
 	    <jcr:content
 	        jcr:primaryType="cq:PageContent"
 	        sling:resourceType="{{ sling:resourceType }}"
-	        {{ ph_1_2 }}
+	        {{ ph_contentpage_2 }}
 	        />
 	</jcr:root>
 
 To replace the placeholders used above, your arguments in the command line must be like this
 	
-	aemdc temp contentpage mycontentpage "jcr:title=my title" "jcr:description=my description" "ranking={Long}10" "sling:resourceType=my-aem-project/components/mycontentpage" "ph_1_1:property1=value1" "ph_1_1:property2=value2" "ph_1_2:property3=value3"
+	aemdc temp contentpage mycontentpage "jcr:title=my title" "jcr:description=my description" "ranking={Long}10" "sling:resourceType=my-aem-project/components/mycontentpage" "ph_contentpage_1:property1=value1" "ph_contentpage_1:property2=value2" "ph_contentpage_2:property3=value3"
 
 where "ph\_1\_2":
 
-	- "ph_1" in the placeholders prefix means placeholders properties set
+	- "ph_contentpage" in the placeholders prefix means placeholders properties set
 	- "_2" in the placeholders prefix means the offset for the property position in the modified file. 2 means 2*4 = 8 blank spaces from left.
 
 # Running
@@ -62,7 +62,7 @@ The command creates the next configuration file, modify it for your needs:
 
 To create a new AEM template run: 
 
-	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_1_1:singlePropExample1_1=my test&value" "ph_1_1:singlePropExample1_2=my-test-value2"  "ph_1_2:singlePropExample2_1=my-test-value2_1"
+	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
 
 Target files will be created and placeholders will be replaced with arguments defined in the command line
 
@@ -122,7 +122,7 @@ Extract the generated .zip or tar.gz file from target directory to your tools di
 
 Go to your AEM maven parent project of "ui.apps" or "core" projects and run: 
 
-	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_1_1:singlePropExample1_1=my test&value" "ph_1_1:singlePropExample1_2=my-test-value2"  "ph_1_2:singlePropExample2_1=my-test-value2_1"
+	aemdc temp contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
 
 Target files will be created and placeholders will be replaced with arguments defined in the command line
 
