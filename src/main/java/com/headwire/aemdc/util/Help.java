@@ -41,13 +41,13 @@ public class Help {
   public static final String HELP_FILE_TARGET_NAME = "help-targetname.txt";
   public static final String HELP_FILE_ARGS = "help-args.txt";
 
-  // Get Properties Config from config file
-  final Config config = new Config();
+  private final Config config;
 
   /**
    * Constructor
    */
-  public Help() {
+  public Help(final Config config) {
+    this.config = config;
   }
 
   /**

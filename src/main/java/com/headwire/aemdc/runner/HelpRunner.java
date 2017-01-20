@@ -43,7 +43,7 @@ public class HelpRunner extends BasisRunner {
     LOG.debug("Help runner starting...");
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand(1, new HelpCommand(resource));
+    menu.setCommand(1, new HelpCommand(resource, config));
   }
 
   /**

@@ -49,7 +49,7 @@ public class Model {
     final Reflection reflection = new Reflection(config);
     final BasisRunner runner = reflection.getRunner(resource);
 
-    final Help helper = new Help();
+    final Help helper = new Help(config);
 
     final String name = resource.getSourceName();
     final String templateSrcPath = runner.getSourceFolder() + "/" + name;

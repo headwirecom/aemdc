@@ -55,7 +55,7 @@ public class CommandMenu {
           command = new ReplacePathPlaceHoldersCommand(resource, replacer, config);
           break;
         case HelpCommand.NAME:
-          command = new HelpCommand(resource);
+          command = new HelpCommand(resource, config);
           break;
         default:
           LOG.error("Unknown command name [{}] for resource type [{}].", operation, resource.getType());
