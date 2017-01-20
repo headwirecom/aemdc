@@ -139,7 +139,7 @@ then
   REPO="$AEMDC_HOME"/lib
 fi
 
-CLASSPATH=$CLASSPATH_PREFIX:"$REPO"/aemdc-0.9.4-SNAPSHOT-jar-with-dependencies.jar
+CLASSPATH=$CLASSPATH_PREFIX:"$REPO"/aemdc-0.10.0-SNAPSHOT-jar-with-dependencies.jar
 # CLASSPATH=$CLASSPATH_PREFIX
 MAINCLASS=com.headwire.aemdc.gui.MainApp
 

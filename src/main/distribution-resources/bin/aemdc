@@ -139,9 +139,9 @@ then
   REPO="$AEMDC_HOME"/lib
 fi
 
-# CLASSPATH=$CLASSPATH_PREFIX:"$REPO"/aemdc-0.9.4-SNAPSHOT-jar-with-dependencies.jar
+# CLASSPATH=$CLASSPATH_PREFIX:"$REPO"/aemdc-0.10.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH=$CLASSPATH_PREFIX
-MAINJARPATH="$REPO"/aemdc-0.9.4-SNAPSHOT-jar-with-dependencies.jar
+MAINJARPATH="$REPO"/aemdc-0.10.0-SNAPSHOT-jar-with-dependencies.jar
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
