@@ -1,1 +1,1 @@
-    Source template name (folder or file).
+    Source template name.
