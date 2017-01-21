@@ -1,9 +1,6 @@
 package com.headwire.aemdc.runner;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -90,11 +87,6 @@ public class ConfigPropsRunner extends BasisRunner {
   @Override
   public String getSourceFolder() {
     return resource.getSourceFolderPath();
-  }
-
-  @Override
-  public Collection<File> listAvailableTemplates(final File dir) {
-    return new ArrayList<File>();
   }
 
   @Override

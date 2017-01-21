@@ -1,9 +1,6 @@
 package com.headwire.aemdc.runner;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +13,6 @@ import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.DynamicReplacer;
 import com.headwire.aemdc.replacer.Replacer;
-import com.headwire.aemdc.util.FilesDirsUtil;
 
 
 /**
@@ -105,17 +101,6 @@ public class DynamicRunner extends BasisRunner {
   @Override
   public String getSourceFolder() {
     return resource.getSourceFolderPath();
-  }
-
-  @Override
-  public Collection<File> listAvailableTemplates(final File dir) {
-    Collection<File> fileList = new ArrayList<File>();
-    if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
-      fileList = FilesDirsUtil.listRootDirs(dir);
-    } else {
-      fileList = FilesDirsUtil.listFiles(dir);
-    }
-    return fileList;
   }
 
   @Override

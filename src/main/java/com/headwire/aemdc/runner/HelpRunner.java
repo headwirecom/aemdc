@@ -1,8 +1,6 @@
 package com.headwire.aemdc.runner;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,11 +68,6 @@ public class HelpRunner extends BasisRunner {
   @Override
   public String getSourceFolder() {
     return resource.getSourceFolderPath();
-  }
-
-  @Override
-  public Collection<File> listAvailableTemplates(final File dir) {
-    return null;
   }
 
   @Override

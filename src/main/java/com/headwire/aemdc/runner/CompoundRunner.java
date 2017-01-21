@@ -1,9 +1,7 @@
 package com.headwire.aemdc.runner;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -17,7 +15,6 @@ import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
-import com.headwire.aemdc.util.FilesDirsUtil;
 
 
 /**
@@ -115,11 +112,6 @@ public class CompoundRunner extends BasisRunner {
   @Override
   public String getSourceFolder() {
     return resource.getSourceFolderPath();
-  }
-
-  @Override
-  public Collection<File> listAvailableTemplates(final File dir) {
-    return FilesDirsUtil.listRootDirs(dir);
   }
 
   @Override

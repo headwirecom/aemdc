@@ -1,11 +1,7 @@
 package com.headwire.aemdc.runner;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +53,6 @@ public abstract class BasisRunner {
   public abstract String getSourceFolder();
 
   /**
-   * Get list available templates in the directory.
-   *
-   * @return list of all existing templates
-   */
-  public abstract Collection<File> listAvailableTemplates(final File dir);
-
-  /**
    * Get place holder replacer.
    *
    * @return place holder replacer
@@ -77,35 +66,6 @@ public abstract class BasisRunner {
    */
   public Resource getResource() {
     return resource;
-  }
-
-  /**
-   * Get list of all available templates.
-   *
-   * @return list of all existing templates
-   */
-  public Collection<File> getAvailableTemplates() {
-    Collection<File> fileList = new ArrayList<File>();
-    final String searchPath = getSourceFolder();
-
-    LOG.debug("Directory {}", searchPath);
-
-    if (StringUtils.isNotBlank(searchPath)) {
-      final File dir = new File(searchPath);
-      if (!dir.exists()) {
-        LOG.error("Can't get available templates. Directory {} doesn't exist.", searchPath);
-      } else {
-        if (dir.isDirectory()) {
-          // find available templates
-          fileList = listAvailableTemplates(dir);
-        } else {
-          LOG.error("Can't get available templates. The {} isn't directory.", searchPath);
-        }
-      }
-    } else {
-      LOG.error("Can't get available templates. Source directory is blank.");
-    }
-    return fileList;
   }
 
   /**

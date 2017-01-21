@@ -39,7 +39,7 @@ public class CopyFilesCommand implements Command {
 
   @Override
   public void execute() throws IOException {
-    final String sourcePath = resource.getSourceFolderPath();
+    final String sourcePath = resource.getSourceFolderPath() + "/" + resource.getSourceName();
     final String targetPath = resource.getTargetFolderPath();
     final File srcDir = new File(sourcePath);
 
