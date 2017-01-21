@@ -102,6 +102,7 @@ public class Constants {
   // static template types
   public static final String TYPES_STATIC_FOLDER = "types";
   public static final String TYPE_CONFIG_PROPS = "config";
+  public static final String TYPE_OSGI = "osgi";
   public static final String TYPE_COMPOUND = "compound";
 
   // forbidden template types

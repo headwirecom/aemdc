@@ -341,17 +341,18 @@ public class Help {
   private List<String> getPlaceHoldersFromOneRunner(final BasisRunner runner) {
     List<String> phsList = new ArrayList<String>();
 
-    String templateSrcPath = runner.getSourceFolder();
     final Resource runnerResource = runner.getResource();
-    if (config.isDirTemplateStructure(runnerResource.getType(), runnerResource.getSourceName())) {
-      templateSrcPath += "/" + runnerResource.getSourceName();
-    }
+    final String templateSrcPath = runner.getSourceFolder() + "/" + runnerResource.getSourceName();
 
     final File dir = new File(templateSrcPath);
     if (!dir.exists()) {
       LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
     } else {
       phsList = getPlaceHolders(dir);
+      // add runmode ph
+      if (Constants.TYPE_OSGI.equals(runnerResource.getType()) && !phsList.contains(Constants.PLACEHOLDER_RUNMODE)) {
+        phsList.add(Constants.PLACEHOLDER_RUNMODE);
+      }
     }
     return phsList;
   }
@@ -363,7 +364,7 @@ public class Help {
    *          - directory or file
    * @return list of placeholders
    */
-  public List<String> getPlaceHolders(final File dir) {
+  private List<String> getPlaceHolders(final File dir) {
     LOG.debug("get PH from [{}]", dir);
     final ArrayList<String> placeholders = new ArrayList<>();
 
