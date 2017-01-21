@@ -391,7 +391,13 @@ public class Config {
           if (splited.length == 2) {
             templateName = splited[1];
           }
-          list.put(templateType, templateName);
+          if (Constants.TYPE_COMPOUND.equals(templateType)) {
+            LOG.error("Not allow to configurate a compound type [{}] inside of another compound type [{}].",
+                templateName, name);
+          } else {
+            list.put(templateType, templateName);
+            LOG.debug("templateType: {}, templateName: {}", templateType, templateName);
+          }
         }
       }
     }

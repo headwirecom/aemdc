@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.util.FilesDirsUtil;
 
@@ -23,6 +24,7 @@ public class CopyFilesCommand implements Command {
   public static final String NAME = "COPY_FILES";
 
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -30,8 +32,9 @@ public class CopyFilesCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CopyFilesCommand(final Resource resource) {
+  public CopyFilesCommand(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
   }
 
   @Override

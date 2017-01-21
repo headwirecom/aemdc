@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 
 
@@ -20,6 +21,7 @@ public class CopyFileCommand implements Command {
   public static final String NAME = "COPY_FILE";
 
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -27,8 +29,9 @@ public class CopyFileCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CopyFileCommand(final Resource resource) {
+  public CopyFileCommand(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
   }
 
   @Override

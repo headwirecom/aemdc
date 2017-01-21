@@ -47,12 +47,15 @@ public class DynamicRunner extends BasisRunner {
     config = pConfig;
     replacer = new DynamicReplacer(resource, config);
 
+    LOG.debug("templateType: {}, templateName: {}", resource.getType(), resource.getSourceName());
+
     final Properties dynProps = config.getDynamicProperties(resource.getType(), resource.getSourceName());
     if (dynProps == null) {
       LOG.error("Unknown <type>=[{}] and [name]=[{}] argument.", resource.getType(), resource.getSourceName());
       return;
     }
 
+    // set source folder path
     resource.setSourceFolderPath(dynProps.getProperty(Constants.DYN_CONFIGPROP_SOURCE_TYPE_FOLDER));
 
     final String targetPath = replacer
@@ -61,16 +64,6 @@ public class DynamicRunner extends BasisRunner {
       resource.setTargetFolderPath(resource.getTempFolder() + "/" + targetPath);
     } else {
       resource.setTargetFolderPath(targetPath);
-    }
-
-    // set target name in low case for Java subpackage name
-    final String targetJavaFolder = config.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
-    final String targetTypeFolder = dynProps.getProperty(Constants.DYN_CONFIGPROP_TARGET_TYPE_FOLDER);
-    if (targetTypeFolder.startsWith(targetJavaFolder)) {
-      final String targetName = resource.getTargetName();
-      if (StringUtils.isNotBlank(targetName)) {
-        resource.setTargetName(targetName.toLowerCase());
-      }
     }
 
     // Set global config properties in the resource

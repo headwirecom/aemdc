@@ -23,8 +23,8 @@ public class ReplacePlaceHoldersCommand implements Command {
   public static final String NAME = "REPLACE_PH";
 
   private final Resource resource;
-  private final Replacer replacer;
   private final Config config;
+  private final Replacer replacer;
 
   /**
    * Constructor
@@ -32,10 +32,10 @@ public class ReplacePlaceHoldersCommand implements Command {
    * @param resource
    *          - resource
    */
-  public ReplacePlaceHoldersCommand(final Resource resource, final Replacer replacer, final Config config) {
+  public ReplacePlaceHoldersCommand(final Resource resource, final Config config, final Replacer replacer) {
     this.resource = resource;
-    this.replacer = replacer;
     this.config = config;
+    this.replacer = replacer;
   }
 
   @Override

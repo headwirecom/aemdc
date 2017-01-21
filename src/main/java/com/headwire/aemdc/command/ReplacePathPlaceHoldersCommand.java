@@ -24,8 +24,8 @@ public class ReplacePathPlaceHoldersCommand implements Command {
   public static final String NAME = "REPLACE_PATH_PH";
 
   private final Resource resource;
-  private final Replacer replacer;
   private final Config config;
+  private final Replacer replacer;
 
   /**
    * Constructor
@@ -33,10 +33,10 @@ public class ReplacePathPlaceHoldersCommand implements Command {
    * @param resource
    *          - resource
    */
-  public ReplacePathPlaceHoldersCommand(final Resource resource, final Replacer replacer, final Config config) {
+  public ReplacePathPlaceHoldersCommand(final Resource resource, final Config config, final Replacer replacer) {
     this.resource = resource;
-    this.replacer = replacer;
     this.config = config;
+    this.replacer = replacer;
   }
 
   @Override

@@ -62,8 +62,8 @@ public class ConfigPropsRunner extends BasisRunner {
     setGlobalConfigProperties(config);
 
     // Creates Invoker object, command object and configure them
-    menu.setCommand(1, new CreateFileFromResourceCommand(resource));
-    menu.setCommand(2, new ReplacePlaceHoldersCommand(resource, getPlaceHolderReplacer(), config));
+    menu.setCommand(1, new CreateFileFromResourceCommand(resource, config));
+    menu.setCommand(2, new ReplacePlaceHoldersCommand(resource, config, getPlaceHolderReplacer()));
   }
 
   /**

@@ -358,10 +358,10 @@ public abstract class Replacer {
     if (commonJcrProps != null) {
       // {{ java-class }}
       javaClassName = commonJcrProps.get(Constants.PLACEHOLDER_JAVA_CLASS);
-      if (StringUtils.isBlank(javaClassName)) {
-        javaClassName = getTargetCompModelName();
-        javaClassName = StringUtils.substringAfterLast(javaClassName, ".");
-      }
+    }
+    if (StringUtils.isBlank(javaClassName)) {
+      javaClassName = getTargetCompModelName();
+      javaClassName = StringUtils.substringAfterLast(javaClassName, ".");
     }
     return javaClassName;
   }

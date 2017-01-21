@@ -21,6 +21,7 @@ import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
 import com.headwire.aemdc.runner.BasisRunner;
+import com.headwire.aemdc.runner.CompoundRunner;
 
 
 /**
@@ -41,33 +42,30 @@ public class Help {
   public static final String HELP_FILE_TARGET_NAME = "help-targetname.txt";
   public static final String HELP_FILE_ARGS = "help-args.txt";
 
+  private final Resource resource;
   private final Config config;
 
   /**
    * Constructor
    */
-  public Help(final Config config) {
+  public Help(final Resource resource, final Config config) {
+    this.resource = resource;
     this.config = config;
   }
 
   /**
    * Shows help text.
-   *
-   * @param resource
-   *          - resource object
    */
-  public void showHelp(final Resource resource) {
-    System.out.print(getHelpText(resource));
+  public void showHelp() {
+    System.out.print(getHelpText());
   }
 
   /**
    * Build help text from helper files.
    *
-   * @param resource
-   *          - resource object
    * @return help text
    */
-  public String getHelpText(final Resource resource) {
+  public String getHelpText() {
     String helpText = "";
 
     final String type = resource.getType();
@@ -76,7 +74,7 @@ public class Help {
       // no type
       helpText = getCompleteHelpText();
     } else {
-      helpText = getSpecificHelpText(resource);
+      helpText = getSpecificHelpText();
     }
 
     // get complete help
@@ -125,11 +123,9 @@ public class Help {
   /**
    * Get template type specific help text.
    *
-   * @param resource
-   *          - resource object
    * @return type specific help text
    */
-  public String getSpecificHelpText(final Resource resource) {
+  public String getSpecificHelpText() {
     final StringBuilder helpText = new StringBuilder();
 
     final String type = resource.getType();
@@ -145,11 +141,6 @@ public class Help {
       helpText.append(getCompleteHelpText());
 
     } else {
-      String templateSrcPath = runner.getSourceFolder();
-      if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
-        templateSrcPath += "/" + name;
-      }
-
       // config type
       if (Constants.TYPE_CONFIG_PROPS.equals(type)) {
         // show default config properties
@@ -176,7 +167,7 @@ public class Help {
         helpText.append(getTextFromResourceFile(HELP_FILE_ARGS));
         helpText.append(getTextFromFile(runner, HELP_FILE_ARGS));
         // get all placeholders
-        helpText.append(getPlaceHolders(templateSrcPath, config));
+        helpText.append(getPlaceHoldersAsString(runner));
 
       } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(targetname)) {
         // if <type> + <name> + <targetname>
@@ -184,7 +175,7 @@ public class Help {
         helpText.append(getTextFromResourceFile(HELP_FILE_ARGS));
         helpText.append(getTextFromFile(runner, HELP_FILE_ARGS));
         // get all placeholders
-        helpText.append(getPlaceHolders(templateSrcPath, config));
+        helpText.append(getPlaceHoldersAsString(runner));
       }
     }
     return helpText.toString();
@@ -301,43 +292,79 @@ public class Help {
   /**
    * Get list of all existing placeholders in the template.
    *
-   * @param templateSrcPath
-   *          - template source path
-   * @param config
-   *          - configuration properties
-   * @return list of placeholders
+   * @param runner
+   *          - template runner
+   * @return list of placeholders as String
    */
-  private String getPlaceHolders(final String templateSrcPath, final Config config) {
-    final File dir = new File(templateSrcPath);
-
+  private String getPlaceHoldersAsString(final BasisRunner runner) {
     final StringBuilder placeHolders = new StringBuilder();
-
-    if (!dir.exists()) {
-      LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
-    } else {
+    final List<String> phsList = getPlaceHolders(runner);
+    if (phsList.size() > 0) {
       placeHolders.append("Found next placeholders: \n");
-
-      // List<String> listPlaceholders = getPlaceHoldersAsList(dir);
-      if (dir.isDirectory()) {
-        // get files list recursive only with predefined extentions
-        final String[] extentions = config.getFileExtensions();
-        final Collection<File> fileList = FileUtils.listFiles(dir, extentions, true);
-        final Iterator<File> iter = fileList.iterator();
-        while (iter.hasNext()) {
-          final File nextFile = iter.next();
-          // find place holders
-          placeHolders.append(getPlaceHolders(nextFile));
-        }
-      } else {
-        // find place holders
-        placeHolders.append(getPlaceHolders(dir));
+      for (final String ph : phsList) {
+        // add offset for help
+        placeHolders.append("    ");
+        placeHolders.append(ph);
+        placeHolders.append("\n");
       }
     }
     return placeHolders.toString();
   }
 
-  public List<String> getPlaceHoldersAsList(final File dir) {
-    System.out.println(dir);
+  /**
+   * Get list of all existing placeholders in the template.
+   *
+   * @param runner
+   *          - template runner
+   * @return list of placeholders
+   */
+  public List<String> getPlaceHolders(final BasisRunner runner) {
+    final List<String> phsList = new ArrayList<String>();
+    if (runner instanceof CompoundRunner) {
+      LOG.debug("runner is instance of CompoundRunner");
+      for (final BasisRunner compoundRunner : ((CompoundRunner) runner).getRunners()) {
+        phsList.addAll(getPlaceHoldersFromOneRunner(compoundRunner));
+      }
+    } else {
+      phsList.addAll(getPlaceHoldersFromOneRunner(runner));
+    }
+    return phsList;
+  }
+
+  /**
+   * Get list of all existing placeholders in the template.
+   *
+   * @param runner
+   *          - template runner
+   * @return list of placeholders
+   */
+  private List<String> getPlaceHoldersFromOneRunner(final BasisRunner runner) {
+    List<String> phsList = new ArrayList<String>();
+
+    String templateSrcPath = runner.getSourceFolder();
+    final Resource runnerResource = runner.getResource();
+    if (config.isDirTemplateStructure(runnerResource.getType(), runnerResource.getSourceName())) {
+      templateSrcPath += "/" + runnerResource.getSourceName();
+    }
+
+    final File dir = new File(templateSrcPath);
+    if (!dir.exists()) {
+      LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
+    } else {
+      phsList = getPlaceHolders(dir);
+    }
+    return phsList;
+  }
+
+  /**
+   * Get list of all existing placeholders in the directory/file.
+   *
+   * @param dir/file
+   *          - directory or file
+   * @return list of placeholders
+   */
+  public List<String> getPlaceHolders(final File dir) {
+    LOG.debug("get PH from [{}]", dir);
     final ArrayList<String> placeholders = new ArrayList<>();
 
     if (dir.isDirectory()) {
@@ -348,11 +375,11 @@ public class Help {
       while (iter.hasNext()) {
         final File nextFile = iter.next();
         // find place holders
-        placeholders.addAll(getPlaceHoldersFromFileAsList(nextFile));
+        placeholders.addAll(getPlaceHoldersFromFile(nextFile));
       }
     } else {
       // find place holders
-      placeholders.addAll(getPlaceHoldersFromFileAsList(dir));
+      placeholders.addAll(getPlaceHoldersFromFile(dir));
     }
 
     final ArrayList<String> ret = new ArrayList<>();
@@ -371,28 +398,9 @@ public class Help {
    *
    * @param file
    *          - file to find placeholders there
-   * @return
+   * @return list of placeholders
    */
-  private String getPlaceHolders(final File file) {
-    final StringBuilder placeHolders = new StringBuilder();
-    try {
-      final String text = FileUtils.readFileToString(file, Constants.ENCODING);
-      // find placeholders
-      final List<String> phList = Replacer.findTextPlaceHolders(text);
-      final Iterator<String> iter = phList.iterator();
-      while (iter.hasNext()) {
-        // add offset for help
-        placeHolders.append("    ");
-        placeHolders.append(iter.next());
-        placeHolders.append("\n");
-      }
-    } catch (final IOException e) {
-      LOG.error("Can't get place holders from {}", file);
-    }
-    return placeHolders.toString();
-  }
-
-  private List<String> getPlaceHoldersFromFileAsList(final File file) {
+  private List<String> getPlaceHoldersFromFile(final File file) {
     final ArrayList<String> placeHolders = new ArrayList<>();
     try {
       final String text = FileUtils.readFileToString(file, Constants.ENCODING);

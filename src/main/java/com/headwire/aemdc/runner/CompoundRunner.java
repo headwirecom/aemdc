@@ -57,6 +57,11 @@ public class CompoundRunner extends BasisRunner {
 
     // get compound template list
     final Map<String, String> compoundList = config.getCompoundList(resource.getSourceName());
+    if (compoundList.size() == 0) {
+      LOG.error("Can't get compound list for template name [{}].", resource.getSourceName());
+      return;
+    }
+
     for (final Map.Entry<String, String> entry : compoundList.entrySet()) {
       final String templateType = entry.getKey();
       final String templateName = entry.getValue();
@@ -67,15 +72,13 @@ public class CompoundRunner extends BasisRunner {
       templateResource.setSourceName(templateName);
 
       // Get Runner
-      BasisRunner runner = new HelpRunner(templateResource, config);
-      if (!templateResource.isHelp()) {
-        final Reflection reflection = new Reflection(config);
-        runner = reflection.getRunner(templateResource);
-        if (runner == null) {
-          runner = new HelpRunner(templateResource, config);
-        }
+      final Reflection reflection = new Reflection(config);
+      final BasisRunner runner = reflection.getRunner(templateResource);
+      if (runner != null) {
+        runners.add(runner);
+      } else {
+        LOG.error("Unknown configurated compound <type>:<name>={}:{}.", templateType, templateName);
       }
-      runners.add(runner);
     }
   }
 
@@ -123,4 +126,14 @@ public class CompoundRunner extends BasisRunner {
   public Replacer getPlaceHolderReplacer() {
     return null;
   }
+
+  /**
+   * Get compound runners
+   *
+   * @return the runners
+   */
+  public List<BasisRunner> getRunners() {
+    return runners;
+  }
+
 }

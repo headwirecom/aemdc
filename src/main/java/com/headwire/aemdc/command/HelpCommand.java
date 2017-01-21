@@ -36,7 +36,7 @@ public class HelpCommand implements Command {
   @Override
   public void execute() throws IOException {
     LOG.debug("Showing help...");
-    final Help help = new Help(config);
-    help.showHelp(resource);
+    final Help help = new Help(resource, config);
+    help.showHelp();
   }
 }

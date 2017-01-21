@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.util.FilesDirsUtil;
 
@@ -22,6 +23,7 @@ public class CopyDirCommand implements Command {
   public static final String NAME = "COPY_DIR";
 
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -29,14 +31,15 @@ public class CopyDirCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CopyDirCommand(final Resource resource) {
+  public CopyDirCommand(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
   }
 
   @Override
   public void execute() throws IOException {
     final String sourcePath = resource.getSourceFolderPath() + "/" + resource.getSourceName();
-    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
+    final String targetPath = resource.getTargetFolderPath() + "/" + getTargetNameAsPath(resource, config);
     final File srcDir = new File(sourcePath);
     final File targetDir = new File(targetPath);
 

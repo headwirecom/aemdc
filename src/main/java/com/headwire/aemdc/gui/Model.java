@@ -1,6 +1,5 @@
 package com.headwire.aemdc.gui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.runner.BasisRunner;
-import com.headwire.aemdc.runner.HelpRunner;
 import com.headwire.aemdc.util.Help;
 
 
@@ -44,21 +42,12 @@ public class Model {
 
   public List<String> getPlaceHoldersForName(final String type, final String template) {
     final Resource resource = new Resource(new String[] { type, template });
-    final BasisRunner helpRunner = new HelpRunner(resource, config);
+    final Help helper = new Help(resource, config);
 
     final Reflection reflection = new Reflection(config);
     final BasisRunner runner = reflection.getRunner(resource);
 
-    final Help helper = new Help(config);
-
-    final String name = resource.getSourceName();
-    String templateSrcPath = runner.getSourceFolder();
-    if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
-      templateSrcPath += "/" + name;
-    }
-
-    return (helper.getPlaceHoldersAsList(new File(templateSrcPath)));
-
+    return (helper.getPlaceHolders(runner));
   }
 
   public String getValue(final String type, final String template, final String placeholder) {

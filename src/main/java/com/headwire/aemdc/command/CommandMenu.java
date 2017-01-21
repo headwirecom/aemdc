@@ -37,22 +37,22 @@ public class CommandMenu {
       final Command command;
       switch (operation) {
         case CopyDirCommand.NAME:
-          command = new CopyDirCommand(resource);
+          command = new CopyDirCommand(resource, config);
           break;
         case CopyFileCommand.NAME:
-          command = new CopyFileCommand(resource);
+          command = new CopyFileCommand(resource, config);
           break;
         case CopyFilesCommand.NAME:
-          command = new CopyFilesCommand(resource);
+          command = new CopyFilesCommand(resource, config);
           break;
         case CreateFileFromResourceCommand.NAME:
-          command = new CreateFileFromResourceCommand(resource);
+          command = new CreateFileFromResourceCommand(resource, config);
           break;
         case ReplacePlaceHoldersCommand.NAME:
-          command = new ReplacePlaceHoldersCommand(resource, replacer, config);
+          command = new ReplacePlaceHoldersCommand(resource, config, replacer);
           break;
         case ReplacePathPlaceHoldersCommand.NAME:
-          command = new ReplacePathPlaceHoldersCommand(resource, replacer, config);
+          command = new ReplacePathPlaceHoldersCommand(resource, config, replacer);
           break;
         case HelpCommand.NAME:
           command = new HelpCommand(resource, config);

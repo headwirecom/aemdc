@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Resource;
 
 
@@ -21,6 +22,7 @@ public class CreateFileFromResourceCommand implements Command {
   public static final String NAME = "CREATE_FILE_FROM_RESOURCE";
 
   private final Resource resource;
+  private final Config config;
 
   /**
    * Constructor
@@ -28,8 +30,9 @@ public class CreateFileFromResourceCommand implements Command {
    * @param resource
    *          - resource
    */
-  public CreateFileFromResourceCommand(final Resource resource) {
+  public CreateFileFromResourceCommand(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
   }
 
   @Override
