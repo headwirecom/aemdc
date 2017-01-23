@@ -493,6 +493,8 @@ public class Config {
           configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER,
           configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER));
+      dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_TARGET_JAVA_MODEL_SUBPACKAGE,
+          configProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_MODEL_SUBPACKAGE));
       dynProps = replacePathPlaceHolder(dynProps, Constants.CONFIGPROP_TARGET_OSGI_SUBFOLDER,
           configProps.getProperty(Constants.CONFIGPROP_TARGET_OSGI_SUBFOLDER));
     }
@@ -535,6 +537,8 @@ public class Config {
           newProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE));
       newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER,
           newProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_PACKAGE_FOLDER));
+      newProps = replacePathPlaceHolder(newProps, Constants.CONFIGPROP_TARGET_JAVA_MODEL_SUBPACKAGE,
+          newProps.getProperty(Constants.CONFIGPROP_TARGET_JAVA_MODEL_SUBPACKAGE));
     }
 
     return newProps;

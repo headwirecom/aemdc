@@ -39,6 +39,7 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String PLACEHOLDER_TARGET_OSGI_SUBFOLDER = "PH_TARGET_OSGI_SUBFOLDER";
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE = "PH_TARGET_JAVA_PACKAGE";
   public static final String PLACEHOLDER_TARGET_JAVA_PACKAGE_FOLDER = "PH_TARGET_JAVA_PACKAGE_FOLDER";
+  public static final String PLACEHOLDER_TARGET_JAVA_MODEL_SUBPACKAGE = "PH_TARGET_JAVA_MODEL_SUBPACKAGE";
 
   // default values
   public static final String PH_DEFAULT_TARGET_PROJECT_APPS_FOLDER = "my-aem-project";
@@ -48,6 +49,7 @@ public class ConfigPropsReplacer extends Replacer {
   public static final String PH_DEFAULT_TARGET_CORE_PROJECT_FOLDER_OLD = "bundle";
   public static final String PH_DEFAULT_TARGET_CORE_BUNDLES_SUBFOLDER = "bundles";
   public static final String PH_DEFAULT_TARGET_JAVA_PACKAGE = "com.headwire.aemdc.samples";
+  public static final String PH_DEFAULT_TARGET_JAVA_MODEL_SUBPACKAGE = "model";
   public static final String PH_DEFAULT_TARGET_OSGI_SUBFOLDER = "/configuration";
 
   /**
@@ -117,17 +119,28 @@ public class ConfigPropsReplacer extends Replacer {
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_OSGI_SUBFOLDER), osgiConfigFolder);
 
-    // target java package
+    // target java package & sling models subpackage
     String javaTargetPackage = lazybonesProps.getProperty(LAZYBONES_PROP_SLING_MODELS_PACKAGRE);
+    String slingModelsSubPackage = PH_DEFAULT_TARGET_JAVA_MODEL_SUBPACKAGE;
     if (StringUtils.isBlank(javaTargetPackage)) {
       final String groupId = lazybonesProps.getProperty(LAZYBONES_PROP_GROUP_ID);
       if (StringUtils.isBlank(groupId)) {
         javaTargetPackage = PH_DEFAULT_TARGET_JAVA_PACKAGE;
       } else {
         javaTargetPackage = groupId.replace('-', '.');
+        if (javaTargetPackage.indexOf('.') > 0) {
+          slingModelsSubPackage = StringUtils.substringAfterLast(javaTargetPackage, ".");
+          javaTargetPackage = StringUtils.substringBeforeLast(javaTargetPackage, ".");
+        }
+      }
+    } else {
+      if (javaTargetPackage.indexOf('.') > 0) {
+        slingModelsSubPackage = StringUtils.substringAfterLast(javaTargetPackage, ".");
+        javaTargetPackage = StringUtils.substringBeforeLast(javaTargetPackage, ".");
       }
     }
     result = result.replace(getPH(PLACEHOLDER_TARGET_JAVA_PACKAGE), javaTargetPackage);
+    result = result.replace(getPH(PLACEHOLDER_TARGET_JAVA_MODEL_SUBPACKAGE), slingModelsSubPackage);
 
     // target java package folder
     final String javaTargetPackageFolder = javaTargetPackage.replace('.', '/');
