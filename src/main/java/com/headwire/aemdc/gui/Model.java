@@ -65,11 +65,15 @@ public class Model {
   }
 
   public String getHelpTextForType(final String type) {
-    return "help for " + type;
+    final Resource resource = new Resource(new String[] { type });
+    final Help helper = new Help(resource, config);
+    return helper.getGuiHelpText();
   }
 
   public String getHelpTextForTemplate(final String type, final String template) {
-    return "help for " + type + " " + template;
+    final Resource resource = new Resource(new String[] { type, template });
+    final Help helper = new Help(resource, config);
+    return helper.getGuiHelpText();
   }
 
   public void setValue(final String type, final String template, final String paramName, final String paramValue) {

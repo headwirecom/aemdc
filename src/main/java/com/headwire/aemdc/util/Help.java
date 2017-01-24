@@ -41,6 +41,7 @@ public class Help {
   public static final String HELP_FILE_NAME = "help-name.txt";
   public static final String HELP_FILE_TARGET_NAME = "help-targetname.txt";
   public static final String HELP_FILE_ARGS = "help-args.txt";
+  public static final String HELP_FILE_GUI = "help-gui.txt";
 
   private final Resource resource;
   private final Config config;
@@ -182,6 +183,32 @@ public class Help {
   }
 
   /**
+   * Get help text for GUI.
+   *
+   * @param type
+   *          - template type
+   * @param name
+   *          - template name
+   * @return help text
+   */
+  public String getGuiHelpText() {
+    final StringBuilder helpText = new StringBuilder();
+
+    // Get Runner
+    final Reflection reflection = new Reflection(config);
+    final BasisRunner runner = reflection.getRunner(resource);
+
+    if (runner == null) {
+      // not existing type
+      helpText.append("No help for type ");
+      helpText.append(resource.getType());
+    } else {
+      helpText.append(getTextFromFile(runner, HELP_FILE_GUI));
+    }
+    return helpText.toString();
+  }
+
+  /**
    * Read help text from dynamic type helper file.
    *
    * @param runner
@@ -190,7 +217,7 @@ public class Help {
    *          - help file name
    * @return help text
    */
-  private String getTextFromFile(final BasisRunner runner, final String fileName) {
+  public String getTextFromFile(final BasisRunner runner, final String fileName) {
     final String typeHelpPath = runner.getHelpFolder() + "/" + fileName;
     final String templateHelpPath = runner.getTemplateHelpFolder() + "/" + fileName;
     final String type = runner.getResource().getType();
@@ -198,13 +225,17 @@ public class Help {
     String helpText = "";
     if (config.isDynamicType(type)) {
       final File file = new File(templateHelpPath);
-      if (file.exists()) {
+      if (file.exists() && file.isFile() && file.canRead()) {
         helpText = getTextFromFile(templateHelpPath);
       } else {
         helpText = getTextFromFile(typeHelpPath);
       }
     } else {
-      helpText = getTextFromResourceFileByPath(templateHelpPath);
+      if (isResource(templateHelpPath)) {
+        helpText = getTextFromResourceFileByPath(templateHelpPath);
+      } else {
+        helpText = getTextFromResourceFileByPath(typeHelpPath);
+      }
     }
     return helpText;
   }
@@ -256,6 +287,21 @@ public class Help {
     }
     filePath += "/" + HELP_FOLDER + "/" + fileName;
     return getTextFromResourceFileByPath(filePath);
+  }
+
+  /**
+   * Is file under resources exists?
+   *
+   * @param filePath
+   *          - path to file under resources
+   * @return true if resource exists, false - otherwise
+   */
+  private boolean isResource(final String filePath) {
+    final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+    if (in == null) {
+      return false;
+    }
+    return true;
   }
 
   /**
