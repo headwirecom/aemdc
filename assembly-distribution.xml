@@ -17,12 +17,12 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.build.directory}/distribution-resources/bin</directory>
+      <directory>${project.build.directory}/resources-distribution/bin</directory>
       <outputDirectory>bin</outputDirectory>
     </fileSet>
     <!-- 
     <fileSet>
-      <directory>${project.build.directory}/distribution-resources/lib</directory>
+      <directory>${project.build.directory}/resources-distribution/lib</directory>
       <outputDirectory>lib</outputDirectory>
     </fileSet>
      -->

@@ -79,9 +79,7 @@
 		<dependency>
 			<groupId>org.simpleframework</groupId>
 			<artifactId>simple-xml</artifactId>
-			<version>2.7.1</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -182,7 +180,7 @@
 							</goals>
 							<configuration>
 								<!-- outputDirectory>${project.build.directory}/lib</outputDirectory-->
-								<outputDirectory>${project.build.directory}/distribution-resources/lib</outputDirectory>
+								<outputDirectory>${project.build.directory}/resources-distribution/lib</outputDirectory>
 							</configuration>
 						</execution>
 					</executions>
@@ -193,7 +191,7 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.6</version>
 					<configuration>
-                        <outputDirectory>${project.build.directory}/distribution-resources/lib</outputDirectory>
+                        <outputDirectory>${project.build.directory}/resources-distribution/lib</outputDirectory>
 						<archive>
 							<manifest>
 								<addClasspath>true</addClasspath>
@@ -251,10 +249,10 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/distribution-resources</outputDirectory>
+                            <outputDirectory>${project.build.directory}/resources-distribution</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/src/main/distribution-resources</directory>
+                                    <directory>${basedir}/src/main/resources-distribution</directory>
                                 </resource>
                             </resources>
                         </configuration>
