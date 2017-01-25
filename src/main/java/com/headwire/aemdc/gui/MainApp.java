@@ -357,7 +357,20 @@ public class MainApp extends Application {
 
     // show the help text for a given command (commands[:<type>[:<template>]]
     private Node getHelpFor(String command) {
-        webEngine.loadContent(model.getHelpTextForType(command));
+        String pre = "<html>\n" +
+                "<head>\n" +
+                "    <style>\n" +
+                "        html,body {\n" +
+                "          font-family: Arial,\"Helvetica Neue\",Helvetica,sans-serif;\n" +
+                "          font-size: 12px;\n" +
+                "          background-color: #f4f4f4;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>";
+        String helpText = model.getHelpTextForType(command);
+        String post = "</body></html>";
+        webEngine.loadContent(pre + helpText+ post);
         return browser;
     }
 
