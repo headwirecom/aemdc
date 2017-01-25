@@ -110,7 +110,7 @@ if "%JAVACMD%"=="" set JAVACMD=java
 
 if "%REPO%"=="" set REPO=%AEMDC_HOME%\lib
 
-set CLASSPATH="%REPO%"\aemdc-0.10.1-SNAPSHOT-jar-with-dependencies.jar
+set CLASSPATH="%REPO%"\aemdc-${project.version}-jar-with-dependencies.jar
 :: set CLASSPATH=""
 set MAINCLASS=com.headwire.aemdc.gui.MainApp
 goto endInit

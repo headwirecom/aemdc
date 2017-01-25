@@ -253,6 +253,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/src/main/resources-distribution</directory>
+                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
@@ -303,6 +304,16 @@
 			</plugin>
 			
 		</plugins>
+
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources-filtered</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 	</build>
 
 </project>
