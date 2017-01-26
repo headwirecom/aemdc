@@ -131,7 +131,7 @@ fi
 
 # create and check MODEL
 aemdc model wcmusepojo hero
-aemdc model sling list "java-class=GraphicList"
+aemdc model resourcemodel list "java-class=GraphicList"
 
 # MODEL check
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/model"
