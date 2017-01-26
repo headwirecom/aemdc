@@ -26,22 +26,78 @@ import com.headwire.aemdc.util.FilesDirsUtil;
 public class Config {
 
   private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+
+  private static File projectRoot = new File(".");
+
+  public static String getProjectRootPath() {
+    return projectRoot.getPath();
+  }
+
+  public static boolean setProjectRootPath(String projectRootPath) {
+    boolean answer = true;
+    if(projectRootPath == null || projectRootPath.isEmpty()) {
+      answer = false;
+      LOG.error("Project Root Path is not provide -> ignore and it stays as: " + Config.projectRoot.getPath());
+    } else {
+      File temp = new File(projectRootPath);
+      if(!temp.exists()) {
+        answer = false;
+        LOG.error("Project Root Path does not exist -> ignore and it stays as: " + Config.projectRoot.getPath());
+      } else if(!temp.isDirectory()) {
+        answer = false;
+        LOG.error("Project Root Path is not a folder -> ignore and it stays as: " + Config.projectRoot.getPath());
+      } else {
+        projectRoot = temp;
+      }
+    }
+    return answer;
+  }
+
+  public static List<String> validateThisConfiguration(File baseFolder, String configPropertiesFileName) {
+    Config config = new Config(baseFolder, configPropertiesFileName);
+    return config.validateConfiguration();
+  }
+
   private final Properties defaultConfigProps;
   private final Properties configProps;
   private final Map<String, Properties> dynamicConfigs = new HashMap<String, Properties>();
   private Collection<String> dynamicTypes;
+  private File baseFolder;
+  private String configPropertiesFileName;
 
   /**
    * Constructor
    */
   public Config() {
+    this(projectRoot, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
+  }
+
+  /**
+   * Constructor
+   */
+  public Config(File baseFolder, String configPropertiesFileName) {
+    if(baseFolder == null) {
+      throw new IllegalArgumentException("Base Folder must be provided");
+    } else if(!baseFolder.exists()) {
+      throw new IllegalArgumentException("Base Folder: '" + baseFolder.getPath() + "' does not exist");
+    } else if(!baseFolder.isDirectory()) {
+      throw new IllegalArgumentException("Base Folder: '" + baseFolder.getPath() + "' is not a folder");
+    } else if(configPropertiesFileName == null || configPropertiesFileName.isEmpty()) {
+      throw new IllegalArgumentException("Config Properties File Name must be provided");
+    }
+
+    this.baseFolder = baseFolder;
+    this.configPropertiesFileName = configPropertiesFileName;
+
     // init default configuration file properties from resources folder
     defaultConfigProps = FilesDirsUtil
         .getPropertiesFromContextClassLoader(
             ConfigPropsRunner.SOURCE_NAME_FOLDER + "/" + ConfigPropsRunner.CONFIG_PROPS_FILENAME);
 
     // init config properties
-    configProps = replacePathPlaceHolders(FilesDirsUtil.getProperties(ConfigPropsRunner.CONFIG_PROPS_FILENAME));
+    configProps = replacePathPlaceHolders(
+        FilesDirsUtil.getProperties(baseFolder.getPath() + "/" + configPropertiesFileName)
+    );
 
     // init dynamic configs
     for (final String type : getDynamicTypes()) {
@@ -64,23 +120,39 @@ public class Config {
    * @return true - if all paths exist, false - otherwise
    */
   public boolean checkConfiguration() {
-    boolean status = true;
-    if (!configProps.isEmpty()) {
+    List<String> validationReports = validateConfiguration();
+    boolean status = validationReports.isEmpty();
+    if(!status) {
+      for(String report : validationReports) {
+        LOG.error(report);
+      }
+    }
+    return status;
+  }
 
+
+  /**
+   * Check the Configuration and report any issues
+   *
+   * @return List of Configuration Issues or empty if OK
+   */
+  public List<String> validateConfiguration() {
+    List<String> answer = new ArrayList<>();
+//    String configPath = baseFolder.getPath() + "/" + configPropertiesFileName;
+    if (!configProps.isEmpty()) {
       // validate config properties
       for (final String pathKey : Constants.SOURCE_PATHS) {
         final String path = configProps.getProperty(pathKey);
         if (StringUtils.isBlank(path)) {
-          LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
-              pathKey,
-              ConfigPropsRunner.CONFIG_PROPS_FILENAME);
-          status = false;
+          answer.add(
+              "Please configure the key [" + pathKey + "] in the configuration properties file [" + configPropertiesFileName + "]."
+          );
         } else {
           final File file = new File(path);
           if (!file.exists()) {
-            LOG.error("The path [{}] from configuration properties file [{}] doesn't exist.", path,
-                ConfigPropsRunner.CONFIG_PROPS_FILENAME);
-            status = false;
+            answer.add(
+                "The path [" + path + "] of key [" + pathKey + "] from configuration properties file [" + configPropertiesFileName + "] doesn't exist."
+            );
           }
         }
       }
@@ -88,10 +160,9 @@ public class Config {
       for (final String pathKey : Constants.CONFIGPROPS_OTHER) {
         final String path = configProps.getProperty(pathKey);
         if (StringUtils.isBlank(path)) {
-          LOG.error("Please configurate the key [{}] in the configuration properties file [{}] in the root folder.",
-              pathKey,
-              ConfigPropsRunner.CONFIG_PROPS_FILENAME);
-          status = false;
+          answer.add(
+              "Please configure the key [" + pathKey + "] in the configuration properties file [" + configPropertiesFileName + "]."
+          );
         }
       }
 
@@ -105,37 +176,39 @@ public class Config {
         for (final String pathKey : Constants.DYN_SOURCE_PATHS) {
           final String path = dynProps.getProperty(pathKey);
           if (StringUtils.isBlank(path)) {
-            LOG.error(
-                "Please configurate the source key [{}] for the template type [{}] and name [{}] in the configuration properties file [{}].",
-                pathKey, dynType, dynName, getDynamicConfigPath(dynType, dynName));
-            status = false;
+            answer.add(
+                "Please configure the source key [" + pathKey + "] for the template type [" + dynType + "] " +
+                  "and name [" + dynName + "] in the configuration properties file [" + getDynamicConfigPath(dynType, dynName) + "]."
+            );
           } else {
             final File file = new File(path);
             if (!file.exists()) {
-              LOG.error(
-                  "The path [{}] for the template type [{}] and name [{}] from the configuration property files [{}] and [{}] doesn't exist.",
-                  pathKey, dynType, dynName, getDynamicConfigPath(dynType, null),
-                  getDynamicConfigPath(dynType, dynName));
-              status = false;
+              answer.add(
+                  "The path [" + pathKey + "] for the template type [" + dynType + "] and name [" + dynName + "] " +
+                  "from the configuration property files [" + getDynamicConfigPath(dynType, null) + "] " +
+                  "and [" + getDynamicConfigPath(dynType, dynName) + "] doesn't exist."
+              );
             }
           }
         }
 
         for (final String pathKey : Constants.DYN_CONFIGPROPS_OTHER) {
           if (!dynProps.containsKey(pathKey)) {
-            LOG.error(
-                "Please configurate the key [{}] for the template type [{}] and name [{}]  in the configuration property files [{}] or [{}].",
-                pathKey, dynType, dynName, getDynamicConfigPath(dynType, null), getDynamicConfigPath(dynType, dynName));
-            status = false;
+            answer.add(
+                "Please configure the key [" + pathKey + "] for the template type [" + dynType + "] and name [" + dynName + "] " +
+                "in the configuration property files [+ " + getDynamicConfigPath(dynType, null) + "] " +
+                " or [" + getDynamicConfigPath(dynType, dynName) + "]."
+            );
           }
         }
       }
-
     } else {
-      status = false;
+      answer.add(
+        "No Config Properties provided or loaded"
+      );
     }
 
-    return status;
+    return answer;
   }
 
   /**
@@ -430,7 +503,7 @@ public class Config {
    *
    * @param type
    *          - dynamic template type
-   * @param nyme
+   * @param name
    *          - template name
    * @return dynamic configuration properties file path
    */
@@ -460,7 +533,7 @@ public class Config {
    *
    * @param type
    *          - dynamic template type
-   * @param nyme
+   * @param name
    *          - template name
    * @return dynamic configuration properties if props file exists
    */

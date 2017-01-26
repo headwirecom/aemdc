@@ -48,10 +48,10 @@ public class FilesDirsUtil {
 
     try {
       input = new FileInputStream(filepath);
-
-      // load a properties file from class path
-      props.load(input);
-
+      if(input != null) {
+        // load a properties file from class path
+        props.load(input);
+      }
     } catch (final IOException e) {
       LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {
@@ -78,11 +78,16 @@ public class FilesDirsUtil {
     InputStream input = null;
 
     try {
-      input = Thread.currentThread().getContextClassLoader().getResourceAsStream(filepath);
-
-      // load a properties file from class path
-      props.load(input);
-
+      ClassLoader cl = Thread.currentThread().getContextClassLoader();
+      input = cl.getResourceAsStream(filepath);
+      if(input == null) {
+        cl = FilesDirsUtil.class.getClassLoader();
+        input = cl.getResourceAsStream(filepath);
+      }
+      if(input != null) {
+        // load a properties file from class path
+        props.load(input);
+      }
     } catch (final IOException e) {
       LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {

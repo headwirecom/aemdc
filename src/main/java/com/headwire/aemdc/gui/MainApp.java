@@ -40,11 +40,12 @@ public class MainApp extends Application {
             .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
     // data storage for this app
-    private Model model = new Model();
+//    private Model model = new Model();
+    private Model model;
 
     // web view and browser used to show help texts
-    private final WebView browser = new WebView();
-    private final WebEngine webEngine = browser.getEngine();
+    private WebView browser;
+    private WebEngine webEngine;
 
     // cache for all the nodes used to display the panels of each command
     private final HashMap<String, Node> nodeCache = new HashMap<>();
@@ -230,10 +231,17 @@ public class MainApp extends Application {
             File aemdcguiConfigFile = new File("aemdcgui.xml");
             if(aemdcguiConfigFile.exists()) {
                 model = serializer.read(Model.class, aemdcguiConfigFile);
+            } else {
+                model = new Model();
             }
         } catch (Exception e) {
             LOG.info("encountered a problem while reading the state of the UI from aemdcgui.xml", e);
         }
+
+        browser = new WebView();
+        webEngine = browser.getEngine();
+
+        container = new BorderPane();
 
         final TreeView tree = setupCommandTree();
 
