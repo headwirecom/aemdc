@@ -61,6 +61,7 @@ public class MainApp extends Application {
     // label for the bottom showing last log message
     private Label lastLogMessage = new Label("last log message: ");
     private Console console;
+    private File root;
 
     // launch of the application
     public static void main(String[] args) {
@@ -214,7 +215,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
 
-        Scene scene = getMainScene();
+        Scene scene = getMainScene(null);
         stage.setTitle("AEM Developer Companion");
         stage.setWidth(800);
         stage.setHeight(600);
@@ -224,7 +225,8 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    public Scene getMainScene() {
+    public Scene getMainScene(File root) {
+        this.root = root;
         Serializer serializer = new Persister();
         try {
             File aemdcguiConfigFile = new File("aemdcgui.xml");
@@ -487,6 +489,9 @@ public class MainApp extends Application {
                 }
             }
             else {
+                if(root != null) {
+                    params.add(0, "-temp="+root.getAbsolutePath());
+                }
                 performAction(params, preview);
             }
         }
