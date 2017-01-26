@@ -130,7 +130,7 @@ fi
 
 
 # create and check MODEL
-aemdc model hero hero
+aemdc model wcmusepojo hero
 aemdc model sling list "java-class=GraphicList"
 
 # MODEL check
@@ -187,7 +187,7 @@ fi
 # create and check im TEMP folder
 aemdc -temp=temp/folder config
 aemdc -temp=temp/folder component component-page page/myTempCompPage "jcr:title=CompPage"
-aemdc -temp=temp/folder model hero myhero "java-class=TempHero"
+aemdc -temp=temp/folder model wcmusepojo myhero "java-class=TempHero"
 
 # TEMP folder check
 TARGETDIR="temp/folder"
