@@ -81,7 +81,7 @@ public class MainApp extends Application {
 
         Serializer serializer = new Persister();
         try {
-            serializer.write(model, new File("aemdcgui.xml"));
+            serializer.write(model, new File(root, "aemdcgui.xml"));
         } catch (Exception e) {
             LOG.error("failed to write current state of UI to aemdcgui.xml",e);
         }
@@ -227,10 +227,10 @@ public class MainApp extends Application {
     }
 
     public Scene getMainScene(File root) {
-        this.root = root;
+        this.root = root == null ? new File(".") : root;
         Serializer serializer = new Persister();
         try {
-            File aemdcguiConfigFile = new File("aemdcgui.xml");
+            File aemdcguiConfigFile = new File(root, "aemdcgui.xml");
             if(aemdcguiConfigFile.exists()) {
                 model = serializer.read(Model.class, aemdcguiConfigFile);
             } else {
