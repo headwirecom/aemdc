@@ -1,7 +1,91 @@
 # AEM Developer Companion (AEMDC)
-AEMDC allows the developer to create AEM templates, components, content pages, osgi configurations, AEM 6.2 editable template structures, java models, services and servlets from predefined templates.
+AEMDC is a scaffolding tool to help a developer quickly create AEM templates,
+components, content pages, osgi configurations, AEM 6.2 editable template structures,
+java models, services and servlets from predefined templates.
 
-# Using placeholders
+AEMDC best works with an AEM project created by the
+[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates)
+but can also be used with other project structures.
+
+# Installation
+
+Download the released .zip or tar.gz file, extract it to your tools directory and
+set the global ENV and PATH variables like:
+
+    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
+    set GIT_HOME=C:\Program Files\Git
+    set AEMDC_HOME=C:\Program Files\aemdc
+    set PATH=%PATH%;%JAVA_HOME%\bin;%GIT_HOME%\bin;%AEMDC_HOME%\bin
+
+# First Run
+
+Go to your AEM maven parent project of "ui.apps" or "core" projects and
+create a configuration file:
+
+	aemdc config
+
+The command creates the next configuration file, modify it for your needs:
+
+	/my-aem-project/aemdc-config.properties
+
+If your project was created by the
+[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates)
+the properties will be auto discovered
+
+# Example Run
+
+To create a new AEM template run:
+
+	aemdc template contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
+
+Target files will be created and placeholders will be replaced with arguments defined in the command line
+
+	"ui.apps/src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/.content.xml"
+	"ui.apps/src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
+
+# Usage - GUI
+
+To start the GUI for AEMDC run the following command:
+
+    aemdcgui
+
+and follow the on screen instructions
+
+# Usage - Command Line
+The following command line options are available:
+
+    aemdc [options] <type> [name] [targetname] [args...]
+
+    options:
+        help               This help text.
+        help config        Shows initial default configuration properties.
+        help <type>        Shows list of possible templates.
+        help <type> <name> Shows list of possible place holders.
+        -temp=<path>       Create all templates under temp folder.
+	type:
+	    config      Create configuration properties file.
+	    component   Component to be created.
+	    compound    Set of different templates to be created.
+	    confstr     Editable templates structure to be created.
+	    model       Model java class to be created.
+	    osgi        Osgi config to be created.
+	    page        Content page to be created.
+	    service     Service java class to be created.
+	    servlet     Servlet java class to be created.
+	    template    Template to be created.
+	name:
+	    Source template name.
+	targetname:
+	    Target resource name (folder or file w/o extension).
+	args:
+	    <placeholder name>=<value>
+	        Placeholder used in all template files.
+	    <properties placeholder set name>:<property name>=<property value>
+	        Properties placeholder set used in the template xml files.
+
+
+# Creating your own Templates
+
 Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemdc-files for you needs. 
 	
 	git clone https://github.com/headwirecom/aemdc-files.git ../aemdc-files
@@ -34,74 +118,17 @@ Source code of  .content.xml
 	        />
 	</jcr:root>
 
-To replace the placeholders used above, your arguments in the command line must be like this
+When running aemdc, the placeholders will be replaced by the arguments provided
 	
 	aemdc template contentpage mycontentpage "jcr:title=my title" "jcr:description=my description" "ranking={Long}10" "sling:resourceType=my-aem-project/components/mycontentpage" "ph_contentpage_1:property1=value1" "ph_contentpage_1:property2=value2" "ph_contentpage_2:property3=value3"
 
-where "ph\_contentpage\_2":
+placeholders with the syntax ph_<name>_<number> are meant to be lists of name value pairs.
+The number indicates how many spaces will be emitted before each name value pair in the output file
 
-	- "ph_contentpage" in the placeholders prefix means placeholders properties set
-	- "_2" in the placeholders prefix means the offset for the property position in the modified file. 2 means 2*4 = 8 blank spaces from left.
+for example: "ph\_contentpage\_2":
 
-# Running
-
-Download the released .zip or tar.gz file, extract it to your tools directory and set the global ENV and PATH variables like:
-
-    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
-    set GIT_HOME=C:\Program Files\Git
-    set AEMDC_HOME=C:\Program Files\aemdc
-    set PATH=%PATH%;%JAVA_HOME%\bin;%GIT_HOME%\bin;%AEMDC_HOME%\bin
-
-Go to your AEM maven parent project of "ui.apps" or "core" projects and create a configuration file: 
-
-	aemdc config
-
-The command creates the next configuration file, modify it for your needs:
- 
-	/my-aem-project/aemdc-config.properties
-
-To create a new AEM template run: 
-
-	aemdc template contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
-
-Target files will be created and placeholders will be replaced with arguments defined in the command line
-
-	"ui.apps/src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/.content.xml"
-	"ui.apps/src/main/content/jcr_root/apps/my-aem-project/templates/mycontentpage/thumbnail.png"
-
-
-# Usage
-The following command line options are available:
-
-    aemdc [options] <type> [name] [targetname] [args...]
-
-    options:
-        help               This help text.
-        help config        Shows initial default configuration properties.
-        help <type>        Shows list of possible templates.
-        help <type> <name> Shows list of possible place holders.
-        -temp=<path>       Create all templates under temp folder.
-	type:
-	    config      Create configuration properties file.
-	    component   Component to be created.
-	    compound    Set of different templates to be created.
-	    confstr     Editable templates structure to be created.
-	    model       Model java class to be created.
-	    osgi        Osgi config to be created.
-	    page        Content page to be created.
-	    service     Service java class to be created.
-	    servlet     Servlet java class to be created.
-	    template    Template to be created.
-	name:
-	    Source template name.
-	targetname:
-	    Target resource name (folder or file w/o extension).
-	args:
-	    <placeholder name>=<value>
-	        Placeholder used in all template files.
-	    <properties placeholder set name>:<property name>=<property value>
-	        Properties placeholder set used in the template xml files.
-
+	- "ph_contentpage" in the placeholders prefix defines the name
+	- "_2" in the placeholders suffix means the offset for the property position in the modified file. 2 means 2*4 = 8 blank spaces from left.
 
 # Development
 
