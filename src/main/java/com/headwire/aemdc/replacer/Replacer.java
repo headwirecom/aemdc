@@ -65,7 +65,7 @@ public abstract class Replacer {
    */
   public static List<String> findTextPlaceHolders(final String text) {
     final List<String> phList = new ArrayList<String>();
-    final Pattern pattern = Pattern.compile("\\{\\{ (.*) \\}\\}");
+    final Pattern pattern = Pattern.compile("\\{\\{ (.+?) \\}\\}");
     final Matcher matcher = pattern.matcher(text);
     // find placeholders
     while (matcher.find()) {
