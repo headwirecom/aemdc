@@ -1,5 +1,6 @@
 package com.headwire.aemdc.replacer;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 
@@ -65,7 +66,8 @@ public class ConfigPropsReplacer extends Replacer {
   }
 
   @Override
-  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
+  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders,
+      final File targetFile) {
     String result = text;
 
     // Get lazybones properties

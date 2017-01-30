@@ -121,6 +121,7 @@ public class Constants {
   public static final String PLACEHOLDER_PROPS_SET_PREFIX = "ph_";
   public static final String PLACEHOLDER_RUNMODE = "runmode";
   public static final String PLACEHOLDER_JAVA_PACKAGE = "java-package";
+  public static final String PLACEHOLDER_JAVA_INTERFACE_PACKAGE = "java-interface-package";
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
   public static final String PLACEHOLDER_TARGET_NAME = "targetname";
   public static final String PLACEHOLDER_TARGET_COMP_MODEL = "targetCompModel";

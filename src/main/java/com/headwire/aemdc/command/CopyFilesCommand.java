@@ -56,7 +56,7 @@ public class CopyFilesCommand implements Command {
 
       // copy files
       for (final File nextFile : fileList) {
-        final File targetFile = new File(targetPath + "/" + nextFile.getName());
+        final File targetFile = new File(targetPath + "/" + FilesDirsUtil.getTemplateName(srcDir, nextFile));
         copyFile(nextFile, targetFile);
       }
     }

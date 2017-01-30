@@ -52,9 +52,12 @@ public abstract class Replacer {
    *          - text to replace placeholders there
    * @param placeholders
    *          placeholders list
+   * @param targetFile
+   *          - target file where placeholders will be replaced
    * @return result text with replaced placeholders
    */
-  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders);
+  protected abstract String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders,
+      File targetFile);
 
   /**
    * Find place holders in text
@@ -114,7 +117,7 @@ public abstract class Replacer {
       if (Constants.FILE_EXT_XML.equals(extention)) {
         fileText = replaceXmlPlaceHolders(fileText);
       } else if (allExtList.contains(extention)) {
-        fileText = replaceTextPlaceHolders(fileText);
+        fileText = replaceTextPlaceHolders(file);
       }
 
       // replace the rest placeholders with default values
@@ -172,14 +175,14 @@ public abstract class Replacer {
   /**
    * Replace place holders in all other files (html, jsp, js, css, ...)
    *
-   * @param text
-   *          the text
-   * @param resource
-   *          the resource
+   * @param targetFile
+   *          - target file where placeholders will be replaced
    * @return result text
+   * @throws IOException
+   *           - IOException
    */
-  private String replaceTextPlaceHolders(final String text) {
-    String result = text;
+  private String replaceTextPlaceHolders(final File targetFile) throws IOException {
+    String result = FileUtils.readFileToString(targetFile, Constants.ENCODING);
 
     // get COMMON Properties Set
     final Map<String, Map<String, String>> jcrPropsSets = resource.getJcrProperties();
@@ -193,7 +196,7 @@ public abstract class Replacer {
     }
 
     // replace all other custom placeholders
-    result = replaceCustomTextPlaceHolders(result, commonProps);
+    result = replaceCustomTextPlaceHolders(result, commonProps, targetFile);
 
     return result;
   }
@@ -369,18 +372,38 @@ public abstract class Replacer {
   /**
    * Get target java package
    *
+   * @param targetFile
+   *          - target file where placeholders will be replaced
    * @return java package
    */
-  protected String getTargetJavaPackage() {
+  protected String getTargetJavaPackage(final File targetFile) {
     // {{ java-package }}
-    final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
+    final String targetPath = getUnixPath(targetFile.getPath());
     final String targetJavaSrcFolder = config.getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
 
-    // cut java file name, replace "/" with "."
+    // get relative file path from java package root
     String javaPackage = StringUtils.substringAfter(targetPath, targetJavaSrcFolder + "/");
+
+    // cut java file name
+    javaPackage = StringUtils.substringBeforeLast(javaPackage, "/");
+
+    // replace "/" with "."
     javaPackage = StringUtils.replace(javaPackage, "/", ".");
     javaPackage = javaPackage.toLowerCase();
 
+    return javaPackage;
+  }
+
+  /**
+   * Get target interface java package
+   *
+   * @param targetFile
+   *          - target file where placeholders will be replaced
+   * @return interface java package
+   */
+  protected String getTargetInterfaceJavaPackage(final File targetFile) {
+    // {{ java-interface-package }}
+    final String javaPackage = StringUtils.substringBeforeLast(getTargetJavaPackage(targetFile), ".");
     return javaPackage;
   }
 
@@ -406,6 +429,17 @@ public abstract class Replacer {
   public String getPathPH(final String phName) {
     final String result = "{{" + phName + "}}";
     return result;
+  }
+
+  /**
+   * Get path in unix format.
+   *
+   * @param path
+   *          - file path
+   * @return file path in unix format
+   */
+  public String getUnixPath(final String path) {
+    return path.replace("\\", "/");
   }
 
   /**

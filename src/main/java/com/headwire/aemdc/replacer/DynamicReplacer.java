@@ -1,5 +1,6 @@
 package com.headwire.aemdc.replacer;
 
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -38,14 +39,20 @@ public class DynamicReplacer extends Replacer {
   }
 
   @Override
-  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders) {
+  protected String replaceCustomTextPlaceHolders(final String text, final Map<String, String> placeholders,
+      final File targetFile) {
+
     String result = replaceDynamicPlaceHolders(text, false);
 
     // {{ java-class }}
     result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_CLASS), getTargetJavaClassName());
 
     // {{ java-package }}
-    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_PACKAGE), getTargetJavaPackage());
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_PACKAGE), getTargetJavaPackage(targetFile));
+
+    // {{ java-interface-package }}
+    result = result.replace(getPH(Constants.PLACEHOLDER_JAVA_INTERFACE_PACKAGE),
+        getTargetInterfaceJavaPackage(targetFile));
 
     return result;
   }
