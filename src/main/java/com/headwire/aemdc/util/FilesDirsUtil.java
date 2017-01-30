@@ -47,9 +47,13 @@ public class FilesDirsUtil {
     InputStream input = null;
 
     try {
-      input = new FileInputStream(filepath);
-      // load a properties file from class path
-      props.load(input);
+      if (StringUtils.isNotBlank(filepath)) {
+        input = new FileInputStream(filepath);
+        // load a properties file from class path
+        props.load(input);
+      } else {
+        LOG.error("Properties file name can't be empty [{}].", filepath);
+      }
     } catch (final IOException e) {
       LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {
