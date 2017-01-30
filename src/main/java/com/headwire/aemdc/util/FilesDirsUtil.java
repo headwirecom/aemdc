@@ -48,10 +48,8 @@ public class FilesDirsUtil {
 
     try {
       input = new FileInputStream(filepath);
-      if(input != null) {
-        // load a properties file from class path
-        props.load(input);
-      }
+      // load a properties file from class path
+      props.load(input);
     } catch (final IOException e) {
       LOG.error("Sorry, unable to find or read properties from file [{}].", filepath);
     } finally {
