@@ -1,6 +1,10 @@
 package com.headwire.aemdc.gui;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.OutputStreamAppender;
 import com.headwire.aemdc.command.HelpCommand;
 import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Reflection;
@@ -32,6 +36,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.LogManager;
 
 public class MainApp extends Application {
 
@@ -277,8 +282,24 @@ public class MainApp extends Application {
         console = new Console(ta, lastLogMessage);
         ta.setStyle("-fx-font-family: Monospaced;");
         PrintStream ps = new PrintStream(console, true);
-        System.setOut(ps);
-        System.setErr(ps);
+
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT");
+
+        PatternLayoutEncoder ple = new PatternLayoutEncoder();
+
+        ple.setPattern("%m%n)");
+        ple.setContext(lc);
+        ple.start();
+
+        OutputStreamAppender<ILoggingEvent> appender = new OutputStreamAppender<>();
+        appender.setContext(lc);
+        appender.setEncoder(ple);
+        appender.setOutputStream(ps);
+        appender.start();
+
+        logger.addAppender(appender);
+
         logView.setContent(ta);
 
         logView.setClosable(false);
@@ -578,9 +599,9 @@ class Console extends OutputStream
             line += ch;
         } else if((i == 10 || i == 13) && line.length() > 0) {
             lastLogMessage.setText("last log message: "+line);
+            output.appendText(line+"\n");
             line = "";
         }
-        output.appendText(ch);
     }
 
     public void clear() {

@@ -33,7 +33,6 @@ public class TableLikeGrid {
         grid.add(placeholder , 2, 0);
 
         HashMap<String, String> placeholders = app.getPlaceholders(type, template, phName);
-        System.out.println("entries "+placeholders.size());
 
         for ( String key: placeholders.keySet()
              ) {
