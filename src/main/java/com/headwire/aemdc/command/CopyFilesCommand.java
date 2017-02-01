@@ -40,7 +40,10 @@ public class CopyFilesCommand implements Command {
   @Override
   public void execute() throws IOException {
     final String sourcePath = resource.getSourceFolderPath() + "/" + resource.getSourceName();
-    final String targetPath = resource.getTargetFolderPath();
+
+    // add target sub package "own" from target name "own/MyServlet"
+    final String targetPath = resource.getTargetFolderPath() + getTargetSubPath();
+
     final File srcDir = new File(sourcePath);
 
     LOG.debug("Copying files from [{}] to [{}] ...", sourcePath, targetPath);
@@ -91,6 +94,11 @@ public class CopyFilesCommand implements Command {
       LOG.error("Can't copy source file [{}] to destination file [{}]", srcFile, destFile);
       throw new IOException(e);
     }
+  }
+
+  @Override
+  public Resource getResource() {
+    return resource;
   }
 
 }

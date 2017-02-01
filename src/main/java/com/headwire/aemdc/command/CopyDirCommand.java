@@ -90,4 +90,9 @@ public class CopyDirCommand implements Command {
     }
   }
 
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }

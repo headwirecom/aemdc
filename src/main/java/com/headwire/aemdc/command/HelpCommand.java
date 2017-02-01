@@ -39,4 +39,10 @@ public class HelpCommand implements Command {
     final Help help = new Help(resource, config);
     help.showHelp();
   }
+
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }
