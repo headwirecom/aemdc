@@ -125,6 +125,13 @@ public class Constants {
   public static final String PLACEHOLDER_JAVA_CLASS = "java-class";
   public static final String PLACEHOLDER_TARGET_NAME = "targetname";
   public static final String PLACEHOLDER_TARGET_COMP_MODEL = "targetCompModel";
+  public static final List<String> FORBIDDEN_PLACEHOLDERS = new ArrayList<String>();
+  static {
+    FORBIDDEN_PLACEHOLDERS.add(PLACEHOLDER_JAVA_PACKAGE);
+    FORBIDDEN_PLACEHOLDERS.add(PLACEHOLDER_JAVA_INTERFACE_PACKAGE);
+    FORBIDDEN_PLACEHOLDERS.add(PLACEHOLDER_TARGET_NAME);
+    FORBIDDEN_PLACEHOLDERS.add(PLACEHOLDER_TARGET_COMP_MODEL);
+  }
 
   // default values
 }

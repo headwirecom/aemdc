@@ -432,7 +432,7 @@ public class Help {
     final ArrayList<String> ret = new ArrayList<>();
 
     for (final String ph : placeholders) {
-      if (!ret.contains(ph) && !"targetname".equals(ph)) {
+      if (!ret.contains(ph) && !Constants.FORBIDDEN_PLACEHOLDERS.contains(ph)) {
         ret.add(ph);
       }
     }
