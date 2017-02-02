@@ -1,7 +1,7 @@
 # AEM Developer Companion (AEMDC)
 AEMDC is a scaffolding tool to help a developer quickly create AEM templates,
 components, content pages, osgi configurations, AEM 6.2 editable template structures,
-java models, services and servlets from predefined templates.
+java models, services, servlets and filters from predefined templates.
 
 AEMDC best works with an AEM project created by the
 [aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates)
@@ -67,6 +67,7 @@ The following command line options are available:
 	    component   Component to be created.
 	    compound    Set of different templates to be created.
 	    confstr     Editable templates structure to be created.
+	    filter      Filter java class to be created.
 	    model       Model java class to be created.
 	    osgi        Osgi config to be created.
 	    page        Content page to be created.
@@ -90,7 +91,7 @@ Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project
 	
 	git clone https://github.com/headwirecom/aemdc-files.git ../aemdc-files
 
-In the XML templates you can define placeholders with similar names as the arguments keys. The java class name and java package in java classes will can be also replaced by placeholders "{{ java-class }}" and "{{ java-package }}". See examples of used placeholders in the /aemdc-files/template/contentpage/files/..
+In the XML templates you can define placeholders with similar names as the arguments keys. The component start file name, java class name and java package in java classes will can be also replaced by placeholders "{{ targetname }}", "{{ java-class }}", "{{ java-package }}" and "{{ java-interface-package }}". See examples of used placeholders in the /aemdc-files/template/contentpage/files/..
 
     {{ jcr:title }}
     {{ jcr:description }}
