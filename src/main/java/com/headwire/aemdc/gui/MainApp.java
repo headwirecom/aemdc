@@ -5,15 +5,9 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
-import com.headwire.aemdc.command.HelpCommand;
-import com.headwire.aemdc.companion.Config;
-import com.headwire.aemdc.companion.Reflection;
-import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.companion.RunnableCompanion;
-import com.headwire.aemdc.runner.BasisRunner;
-import com.headwire.aemdc.runner.HelpRunner;
-import com.headwire.aemdc.util.Help;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -36,7 +30,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.LogManager;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MainApp extends Application {
 
@@ -45,7 +40,6 @@ public class MainApp extends Application {
             .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
     // data storage for this app
-//    private Model model = new Model();
     private Model model;
 
     // web view and browser used to show help texts
@@ -279,12 +273,19 @@ public class MainApp extends Application {
         TextArea ta = new TextArea();
         ta.setWrapText(false);
 
+        if(console != null) {
+            console.exit();
+        }
         console = new Console(ta, lastLogMessage);
         ta.setStyle("-fx-font-family: Monospaced;");
         PrintStream ps = new PrintStream(console, true);
 
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT");
+//        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT");
+        // Limit logs to AEMDC otherwise any logs are printed here
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.headwire.aemdc");
+        // Limit logs to INFO to cut down on number of log statements
+        logger.setLevel(Level.INFO);
 
         PatternLayoutEncoder ple = new PatternLayoutEncoder();
 
@@ -581,14 +582,12 @@ public class MainApp extends Application {
 
 class Console extends OutputStream
 {
-    private final Label lastLogMessage;
-    private TextArea    output;
     private String line = "";
+    private OutputHandler outputHandler;
 
-    public Console(TextArea ta, Label lastLogMessage)
+    public Console(TextArea ta, final Label lastLogMessage)
     {
-        this.output = ta;
-        this.lastLogMessage = lastLogMessage;
+        this.outputHandler = new OutputHandler(lastLogMessage, ta);
     }
 
     @Override
@@ -598,14 +597,176 @@ class Console extends OutputStream
         if(i >= 32) {
             line += ch;
         } else if((i == 10 || i == 13) && line.length() > 0) {
-            lastLogMessage.setText("last log message: "+line);
-            output.appendText(line+"\n");
+            outputHandler.setLine(line);
             line = "";
         }
     }
 
     public void clear() {
-        output.clear();
+        outputHandler.clear();
     }
 
+    public void exit() {
+        outputHandler.exit();
+    }
+
+}
+
+/**
+ * This class makes sure that lines are still witten to the
+ * log after a given timeout (MAX_TIME).
+ *
+ * The class's thread is waiting if no lines are pending to
+ * avoid a constant load by this class.
+ */
+class TimedCheckRunner
+    implements Runnable
+{
+    private static long MAX_TIME = 10 * 1000;
+
+    private OutputHandler outputHandler;
+
+    public TimedCheckRunner(OutputHandler outputHandler) {
+        this.outputHandler = outputHandler;
+    }
+
+    public void run() {
+        while(!Thread.interrupted()) {
+            // If no lines or set to run we wait for new lines to be added
+            synchronized(outputHandler) {
+                if(outputHandler.isEmpty() || outputHandler.isScheduledToRun()) {
+                    try {
+                        outputHandler.wait();
+                    } catch(InterruptedException e) {
+                        break;
+                    }
+                }
+            }
+            // If run is not scheduled then check if time has passed and if start the updated thread
+            if(!outputHandler.isScheduledToRun()) {
+                long timeSince = System.currentTimeMillis() - outputHandler.getStartTime();
+                if(timeSince < MAX_TIME) {
+                    // Delay until max time has passed
+                    try {
+                        Thread.sleep(MAX_TIME - timeSince);
+                    } catch(InterruptedException e) {
+                        // Ignore and exit
+                        break;
+                    }
+                }
+                if(!outputHandler.isScheduledToRun()) {
+                    outputHandler.scheduleRun();
+                }
+            }
+        }
+        if(Thread.interrupted()) {
+            outputHandler = null;
+        }
+    }
+}
+
+/**
+ * This class received the output lines and clear events,
+ * stores the locally and then writes them out if there are
+ * more than the given threshold of lines.
+ *
+ * This class is then used to write the log lines out
+ * to the Text Area in a JavaFX thread (run method).
+ */
+class OutputHandler
+    implements Runnable
+{
+    public static final String CLEAR = "!!CLEAR!!";
+    public static final int WRITE_OUT_THRESHOLD = 10;
+
+    // JavaFX objects
+    private Label lastLogMessage;
+    private TextArea output;
+    // Log Line Buffer
+    private List<String> lines = new ArrayList<>();
+    // Flag to indicate if a run inside the JavaFX thread is scheduled
+    private AtomicBoolean willRun = new AtomicBoolean(false);
+    // Indicates when the first line was added to the buffer or -1 if lines are empty
+    private AtomicLong start = new AtomicLong(-1);
+    // Thread that makes sure buffer is written out after a given time even
+    // if there are less than the threshold lines in the buffer
+    private Thread timedCheck;
+
+    public OutputHandler(Label lastLogMessage, TextArea output) {
+        this.lastLogMessage = lastLogMessage;
+        this.output = output;
+        timedCheck = new Thread(
+            new TimedCheckRunner(this),
+            "Time Checker for Logs"
+        );
+        timedCheck.setDaemon(true);
+        timedCheck.start();
+    }
+
+    public void exit() {
+        timedCheck.interrupt();
+    }
+
+    public boolean isScheduledToRun() {
+        return willRun.get();
+    }
+
+    public void scheduleRun() {
+        willRun.set(true);
+        Platform.runLater(this);
+    }
+
+    public boolean isEmpty() {
+        return lines.isEmpty();
+    }
+
+    public long getStartTime() {
+        return start.get();
+    }
+
+    public OutputHandler clear() {
+        addLine(CLEAR);
+        return this;
+    }
+
+    public OutputHandler setLine(String line) {
+        addLine(line);
+        return this;
+    }
+
+    private void addLine(String line) {
+        if(line != null) {
+            synchronized(this) {
+                if(start.get() < 0) {
+                    start.set(System.currentTimeMillis());
+                }
+                if(CLEAR.equals(line)) {
+                    lines.clear();;
+                }
+                lines.add(line);
+                if(lines.size() > WRITE_OUT_THRESHOLD || line.equals("aemdc completed") || line.equals("failed to perform aemdc command")) {
+                    if(!willRun.get()) {
+                        scheduleRun();
+                    }
+                }
+                this.notifyAll();
+            }
+        }
+    }
+
+    public void run() {
+        synchronized(this) {
+            for(String line: lines) {
+                if(CLEAR.equals(line)) {
+                    output.clear();
+                } else {
+                    lastLogMessage.setText("last log message: " + line);
+                    output.appendText(line + "\n");
+                }
+            }
+            lines.clear();
+            start.set(-1);
+            willRun.set(false);
+        }
+    }
 }
