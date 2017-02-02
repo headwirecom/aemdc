@@ -71,7 +71,7 @@ fi
 # create and check COMPONENT
 aemdc component component-page page/page "jcr:title=CompContentPage"
 aemdc component component-js content/CompJS "jcr:title=CompJSTitle"
-aemdc component component-model content/hero "jcr:title=Hero Title" "comp-model=com.headwire.myaem.model.hero.Hero"
+aemdc component component-model content/hero "jcr:title=Hero Title" "comp-model=com.headwire.myaem.model.impl.HeroImpl"
 
 # COMPONENT check
 TARGETDIR="ui.apps/src/main/content/jcr_root/apps/my-test-project/components"
@@ -131,52 +131,60 @@ fi
 
 # create and check MODEL
 aemdc model wcmusepojo hero
-aemdc model resourcemodel list "java-class=GraphicList"
+aemdc model resourcemodel list/graphicList
 
 # MODEL check
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/model"
-if [ ! -f  "$TARGETDIR/hero/Hero.java" ] ; then
+if [ ! -f  "$TARGETDIR/Hero.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no model definition in the target directory $TARGETDIR/hero/Hero.java"
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/Hero.java"
+fi
+if [ ! -f  "$TARGETDIR/impl/HeroImpl.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/impl/HeroImpl.java"
 fi
 if [ ! -f  "$TARGETDIR/list/GraphicList.java" ] ; then
   TESTVALID=false
   echo "ERROR: there is no model definition in the target directory $TARGETDIR/list/GraphicList.java"
 fi
+if [ ! -f  "$TARGETDIR/list/impl/GraphicListImpl.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/list/impl/GraphicListImpl.java"
+fi
 
 
 # create and check SERVICE
 aemdc service sample mysample
-aemdc service sample mysample "java-class=MySampleService"
+aemdc service sample mysample2/MySampleService
 
 # SERVICE check
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/service"
-if [ ! -f  "$TARGETDIR/mysample/Mysample.java" ] ; then
+if [ ! -f  "$TARGETDIR/Mysample.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample/Mysample.java"
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/Mysample.java"
 fi
-if [ ! -f  "$TARGETDIR/mysample/MysampleImpl.java" ] ; then
+if [ ! -f  "$TARGETDIR/impl/MysampleImpl.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample/MysampleImpl.java"
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/impl/MysampleImpl.java"
 fi
-if [ ! -f  "$TARGETDIR/mysample/MySampleService.java" ] ; then
+if [ ! -f  "$TARGETDIR/mysample2/MySampleService.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample/MySampleService.java"
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample2/MySampleService.java"
 fi
-if [ ! -f  "$TARGETDIR/mysample/MySampleServiceImpl.java" ] ; then
+if [ ! -f  "$TARGETDIR/mysample2/impl/MySampleServiceImpl.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample/MySampleServiceImpl.java"
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/mysample2/impl/MySampleServiceImpl.java"
 fi
 
 # create and check SERVLET
 aemdc servlet safemethods test
-aemdc servlet safemethods safes/impl "java-class=SampleSafeMethodsServlet"
+aemdc servlet safemethods safes/impl/SampleSafeMethodsServlet
 
 # SERVLET check
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/servlet"
-if [ ! -f  "$TARGETDIR/test/Test.java" ] ; then
+if [ ! -f  "$TARGETDIR/Test.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/test/Test.java"
+  echo "ERROR: there is no service definition in the target directory $TARGETDIR/Test.java"
 fi
 if [ ! -f  "$TARGETDIR/safes/impl/SampleSafeMethodsServlet.java" ] ; then
   TESTVALID=false
@@ -187,7 +195,7 @@ fi
 # create and check im TEMP folder
 aemdc -temp=temp/folder config
 aemdc -temp=temp/folder component component-page page/myTempCompPage "jcr:title=CompPage"
-aemdc -temp=temp/folder model wcmusepojo myhero "java-class=TempHero"
+aemdc -temp=temp/folder model wcmusepojo myhero/TempHero
 
 # TEMP folder check
 TARGETDIR="temp/folder"
@@ -204,6 +212,10 @@ TARGETDIR="temp/folder/core/src/main/java/com/headwire/myaem/core/model"
 if [ ! -f  "$TARGETDIR/myhero/TempHero.java" ] ; then
   TESTVALID=false
   echo "ERROR: there is no model definition in the target directory $TARGETDIR/myhero/TempHero.java"
+fi
+if [ ! -f  "$TARGETDIR/myhero/impl/TempHeroImpl.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/myhero/impl/TempHeroImpl.java"
 fi
 
 
@@ -222,13 +234,21 @@ if [ ! -f  "$TARGETDIR/page/MyComps/MyList/.content.xml" ] ; then
   echo "ERROR: there is no component definition in the target directory $TARGETDIR/page/MyComps/MyList/.content.xml"
 fi
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/model"
-if [ ! -f  "$TARGETDIR/page/myherocomp/MyHero.java" ] ; then
+if [ ! -f  "$TARGETDIR/page/MyHero.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/myherocomp/MyHero.java"
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/MyHero.java"
 fi
-if [ ! -f  "$TARGETDIR/page/mycomps/mylist/MyList.java" ] ; then
+if [ ! -f  "$TARGETDIR/page/impl/MyHeroImpl.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/mycomps/mylist/MyList.java"
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/impl/MyHeroImpl.java"
+fi
+if [ ! -f  "$TARGETDIR/page/mycomps/MyList.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/mycomps/MyList.java"
+fi
+if [ ! -f  "$TARGETDIR/page/mycomps/impl/MyListImpl.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/mycomps/impl/MyListImpl.java"
 fi
 
 
