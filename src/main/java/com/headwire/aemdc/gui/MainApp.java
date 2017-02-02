@@ -281,7 +281,7 @@ public class MainApp extends Application {
         PrintStream ps = new PrintStream(console, true);
 
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-//        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT");
+        // ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT");
         // Limit logs to AEMDC otherwise any logs are printed here
         ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.headwire.aemdc");
         // Limit logs to INFO to cut down on number of log statements
