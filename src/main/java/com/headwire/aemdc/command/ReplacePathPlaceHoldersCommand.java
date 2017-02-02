@@ -44,6 +44,8 @@ public class ReplacePathPlaceHoldersCommand implements Command {
     String targetPath = resource.getTargetFolderPath();
     if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
       targetPath += "/" + resource.getTargetName();
+    } else {
+      targetPath += getTargetSubPath();
     }
 
     LOG.debug("Replacing path place holders in the directory/file [{}] ...", targetPath);
@@ -114,4 +116,10 @@ public class ReplacePathPlaceHoldersCommand implements Command {
       throw new IOException(e);
     }
   }
+
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }

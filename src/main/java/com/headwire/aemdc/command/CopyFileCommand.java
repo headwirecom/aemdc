@@ -78,4 +78,9 @@ public class CopyFileCommand implements Command {
     }
   }
 
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }

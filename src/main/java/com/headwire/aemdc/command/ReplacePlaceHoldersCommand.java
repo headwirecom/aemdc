@@ -43,6 +43,8 @@ public class ReplacePlaceHoldersCommand implements Command {
     String targetPath = resource.getTargetFolderPath();
     if (config.isDirTemplateStructure(resource.getType(), resource.getSourceName())) {
       targetPath += "/" + resource.getTargetName();
+    } else {
+      targetPath += getTargetSubPath();
     }
 
     // final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
@@ -76,4 +78,10 @@ public class ReplacePlaceHoldersCommand implements Command {
       }
     }
   }
+
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }

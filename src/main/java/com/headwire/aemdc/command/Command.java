@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Resource;
+import com.headwire.aemdc.replacer.Replacer;
 
 
 /**
@@ -19,6 +20,8 @@ interface Command {
   String NAME = "SET_OWN_COMMAND_NAME";
 
   void execute() throws IOException;
+
+  Resource getResource();
 
   default String getTargetNameAsPath(final Resource resource, final Config config) {
     String targetName = resource.getTargetName();
@@ -34,6 +37,21 @@ interface Command {
       }
     }
     return targetName;
+  }
+
+  /**
+   * Get target sub path.
+   * For example get "/own" from target name "own/MyServlet"
+   *
+   * @return
+   */
+  default String getTargetSubPath() {
+    String targetSubPath = "";
+    final String targetName = Replacer.getUnixPath(getResource().getTargetName());
+    if (targetName.contains("/")) {
+      targetSubPath = "/" + StringUtils.substringBeforeLast(targetName, "/");
+    }
+    return targetSubPath;
   }
 
 }

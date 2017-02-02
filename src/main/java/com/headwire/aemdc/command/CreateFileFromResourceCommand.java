@@ -83,4 +83,9 @@ public class CreateFileFromResourceCommand implements Command {
     }
   }
 
+  @Override
+  public Resource getResource() {
+    return resource;
+  }
+
 }

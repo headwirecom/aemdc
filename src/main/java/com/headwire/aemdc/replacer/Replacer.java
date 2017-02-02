@@ -438,7 +438,7 @@ public abstract class Replacer {
    *          - file path
    * @return file path in unix format
    */
-  public String getUnixPath(final String path) {
+  public static String getUnixPath(final String path) {
     return path.replace("\\", "/");
   }
 
