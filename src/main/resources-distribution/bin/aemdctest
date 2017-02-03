@@ -184,7 +184,7 @@ aemdc servlet safemethods safes/impl/SampleSafeMethodsServlet
 TARGETDIR="core/src/main/java/com/headwire/myaem/core/servlet"
 if [ ! -f  "$TARGETDIR/Test.java" ] ; then
   TESTVALID=false
-  echo "ERROR: there is no service definition in the target directory $TARGETDIR/Test.java"
+  echo "ERROR: there is no servlet definition in the target directory $TARGETDIR/Test.java"
 fi
 if [ ! -f  "$TARGETDIR/safes/impl/SampleSafeMethodsServlet.java" ] ; then
   TESTVALID=false
@@ -249,6 +249,32 @@ fi
 if [ ! -f  "$TARGETDIR/page/mycomps/impl/MyListImpl.java" ] ; then
   TESTVALID=false
   echo "ERROR: there is no model definition in the target directory $TARGETDIR/page/mycomps/impl/MyListImpl.java"
+fi
+
+
+# create and check FILTER
+aemdc filter threadlocal MyThreadLocal
+aemdc filter slingrequest MySlingRequestFilter
+aemdc filter slinginclude mypkg/MySlingIncludeFilter
+aemdc filter slinginclude my-minus-pkg/MyFilter
+
+# FILTER check
+TARGETDIR="core/src/main/java/com/headwire/myaem/core/filter"
+if [ ! -f  "$TARGETDIR/MyThreadLocalService.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no filter service definition in the target directory $TARGETDIR/MyThreadLocalService.java"
+fi
+if [ ! -f  "$TARGETDIR/impl/MyThreadLocalFilter.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no filter definition in the target directory $TARGETDIR/impl/MyThreadLocalFilter.java"
+fi
+if [ ! -f  "$TARGETDIR/impl/MySlingRequestFilter.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no filter definition in the target directory $TARGETDIR/impl/MySlingRequestFilter.java"
+fi
+if [ ! -f  "$TARGETDIR/myminuspkg/impl/MyFilter.java" ] ; then
+  TESTVALID=false
+  echo "ERROR: there is no filter definition in the target directory $TARGETDIR/myminuspkg/impl/MyFilter.java"
 fi
 
 

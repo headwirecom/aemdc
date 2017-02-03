@@ -54,6 +54,13 @@
 				<artifactId>simple-xml</artifactId>
 				<version>2.7.1</version>
 			</dependency>
+
+			<!-- Tests -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -80,6 +87,12 @@
 			<groupId>org.simpleframework</groupId>
 			<artifactId>simple-xml</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>

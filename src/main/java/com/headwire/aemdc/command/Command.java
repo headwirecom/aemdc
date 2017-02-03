@@ -23,6 +23,8 @@ interface Command {
 
   Resource getResource();
 
+  Config getConfig();
+
   default String getTargetNameAsPath(final Resource resource, final Config config) {
     String targetName = resource.getTargetName();
 
@@ -50,6 +52,13 @@ interface Command {
     final String targetName = Replacer.getUnixPath(getResource().getTargetName());
     if (targetName.contains("/")) {
       targetSubPath = "/" + StringUtils.substringBeforeLast(targetName, "/");
+    }
+
+    // avoid special characters for java packages
+    final String targetFolder = getResource().getTargetFolderPath();
+    final String targetJavaFolder = getConfig().getProperty(Constants.CONFIGPROP_TARGET_JAVA_FOLDER);
+    if (StringUtils.isNotBlank(targetFolder) && targetFolder.startsWith(targetJavaFolder)) {
+      targetSubPath = Replacer.getWithoutSpecialChars(targetSubPath);
     }
     return targetSubPath;
   }

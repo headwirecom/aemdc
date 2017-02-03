@@ -83,4 +83,9 @@ public class CopyFileCommand implements Command {
     return resource;
   }
 
+  @Override
+  public Config getConfig() {
+    return config;
+  }
+
 }

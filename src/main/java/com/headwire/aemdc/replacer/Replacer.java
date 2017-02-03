@@ -347,7 +347,7 @@ public abstract class Replacer {
       // to "page.hero.Hero"
       compModel += "." + javaClassName;
     }
-    return compModel;
+    return getWithoutSpecialChars(compModel);
   }
 
   /**
@@ -366,7 +366,7 @@ public abstract class Replacer {
       javaClassName = getTargetCompModelName();
       javaClassName = StringUtils.substringAfterLast(javaClassName, ".");
     }
-    return javaClassName;
+    return getWithoutSpecialChars(javaClassName);
   }
 
   /**
@@ -389,6 +389,7 @@ public abstract class Replacer {
 
     // replace "/" with "."
     javaPackage = StringUtils.replace(javaPackage, "/", ".");
+    javaPackage = getWithoutSpecialChars(javaPackage);
     javaPackage = javaPackage.toLowerCase();
 
     return javaPackage;
@@ -440,6 +441,17 @@ public abstract class Replacer {
    */
   public static String getUnixPath(final String path) {
     return path.replace("\\", "/");
+  }
+
+  /**
+   * Get string without special characters.
+   *
+   * @param text
+   *          - text to replace special characters
+   * @return text without special characters
+   */
+  public static String getWithoutSpecialChars(final String text) {
+    return text.replaceAll("[^a-zA-Z0-9\\./]", "");
   }
 
   /**

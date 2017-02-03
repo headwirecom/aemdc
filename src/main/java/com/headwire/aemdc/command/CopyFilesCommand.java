@@ -101,4 +101,9 @@ public class CopyFilesCommand implements Command {
     return resource;
   }
 
+  @Override
+  public Config getConfig() {
+    return config;
+  }
+
 }

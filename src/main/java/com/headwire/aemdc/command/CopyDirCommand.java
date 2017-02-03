@@ -95,4 +95,9 @@ public class CopyDirCommand implements Command {
     return resource;
   }
 
+  @Override
+  public Config getConfig() {
+    return config;
+  }
+
 }
