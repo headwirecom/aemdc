@@ -58,22 +58,22 @@ public class ReplacePlaceHoldersCommand implements Command {
       return;
     }
 
-    final List<String> allExtList = resource.getExtentionsList();
+    final List<String> allExtList = resource.getExtensionsList();
 
     if (dest.isDirectory()) {
       // replace PH in only copied files
       final List<String> copiedTemplateNames = resource.getCopiedTemplateNames();
       for (final String nextName : copiedTemplateNames) {
         final File targetFile = new File(targetPath + "/" + nextName);
-        final String extention = FilenameUtils.getExtension(targetFile.getName());
-        if (allExtList.contains(extention)) {
+        final String extension = FilenameUtils.getExtension(targetFile.getName());
+        if (allExtList.contains(extension)) {
           replacer.replacePlaceHolders(targetFile);
         }
       }
 
     } else {
-      final String extention = FilenameUtils.getExtension(dest.getName());
-      if (allExtList.contains(extention)) {
+      final String extension = FilenameUtils.getExtension(dest.getName());
+      if (allExtList.contains(extension)) {
         replacer.replacePlaceHolders(dest);
       }
     }

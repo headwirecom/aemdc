@@ -111,17 +111,17 @@ public abstract class Replacer {
     try {
       String fileText = FileUtils.readFileToString(file, Constants.ENCODING);
 
-      final String extention = FilenameUtils.getExtension(file.getName());
-      final List<String> allExtList = resource.getExtentionsList();
+      final String extension = FilenameUtils.getExtension(file.getName());
+      final List<String> allExtList = resource.getExtensionsList();
 
-      if (Constants.FILE_EXT_XML.equals(extention)) {
+      if (Constants.FILE_EXT_XML.equals(extension)) {
         fileText = replaceXmlPlaceHolders(fileText);
-      } else if (allExtList.contains(extention)) {
+      } else if (allExtList.contains(extension)) {
         fileText = replaceTextPlaceHolders(file);
       }
 
       // replace the rest placeholders with default values
-      if (allExtList.contains(extention)) {
+      if (allExtList.contains(extension)) {
         fileText = replacePlaceHoldersByDefault(fileText);
       }
 

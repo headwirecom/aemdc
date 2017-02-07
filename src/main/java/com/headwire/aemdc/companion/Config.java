@@ -407,17 +407,17 @@ public class Config {
   }
 
   /**
-   * Get extentions of files with placeholders
+   * Get extensions of files with placeholders
    *
-   * @return file extentions
+   * @return file extensions
    */
   public String[] getFileExtensions() {
-    final String extentionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
-    String[] extentions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
-    if (StringUtils.isNotBlank(extentionsAsString)) {
-      extentions = extentionsAsString.split(",");
+    final String extensionsAsString = configProps.getProperty(Constants.CONFIGPROP_FILES_WITH_PLACEHOLDERS_EXTENSIONS);
+    String[] extensions = Constants.FILES_PH_EXTENSIONS_DEFAULT;
+    if (StringUtils.isNotBlank(extensionsAsString)) {
+      extensions = extensionsAsString.split(",");
     }
-    return extentions;
+    return extensions;
   }
 
   /**

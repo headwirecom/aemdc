@@ -75,9 +75,9 @@ public abstract class BasisRunner {
    *          - properties config
    */
   public void setGlobalConfigProperties(final Config config) {
-    // Set extentions from config file
-    final String[] extentions = config.getFileExtensions();
-    getResource().setExtentions(extentions);
+    // Set extensions from config file
+    final String[] extensions = config.getFileExtensions();
+    getResource().setExtensions(extensions);
 
     // Set overwriting methods from config file
     if (Constants.EXISTING_DESTINATION_RESOURCES_WARN

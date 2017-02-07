@@ -21,7 +21,7 @@ public class Constants {
   public static final String FILE_EXT_JS = "js";
   public static final String FILE_EXT_CSS = "css";
   public static final String FILE_EXT_PROPS = "properties";
-  // ALSO ADD EXTENTION TO THE PROPERTIES FILE!!!
+  // ALSO ADD EXTENSION TO THE PROPERTIES FILE!!!
   public static final String[] FILES_PH_EXTENSIONS_DEFAULT = { FILE_EXT_XML, FILE_EXT_JAVA, FILE_EXT_HTML, FILE_EXT_JSP,
       FILE_EXT_JS, FILE_EXT_CSS, FILE_EXT_PROPS };
 

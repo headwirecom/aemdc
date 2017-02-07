@@ -28,7 +28,7 @@ public class Resource {
   private String tempFolder;
   private String sourceFolderPath;
   private String targetFolderPath;
-  private String[] extentions;
+  private String[] extensions;
   private boolean toDeleteDestDir;
   private boolean toWarnDestDir;
   private List<String> copiedTemplateNames;
@@ -294,26 +294,26 @@ public class Resource {
   }
 
   /**
-   * @return the extentions
+   * @return the extensions
    */
-  public String[] getExtentions() {
-    return extentions;
+  public String[] getExtensions() {
+    return extensions;
   }
 
   /**
-   * @return the extentions as list
+   * @return the extensions as list
    */
-  public List<String> getExtentionsList() {
-    final List<String> extAsList = Arrays.asList(extentions);
+  public List<String> getExtensionsList() {
+    final List<String> extAsList = Arrays.asList(extensions);
     return extAsList;
   }
 
   /**
-   * @param extentions
-   *          the extentions to set
+   * @param extensions
+   *          the extensions to set
    */
-  public void setExtentions(final String[] extentions) {
-    this.extentions = extentions;
+  public void setExtensions(final String[] extensions) {
+    this.extensions = extensions;
   }
 
   /**
@@ -387,7 +387,7 @@ public class Resource {
     // clone other properties
     newResource.setSourceFolderPath(getSourceFolderPath());
     newResource.setTargetFolderPath(getTargetFolderPath());
-    newResource.setExtentions(getExtentions());
+    newResource.setExtensions(getExtensions());
     newResource.setToDeleteDestDir(isToDeleteDestDir());
     newResource.setToWarnDestDir(isToWarnDestDir());
 

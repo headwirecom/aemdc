@@ -415,9 +415,9 @@ public class Help {
     final ArrayList<String> placeholders = new ArrayList<>();
 
     if (dir.isDirectory()) {
-      // get files list recursive only with predefined extentions
-      final String[] extentions = config.getFileExtensions();
-      final Collection<File> fileList = FileUtils.listFiles(dir, extentions, true);
+      // get files list recursive only with predefined extensions
+      final String[] extensions = config.getFileExtensions();
+      final Collection<File> fileList = FileUtils.listFiles(dir, extensions, true);
       final Iterator<File> iter = fileList.iterator();
       while (iter.hasNext()) {
         final File nextFile = iter.next();
