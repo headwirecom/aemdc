@@ -131,6 +131,12 @@ for example: "ph\_contentpage\_2":
 	- "ph_contentpage" in the placeholders prefix defines the name
 	- "_2" in the placeholders suffix means the offset for the property position in the modified file. 2 means 2*4 = 8 blank spaces from left.
 
+#Wiki
+
+For more technical information and best practices see Wiki page
+
+https://github.com/headwirecom/aemdc/wiki
+
 # Development
 
 To compile:
