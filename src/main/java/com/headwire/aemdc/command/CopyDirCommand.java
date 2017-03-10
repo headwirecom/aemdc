@@ -40,7 +40,8 @@ public class CopyDirCommand implements Command {
   public void execute() throws IOException {
     final String sourcePath = resource.getSourceFolderPath() + "/" + resource.getSourceName();
     final String targetPath = resource.getTargetFolderPath() + "/" + getTargetNameAsPath(resource, config);
-    final File srcDir = new File(sourcePath);
+    final File srcDir = FilesDirsUtil.getFile(config.getBaseFolder(), sourcePath);
+//    final File srcDir = new File(sourcePath);
     final File targetDir = new File(targetPath);
 
     LOG.debug("Copying files from [{}] to [{}] ...", sourcePath, targetPath);

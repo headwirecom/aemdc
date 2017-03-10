@@ -3,6 +3,7 @@ package com.headwire.aemdc.command;
 import java.io.File;
 import java.io.IOException;
 
+import com.headwire.aemdc.util.FilesDirsUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class CopyFileCommand implements Command {
   public void execute() throws IOException {
     final String sourcePath = resource.getSourceFolderPath() + "/" + resource.getSourceName();
     final String targetPath = resource.getTargetFolderPath() + "/" + resource.getTargetName();
-    final File srcFile = new File(sourcePath);
+    final File srcFile = FilesDirsUtil.getFile(config.getBaseFolder(), sourcePath);
+//    final File srcFile = new File(sourcePath);
     final File targetFile = new File(targetPath);
 
     LOG.debug("Copying file from [{}] to [{}] ...", sourcePath, targetPath);

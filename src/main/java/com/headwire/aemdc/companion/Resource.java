@@ -42,7 +42,7 @@ public class Resource {
   /**
    * Constructor with command arguments
    *
-   * @param args
+   * @param cmdArgs
    *          - all command arguments
    */
   public Resource(final String[] cmdArgs) {

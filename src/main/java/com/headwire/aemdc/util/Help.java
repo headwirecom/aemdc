@@ -224,7 +224,7 @@ public class Help {
 
     String helpText = "";
     if (config.isDynamicType(type)) {
-      final File file = new File(templateHelpPath);
+      final File file = FilesDirsUtil.getFile(config.getBaseFolder(), templateHelpPath);
       if (file.exists() && file.isFile() && file.canRead()) {
         helpText = getTextFromFile(templateHelpPath);
       } else {
@@ -250,11 +250,11 @@ public class Help {
   private String getTextFromFile(final String filePath) {
     final StringBuilder helpText = new StringBuilder();
     try {
-      final File helpFile = new File(filePath);
+      final File helpFile = FilesDirsUtil.getFile(config.getBaseFolder(), filePath);
       final String fileText = FileUtils.readFileToString(helpFile, Constants.ENCODING);
       helpText.append(fileText);
     } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text from file [{}]", filePath);
+      LOG.error("Sorry, can't show you help text from file [" + filePath + "]", e);
     }
     helpText.append("\n");
     return helpText.toString();
@@ -316,12 +316,15 @@ public class Help {
     InputStream in = null;
     try {
       in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+      if(in == null) {
+        in = getClass().getClassLoader().getResourceAsStream(filePath);
+      }
       final StringWriter writer = new StringWriter();
 
       IOUtils.copy(in, writer, Constants.ENCODING);
       helpText.append(writer.toString());
     } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text from file [{}]", filePath);
+      LOG.error("Sorry, can't show you help text from resource [{}] (Exception: {})", filePath, e.getMessage());
     } finally {
       if (in != null) {
         try {
@@ -390,7 +393,8 @@ public class Help {
     final Resource runnerResource = runner.getResource();
     final String templateSrcPath = runner.getSourceFolder() + "/" + runnerResource.getSourceName();
 
-    final File dir = new File(templateSrcPath);
+    final File dir = FilesDirsUtil.getFile(config.getBaseFolder(), templateSrcPath);
+//    final File dir = new File(templateSrcPath);
     if (!dir.exists()) {
       LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
     } else {

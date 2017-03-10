@@ -44,7 +44,8 @@ public class CopyFilesCommand implements Command {
     // add target sub package "own" from target name "own/MyServlet"
     final String targetPath = resource.getTargetFolderPath() + getTargetSubPath();
 
-    final File srcDir = new File(sourcePath);
+    final File srcDir = FilesDirsUtil.getFile(config.getBaseFolder(), sourcePath);
+//    final File srcDir = new File(sourcePath);
 
     LOG.debug("Copying files from [{}] to [{}] ...", sourcePath, targetPath);
 
