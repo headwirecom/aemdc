@@ -3,13 +3,20 @@ AEMDC is a scaffolding tool to help a developer quickly create AEM templates,
 components, content pages, osgi configurations, AEM 6.2 editable template structures,
 java models, services, servlets and filters from predefined templates.
 
-AEMDC best works with an AEM project created by the
-[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates)
+AEMDC works best with an AEM project created by the
+[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates),
 but can also be used with other project structures.
+
+# Prerequisites
+
+AEMDC requires the following:
+
+* Java 8+
+* Git
 
 # Installation
 
-Download the released .zip or tar.gz file, extract it to your tools directory and
+Download the released .zip or tar.gz file, extract it to your tools directory, and
 set the global ENV and PATH variables like:
 
     set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
@@ -19,22 +26,23 @@ set the global ENV and PATH variables like:
 
 # First Run
 
-Go to your AEM maven parent project of "ui.apps" or "core" projects and
-create a configuration file:
+Go to your AEM maven parent project root (one level up from the "ui.apps" or "core" modules) and run the following command to create the initial configuration file:
 
 	aemdc config
 
-The command creates the next configuration file, modify it for your needs:
+A file called **aemdc-config.properties** will be created at the project root, e.g.:
 
 	/my-aem-project/aemdc-config.properties
 
+You may modify this file to suit your needs.
+
 If your project was created by the
-[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates)
-the properties will be auto discovered
+[aem lazybones archetype](https://github.com/Adobe-Consulting-Services/lazybones-aem-templates),
+the properties will be auto discovered.
 
 # Example Run
 
-To create a new AEM template run:
+To create a new AEM template, run:
 
 	aemdc template contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
 
@@ -45,7 +53,7 @@ Target files will be created and placeholders will be replaced with arguments de
 
 # Usage - GUI
 
-To start the GUI for AEMDC run the following command:
+To start the GUI for AEMDC, run the following command:
 
     aemdcgui
 
@@ -87,11 +95,11 @@ The following command line options are available:
 
 # Creating your own Templates
 
-Clone the aemdc-files from GitHub to a parallel folder to your AEM maven project and modify the templates from aemdc-files for you needs. 
+Clone the aemdc-files from GitHub to a folder parallel to your AEM maven project root and modify the templates from aemdc-files for you needs.
 	
 	git clone https://github.com/headwirecom/aemdc-files.git ../aemdc-files
 
-In the XML templates you can define placeholders with similar names as the arguments keys. The component start file name, java class name and java package in java classes will can be also replaced by placeholders "{{ targetname }}", "{{ java-class }}", "{{ java-package }}" and "{{ java-interface-package }}". See examples of used placeholders in the /aemdc-files/template/contentpage/files/..
+In the XML templates, you can define placeholders with similar names to the arguments keys. The component start file name, java class name, and java package in java classes will can be also replaced by placeholders "{{ targetname }}", "{{ java-class }}", "{{ java-package }}" and "{{ java-interface-package }}". See examples of placeholders used in /aemdc-files/template/contentpage/files/..
 
     {{ jcr:title }}
     {{ jcr:description }}
@@ -119,11 +127,11 @@ Source code of  .content.xml
 	        />
 	</jcr:root>
 
-When running aemdc, the placeholders will be replaced by the arguments provided
+When running aemdc, the placeholders will be replaced with the arguments provided
 	
 	aemdc template contentpage mycontentpage "jcr:title=my title" "jcr:description=my description" "ranking={Long}10" "sling:resourceType=my-aem-project/components/mycontentpage" "ph_contentpage_1:property1=value1" "ph_contentpage_1:property2=value2" "ph_contentpage_2:property3=value3"
 
-placeholders with the syntax ph_<name>_<number> are meant to be lists of name value pairs.
+placeholders with the syntax ph_<name>_<number> are meant to be lists of name-value pairs.
 The number indicates how many spaces will be emitted before each name value pair in the output file
 
 for example: "ph\_contentpage\_2":
@@ -150,7 +158,7 @@ Extract the generated .zip or tar.gz file from target directory to your tools di
     set AEMDC_HOME=C:\Program Files\aemdc
     set PATH=%PATH%;%JAVA_HOME%\bin;%GIT_HOME%\bin;%AEMDC_HOME%\bin
 
-Go to your AEM maven parent project of "ui.apps" or "core" projects and run: 
+Go to your AEM maven parent project root (one level up from the "ui.apps" or "core" modules) and run the following:
 
 	aemdc template contentpage mycontentpage "jcr:title=my title" "ph_contentpage_1:singlePropExample1_1=my test&value" "ph_contentpage_1:singlePropExample1_2=my-test-value2"  "ph_contentpage_2:singlePropExample2_1=my-test-value2_1"
 
