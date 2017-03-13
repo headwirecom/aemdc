@@ -266,6 +266,10 @@ public class MainApp extends Application {
         return scene;
     }
 
+    public WebView getBrowser() {
+        return browser;
+    }
+
     // creates a log viewer wrapping system.out and system.err
     private Tab createLogViewTab() {
         Tab logView = new Tab("log");
