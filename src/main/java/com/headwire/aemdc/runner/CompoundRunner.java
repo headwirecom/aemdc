@@ -1,16 +1,20 @@
 package com.headwire.aemdc.runner;
 
+import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.headwire.aemdc.companion.Config;
 import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.Reflection;
 import com.headwire.aemdc.companion.Resource;
 import com.headwire.aemdc.replacer.Replacer;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.*;
 
 
 /**
@@ -50,32 +54,27 @@ public class CompoundRunner extends BasisRunner {
 
     if (StringUtils.isNotBlank(resource.getSourceName())) {
       // get compound template list
-      final Map<String, Set<String>> compoundList =
-          config.getCompoundList(resource.getSourceName());
-      if (compoundList.size() == 0) {
+      final List<SimpleEntry<String, String>> compoundList = config.getCompoundList(resource.getSourceName());
+      if (compoundList.isEmpty()) {
         LOG.error("Can't get compound list for template name [{}].", resource.getSourceName());
       }
 
-      for (final Map.Entry<String, Set<String>> entry : compoundList.entrySet()) {
+      for (final SimpleEntry<String, String> entry : compoundList) {
         final String templateType = entry.getKey();
-        final Set<String> templateNameSet = entry.getValue();
+        final String templateName = entry.getValue();
 
-        for (String templateName : templateNameSet) {
-          resource.setSourceName(templateName);
-          resource.setType(templateType);
-          // Creates Invoker object, command object and configure them
-          final Resource templateResource = resource.clone();
+        // Creates Invoker object, command object and configure them
+        final Resource templateResource = resource.clone();
+        templateResource.setType(templateType);
+        templateResource.setSourceName(templateName);
 
-          // Get Runner
-          final Reflection reflection = new Reflection(config);
-          final BasisRunner runner = reflection.getRunner(templateResource);
-
-          if (runner != null) {
-            runners.add(runner);
-
-          } else {
-            LOG.error("Unknown configurated compound <type>:<name>={}:{}.", templateType, templateName);
-          }
+        // Get Runner
+        final Reflection reflection = new Reflection(config);
+        final BasisRunner runner = reflection.getRunner(templateResource);
+        if (runner != null) {
+          runners.add(runner);
+        } else {
+          LOG.error("Unknown configurated compound <type>:<name>={}:{}.", templateType, templateName);
         }
       }
     }

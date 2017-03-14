@@ -1,13 +1,22 @@
 package com.headwire.aemdc.companion;
 
-import com.headwire.aemdc.runner.ConfigPropsRunner;
-import com.headwire.aemdc.util.FilesDirsUtil;
+import java.io.File;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.*;
+import com.headwire.aemdc.runner.ConfigPropsRunner;
+import com.headwire.aemdc.util.FilesDirsUtil;
 
 
 /**
@@ -452,10 +461,10 @@ public class Config {
    *
    * @param name
    *          - compound template name
-   * @return compound set
+   * @return compound list
    */
-  public Map<String, Set<String>> getCompoundList(final String name) {
-    final Map<String, Set<String>> list = new HashMap<String, Set<String>>();
+  public List<SimpleEntry<String, String>> getCompoundList(final String name) {
+    final List<SimpleEntry<String, String>> list = new ArrayList<SimpleEntry<String, String>>();
 
     final Properties dynProps = getDynamicProperties(Constants.TYPE_COMPOUND, name);
 
@@ -465,33 +474,20 @@ public class Config {
       if (StringUtils.isNotBlank(compoundsAsString)) {
         final String[] compounds = compoundsAsString.split(",");
 
-        for (final String comp : compounds) {
-
-          Set<String> set = new HashSet<String>();
-          final String[] aSplited = comp.split(":");
-          final String aTemplateType = aSplited[0];
-
-          for (final String compound : compounds) {
-            final String[] splited = compound.split(":");
-            final String templateType = splited[0]; //To compare
-            String templateName = "";
-            if (splited.length == 2) {
-              templateName = splited[1];
-            }
-
-            if (StringUtils.equalsIgnoreCase(templateType, aTemplateType)) {
-              set.add(templateName);
-            }
-
-            if (Constants.TYPE_COMPOUND.equals(templateType)) {
-              LOG.error(
-                  "Not allow to configurate a compound type [{}] inside of another compound type [{}].",
-                  templateName, name);
-            } else {
-              LOG.debug("templateType: {}, templateName: {}", templateType, templateName);
-            }
+        for (final String compound : compounds) {
+          final String[] splited = compound.split(":");
+          final String templateType = splited[0];
+          String templateName = "";
+          if (splited.length == 2) {
+            templateName = splited[1];
           }
-          list.put(aTemplateType, set);
+          if (Constants.TYPE_COMPOUND.equals(templateType)) {
+            LOG.error("Not allow to configurate a compound type [{}] inside of another compound type [{}].",
+                templateName, name);
+          } else {
+            list.add(new SimpleEntry<String, String>(templateType, templateName));
+            LOG.debug("templateType: {}, templateName: {}", templateType, templateName);
+          }
         }
       }
     }
