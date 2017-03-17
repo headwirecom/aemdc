@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.headwire.aemdc.companion.RunnableCompanion.PROJECT_ROOT;
+
 public class MainApp extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainApp.class);
@@ -85,7 +87,7 @@ public class MainApp extends Application {
             LOG.error("failed to write current state of UI to aemdcgui.xml",e);
         }
         try {
-
+            parameters.add(PROJECT_ROOT + "=" + root.getPath());
             LOG.info("aemdc "+String.join(" ", parameters));
             RunnableCompanion.main(parameters.toArray(new String[parameters.size()]));
             LOG.info("aemdc completed");

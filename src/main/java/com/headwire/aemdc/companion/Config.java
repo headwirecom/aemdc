@@ -397,13 +397,16 @@ public class Config {
    *
    * @return lazybones configuration properties if props file exists
    */
-  public static Properties getLazybonesProperties() {
+  public static Properties getLazybonesProperties(File projectRoot) {
     Properties props = new Properties();
 
     // Get lazybones properties
-    final File file = new File(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    final File file = new File(
+        projectRoot == null ? new File(".") : projectRoot,
+        Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH
+    );
     if (file.exists()) {
-      props = FilesDirsUtil.getProperties(file.getParentFile(), Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+      props = FilesDirsUtil.getProperties(file.getParentFile(), file.getName());
     }
 
     return props;
