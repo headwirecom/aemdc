@@ -1,6 +1,7 @@
 package com.headwire.aemdc.companion;
 
 import java.io.File;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -468,8 +469,8 @@ public class Config {
    *          - compound template name
    * @return compound list
    */
-  public Map<String, String> getCompoundList(final String name) {
-    final Map<String, String> list = new HashMap<String, String>();
+  public List<SimpleEntry<String, String>> getCompoundList(final String name) {
+    final List<SimpleEntry<String, String>> list = new ArrayList<SimpleEntry<String, String>>();
 
     final Properties dynProps = getDynamicProperties(Constants.TYPE_COMPOUND, name);
 
@@ -490,7 +491,7 @@ public class Config {
             LOG.error("Not allow to configurate a compound type [{}] inside of another compound type [{}].",
                 templateName, name);
           } else {
-            list.put(templateType, templateName);
+            list.add(new SimpleEntry<String, String>(templateType, templateName));
             LOG.debug("templateType: {}, templateName: {}", templateType, templateName);
           }
         }

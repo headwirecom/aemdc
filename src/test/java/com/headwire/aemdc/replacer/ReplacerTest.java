@@ -11,10 +11,6 @@ import org.junit.Test;
  */
 public class ReplacerTest {
 
-  public static String getWithoutSpecialChars(final String text) {
-    return text.replaceAll("[^a-zA-Z0-9\\.]", "");
-  }
-
   @Test
   public void testGetWithoutSpecialChars() {
     assertEquals(Replacer.getWithoutSpecialChars("my-minus-Package.my-Class-Name"), "myminusPackage.myClassName");

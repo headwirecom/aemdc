@@ -1,9 +1,9 @@
 package com.headwire.aemdc.runner;
 
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,12 +54,12 @@ public class CompoundRunner extends BasisRunner {
 
     if (StringUtils.isNotBlank(resource.getSourceName())) {
       // get compound template list
-      final Map<String, String> compoundList = config.getCompoundList(resource.getSourceName());
-      if (compoundList.size() == 0) {
+      final List<SimpleEntry<String, String>> compoundList = config.getCompoundList(resource.getSourceName());
+      if (compoundList.isEmpty()) {
         LOG.error("Can't get compound list for template name [{}].", resource.getSourceName());
       }
 
-      for (final Map.Entry<String, String> entry : compoundList.entrySet()) {
+      for (final SimpleEntry<String, String> entry : compoundList) {
         final String templateType = entry.getKey();
         final String templateName = entry.getValue();
 
