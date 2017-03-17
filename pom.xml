@@ -192,7 +192,6 @@
 								<goal>copy-dependencies</goal>
 							</goals>
 							<configuration>
-								<!-- outputDirectory>${project.build.directory}/lib</outputDirectory-->
 								<outputDirectory>${project.build.directory}/resources-distribution/lib</outputDirectory>
 							</configuration>
 						</execution>
@@ -303,8 +302,8 @@
                 </executions>
                 <configuration>
                     <descriptors>
-                        <descriptor>assembly-jar-with-dependencies.xml</descriptor>
-                        <descriptor>assembly-distribution.xml</descriptor>
+                        <descriptor>assembly/assembly-jar-with-dependencies.xml</descriptor>
+                        <descriptor>assembly/assembly-distribution.xml</descriptor>
                     </descriptors>
                     <appendAssemblyId>true</appendAssemblyId>
 					<archive>
@@ -312,7 +311,6 @@
 							<mainClass>com.headwire.aemdc.companion.RunnableCompanion</mainClass>
 						</manifest>
 					</archive>
-                    <!-- appendAssemblyId>false</appendAssemblyId-->
                 </configuration>
 			</plugin>
 			
