@@ -71,7 +71,7 @@ public class ConfigPropsReplacer extends Replacer {
     String result = text;
 
     // Get lazybones properties
-    final Properties lazybonesProps = Config.getLazybonesProperties();
+    final Properties lazybonesProps = Config.getLazybonesProperties(targetFile.getParentFile());
 
     // apps folder name
     String appsFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);

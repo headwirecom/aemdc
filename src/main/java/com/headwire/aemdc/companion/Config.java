@@ -67,7 +67,7 @@ public class Config {
 
     // init config properties
     configProps = replacePathPlaceHolders(
-        FilesDirsUtil.getProperties(baseFolder.getPath() + "/" + configPropertiesFileName));
+        FilesDirsUtil.getProperties(baseFolder, baseFolder.getPath() + "/" + configPropertiesFileName));
 
     // init dynamic configs
     for (final String type : getDynamicTypes()) {
@@ -120,6 +120,10 @@ public class Config {
     return answer;
   }
 
+  public File getBaseFolder() {
+    return baseFolder;
+  }
+
   /**
    * Check whether configurated source paths exist
    *
@@ -157,7 +161,6 @@ public class Config {
    */
   public List<String> validateConfiguration() {
     final List<String> answer = new ArrayList<>();
-    // String configPath = baseFolder.getPath() + "/" + configPropertiesFileName;
     if (!configProps.isEmpty()) {
       // validate config properties
       for (final String pathKey : Constants.SOURCE_PATHS) {
@@ -167,7 +170,7 @@ public class Config {
               "Please configure the key [" + pathKey + "] in the configuration properties file ["
                   + configPropertiesFileName + "].");
         } else {
-          final File file = new File(path);
+          File file = FilesDirsUtil.getFile(baseFolder, path);
           if (!file.exists()) {
             answer.add(
                 "The path [" + path + "] of key [" + pathKey + "] from configuration properties file ["
@@ -200,7 +203,7 @@ public class Config {
                     "and name [" + dynName + "] in the configuration properties file ["
                     + getDynamicConfigPath(dynType, dynName) + "].");
           } else {
-            final File file = new File(path);
+            File file = FilesDirsUtil.getFile(baseFolder, path);
             if (!file.exists()) {
               answer.add(
                   "The path [" + pathKey + "] for the template type [" + dynType + "] and name [" + dynName + "] " +
@@ -339,7 +342,7 @@ public class Config {
       final String typesDirPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER);
 
       if (StringUtils.isNotBlank(typesDirPath)) {
-        final File dir = new File(typesDirPath);
+        File dir = FilesDirsUtil.getFile(baseFolder, typesDirPath);
         if (dir.exists()) {
           list = FilesDirsUtil.listRootDirNames(dir);
         }
@@ -376,7 +379,7 @@ public class Config {
     final String path = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER) + "/" + type;
 
     if (StringUtils.isNotBlank(path)) {
-      final File dir = new File(path);
+      final File dir = FilesDirsUtil.getFile(baseFolder, path);
       if (dir.exists()) {
         list = FilesDirsUtil.listRootDirNames(dir);
       }
@@ -395,13 +398,16 @@ public class Config {
    *
    * @return lazybones configuration properties if props file exists
    */
-  public static Properties getLazybonesProperties() {
+  public static Properties getLazybonesProperties(File projectRoot) {
     Properties props = new Properties();
 
     // Get lazybones properties
-    final File file = new File(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    final File file = new File(
+        projectRoot == null ? new File(".") : projectRoot,
+        Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH
+    );
     if (file.exists()) {
-      props = FilesDirsUtil.getProperties(Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+      props = FilesDirsUtil.getProperties(file.getParentFile(), file.getName());
     }
 
     return props;
@@ -555,8 +561,8 @@ public class Config {
    * @return dynamic configuration properties if props file exists
    */
   private Properties readDynamicProperties(final String type, final String name) {
-    Properties dynProps = FilesDirsUtil.getProperties(getDynamicConfigPath(type, null));
-    dynProps.putAll(FilesDirsUtil.getProperties(getDynamicConfigPath(type, name)));
+    Properties dynProps = FilesDirsUtil.getProperties(baseFolder, getDynamicConfigPath(type, null));
+    dynProps.putAll(FilesDirsUtil.getProperties(baseFolder, getDynamicConfigPath(type, name)));
 
     // replace path place holders
     if (!dynProps.isEmpty()) {

@@ -35,6 +35,17 @@ public class FilesDirsUtil {
   private FilesDirsUtil() {
   }
 
+  public static File getFile(File baseFolder, String filePath) {
+    return getFile(baseFolder, new File(filePath));
+  }
+
+  public static File getFile(File baseFolder, File file) {
+    if(!file.exists() && !file.isAbsolute()) {
+      file = new File(baseFolder, file.getPath());
+    }
+    return file;
+  }
+
   /**
    * Get properties from property file
    *
@@ -42,15 +53,20 @@ public class FilesDirsUtil {
    *          - file path
    * @return properties object
    */
-  public static Properties getProperties(final String filepath) {
+  public static Properties getProperties(final File baseFolder, final String filepath) {
     final Properties props = new Properties();
     InputStream input = null;
 
     try {
       if (StringUtils.isNotBlank(filepath)) {
-        input = new FileInputStream(filepath);
-        // load a properties file from class path
-        props.load(input);
+        File file = getFile(baseFolder, filepath);
+        if(file.exists()) {
+          input = new FileInputStream(file);
+          // load a properties file from class path
+          props.load(input);
+        } else {
+          LOG.error("Properties File: '{}' does not exist", file.getPath());
+        }
       } else {
         LOG.error("Properties file name can't be empty [{}].", filepath);
       }
@@ -68,6 +84,19 @@ public class FilesDirsUtil {
     return props;
   }
 
+  public static InputStream getInputStreamFromClassLoader(final String resourcePath) {
+    InputStream input = null;
+
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    input = cl.getResourceAsStream(resourcePath);
+
+    if (input == null) {
+      cl = FilesDirsUtil.class.getClassLoader();
+      input = cl.getResourceAsStream(resourcePath);
+    }
+    return input;
+  }
+
   /**
    * Get properties from property file from Context Class Loader
    *
@@ -80,13 +109,7 @@ public class FilesDirsUtil {
     InputStream input = null;
 
     try {
-      ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      input = cl.getResourceAsStream(filepath);
-
-      if (input == null) {
-        cl = FilesDirsUtil.class.getClassLoader();
-        input = cl.getResourceAsStream(filepath);
-      }
+      input = getInputStreamFromClassLoader(filepath);
 
       if (input != null) {
         // load a properties file from class path

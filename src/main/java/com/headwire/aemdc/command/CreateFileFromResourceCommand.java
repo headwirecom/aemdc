@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.headwire.aemdc.util.FilesDirsUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +65,12 @@ public class CreateFileFromResourceCommand implements Command {
       if (destFile.exists()) {
         LOG.error("File [{}] already exists and will be not overwritten.", destFile);
       } else {
-        input = Thread.currentThread().getContextClassLoader().getResourceAsStream(sourcePath);
-        FileUtils.copyInputStreamToFile(input, destFile);
+        input = FilesDirsUtil.getInputStreamFromClassLoader(sourcePath);
+        if(input != null) {
+          FileUtils.copyInputStreamToFile(input, destFile);
+        } else {
+          throw new IOException("Could not find Input Stream for Resource: " + sourcePath);
+        }
         LOG.info("File {} created.", destFile);
       }
     } catch (final IOException e) {
