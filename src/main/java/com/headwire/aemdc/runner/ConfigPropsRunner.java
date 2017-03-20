@@ -91,6 +91,6 @@ public class ConfigPropsRunner extends BasisRunner {
 
   @Override
   public Replacer getPlaceHolderReplacer() {
-    return new ConfigPropsReplacer(resource);
+    return new ConfigPropsReplacer(resource, config);
   }
 }

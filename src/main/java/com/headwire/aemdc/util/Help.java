@@ -254,7 +254,7 @@ public class Help {
       final String fileText = FileUtils.readFileToString(helpFile, Constants.ENCODING);
       helpText.append(fileText);
     } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text from file [" + filePath + "]", e);
+      LOG.error("Sorry, can't show you help text from file [{}]", filePath, e);
     }
     helpText.append("\n");
     return helpText.toString();
@@ -316,7 +316,7 @@ public class Help {
     InputStream in = null;
     try {
       in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
-      if(in == null) {
+      if (in == null) {
         in = getClass().getClassLoader().getResourceAsStream(filePath);
       }
       final StringWriter writer = new StringWriter();
@@ -324,7 +324,7 @@ public class Help {
       IOUtils.copy(in, writer, Constants.ENCODING);
       helpText.append(writer.toString());
     } catch (final IOException e) {
-      LOG.error("Sorry, can't show you help text from resource [{}] (Exception: {})", filePath, e.getMessage());
+      LOG.error("Sorry, can't show you help text from resource [{}] ", filePath, e);
     } finally {
       if (in != null) {
         try {
@@ -394,7 +394,7 @@ public class Help {
     final String templateSrcPath = runner.getSourceFolder() + "/" + runnerResource.getSourceName();
 
     final File dir = FilesDirsUtil.getFile(config.getBaseFolder(), templateSrcPath);
-//    final File dir = new File(templateSrcPath);
+    // final File dir = new File(templateSrcPath);
     if (!dir.exists()) {
       LOG.error("Can't get place holders. Directory/file {} doesn't exist.", templateSrcPath);
     } else {

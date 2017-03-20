@@ -5,6 +5,8 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
+
+import com.headwire.aemdc.companion.Constants;
 import com.headwire.aemdc.companion.RunnableCompanion;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,8 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static com.headwire.aemdc.companion.RunnableCompanion.PROJECT_ROOT;
 
 public class MainApp extends Application {
 
@@ -87,7 +87,7 @@ public class MainApp extends Application {
             LOG.error("failed to write current state of UI to aemdcgui.xml",e);
         }
         try {
-            parameters.add(PROJECT_ROOT + "=" + root.getPath());
+            parameters.add(Constants.PARAM_PROJECT_ROOT + "=" + root.getPath());
             LOG.info("aemdc "+String.join(" ", parameters));
             RunnableCompanion.main(parameters.toArray(new String[parameters.size()]));
             LOG.info("aemdc completed");

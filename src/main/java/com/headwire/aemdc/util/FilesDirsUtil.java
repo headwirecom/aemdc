@@ -35,12 +35,30 @@ public class FilesDirsUtil {
   private FilesDirsUtil() {
   }
 
-  public static File getFile(File baseFolder, String filePath) {
+  /**
+   * Get file
+   *
+   * @param baseFolder
+   *          - parent directory
+   * @param filePath
+   *          - file path
+   * @return file
+   */
+  public static File getFile(final File baseFolder, final String filePath) {
     return getFile(baseFolder, new File(filePath));
   }
 
-  public static File getFile(File baseFolder, File file) {
-    if(!file.exists() && !file.isAbsolute()) {
+  /**
+   * Get file
+   * 
+   * @param baseFolder
+   *          - parent directory
+   * @param file
+   *          - child file
+   * @return file
+   */
+  public static File getFile(final File baseFolder, File file) {
+    if (!file.exists() && !file.isAbsolute()) {
       file = new File(baseFolder, file.getPath());
     }
     return file;
@@ -59,8 +77,8 @@ public class FilesDirsUtil {
 
     try {
       if (StringUtils.isNotBlank(filepath)) {
-        File file = getFile(baseFolder, filepath);
-        if(file.exists()) {
+        final File file = getFile(baseFolder, filepath);
+        if (file.exists()) {
           input = new FileInputStream(file);
           // load a properties file from class path
           props.load(input);

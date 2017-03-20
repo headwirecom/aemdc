@@ -56,8 +56,9 @@ public class ConfigPropsReplacer extends Replacer {
   /**
    * Constructor
    */
-  public ConfigPropsReplacer(final Resource resource) {
+  public ConfigPropsReplacer(final Resource resource, final Config config) {
     this.resource = resource;
+    this.config = config;
   }
 
   @Override
@@ -71,7 +72,7 @@ public class ConfigPropsReplacer extends Replacer {
     String result = text;
 
     // Get lazybones properties
-    final Properties lazybonesProps = Config.getLazybonesProperties(targetFile.getParentFile());
+    final Properties lazybonesProps = config.getLazybonesProperties();
 
     // apps folder name
     String appsFolderName = lazybonesProps.getProperty(LAZYBONES_PROP_APPS_FOLDER_NAME);

@@ -100,6 +100,7 @@ public class Constants {
   public static final String PARAM_TYPE = "type";
   public static final String PARAM_TEMPLATE_NAME = "templateName";
   public static final String PARAM_TARGET_NAME = "targetName";
+  public static final String PARAM_PROJECT_ROOT = "projectroot";
 
   // static template types
   public static final String TYPES_STATIC_FOLDER = "types";

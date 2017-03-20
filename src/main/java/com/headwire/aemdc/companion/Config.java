@@ -28,11 +28,13 @@ public class Config {
 
   private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
-  private static File projectRoot = new File(".");
-  private final File baseFolder;
-  private final String configPropertiesFileName;
-  private final Properties defaultConfigProps;
-  private final Properties configProps;
+  private static final File PROJECT_ROOT_DIR = new File(".");
+
+  private File baseFolder;
+  private String configPropertiesFileName;
+  private Properties defaultConfigProps;
+  private Properties configProps;
+  private Properties lazybonesProps;
   private final Map<String, Properties> dynamicConfigs = new HashMap<String, Properties>();
   private Collection<String> dynamicTypes;
 
@@ -40,13 +42,46 @@ public class Config {
    * Constructor
    */
   public Config() {
-    this(projectRoot, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
+    this(PROJECT_ROOT_DIR, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
+  }
+
+  /**
+   * Constructor
+   */
+  public Config(final String[] cmsArgs) {
+    for (final String arg : cmsArgs) {
+      if (arg.startsWith(Constants.PARAM_PROJECT_ROOT + "=")) {
+        final String projectRootPath = new Param(arg).getValue();
+        if (StringUtils.isNoneBlank(projectRootPath)) {
+          final File root = new File(projectRootPath);
+          if (root.exists()) {
+            init(root, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
+            return;
+          }
+        }
+        break;
+      }
+    }
+    // init by default
+    init(PROJECT_ROOT_DIR, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
   }
 
   /**
    * Constructor
    */
   public Config(final File baseFolder, final String configPropertiesFileName) {
+    init(baseFolder, configPropertiesFileName);
+  }
+
+  /**
+   * Initialize.
+   *
+   * @param baseFolder
+   *          - baseFolder dir
+   * @param configPropertiesFileName
+   *          - config Properties File Name
+   */
+  private void init(final File baseFolder, final String configPropertiesFileName) {
     if (baseFolder == null) {
       throw new IllegalArgumentException("Base Folder must be provided");
     } else if (!baseFolder.exists()) {
@@ -71,16 +106,25 @@ public class Config {
 
     // init dynamic configs
     for (final String type : getDynamicTypes()) {
-      Properties dynProps = readDynamicProperties(type, null);
-
+      // add dynamic props only for type
+      Properties dynProps = readDynamicProperties(type);
       Key key = new Key(type, "");
       dynamicConfigs.put(key.getKey(), dynProps);
 
+      // add dynamic props for type + name
       for (final String name : getTemplateNames(type)) {
         dynProps = readDynamicProperties(type, name);
         key = new Key(type, name);
         dynamicConfigs.put(key.getKey(), dynProps);
       }
+    }
+
+    // init lazybones properties
+    final File file = new File(baseFolder, Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH);
+    if (file.exists()) {
+      lazybonesProps = FilesDirsUtil.getProperties(file.getParentFile(), file.getName());
+    } else {
+      lazybonesProps = new Properties();
     }
   }
 
@@ -89,9 +133,11 @@ public class Config {
    *
    * @return project root directory path
    */
+  /*
   public static String getProjectRootPath() {
-    return projectRoot.getPath();
+    return PROJECT_ROOT_DIR.getPath();
   }
+  */
 
   /**
    * Set project root path
@@ -100,26 +146,33 @@ public class Config {
    *          - project root path
    * @return true if project root path is Ok
    */
+  /*
   public static boolean setProjectRootPath(final String projectRootPath) {
     boolean answer = true;
     if (projectRootPath == null || projectRootPath.isEmpty()) {
       answer = false;
-      LOG.error("Project Root Path is not provide -> ignore and it stays as: {}", Config.projectRoot.getPath());
+      LOG.error("Project Root Path is not provide -> ignore and it stays as: {}", PROJECT_ROOT_DIR.getPath());
     } else {
       final File temp = new File(projectRootPath);
       if (!temp.exists()) {
         answer = false;
-        LOG.error("Project Root Path does not exist -> ignore and it stays as: {}", Config.projectRoot.getPath());
+        LOG.error("Project Root Path does not exist -> ignore and it stays as: {}", PROJECT_ROOT_DIR.getPath());
       } else if (!temp.isDirectory()) {
         answer = false;
-        LOG.error("Project Root Path is not a folder -> ignore and it stays as: {}", Config.projectRoot.getPath());
+        LOG.error("Project Root Path is not a folder -> ignore and it stays as: {}", PROJECT_ROOT_DIR.getPath());
       } else {
-        projectRoot = temp;
+        PROJECT_ROOT_DIR = temp;
       }
     }
     return answer;
   }
+  */
 
+  /**
+   * Get Base Project Root Folder
+   *
+   * @return base folder
+   */
   public File getBaseFolder() {
     return baseFolder;
   }
@@ -170,7 +223,7 @@ public class Config {
               "Please configure the key [" + pathKey + "] in the configuration properties file ["
                   + configPropertiesFileName + "].");
         } else {
-          File file = FilesDirsUtil.getFile(baseFolder, path);
+          final File file = FilesDirsUtil.getFile(baseFolder, path);
           if (!file.exists()) {
             answer.add(
                 "The path [" + path + "] of key [" + pathKey + "] from configuration properties file ["
@@ -203,7 +256,7 @@ public class Config {
                     "and name [" + dynName + "] in the configuration properties file ["
                     + getDynamicConfigPath(dynType, dynName) + "].");
           } else {
-            File file = FilesDirsUtil.getFile(baseFolder, path);
+            final File file = FilesDirsUtil.getFile(baseFolder, path);
             if (!file.exists()) {
               answer.add(
                   "The path [" + pathKey + "] for the template type [" + dynType + "] and name [" + dynName + "] " +
@@ -342,7 +395,7 @@ public class Config {
       final String typesDirPath = configProps.getProperty(Constants.CONFIGPROP_SOURCE_TYPES_FOLDER);
 
       if (StringUtils.isNotBlank(typesDirPath)) {
-        File dir = FilesDirsUtil.getFile(baseFolder, typesDirPath);
+        final File dir = FilesDirsUtil.getFile(baseFolder, typesDirPath);
         if (dir.exists()) {
           list = FilesDirsUtil.listRootDirNames(dir);
         }
@@ -398,19 +451,8 @@ public class Config {
    *
    * @return lazybones configuration properties if props file exists
    */
-  public static Properties getLazybonesProperties(File projectRoot) {
-    Properties props = new Properties();
-
-    // Get lazybones properties
-    final File file = new File(
-        projectRoot == null ? new File(".") : projectRoot,
-        Constants.LAZYBONES_CONFIG_PROPS_FILE_PATH
-    );
-    if (file.exists()) {
-      props = FilesDirsUtil.getProperties(file.getParentFile(), file.getName());
-    }
-
-    return props;
+  public Properties getLazybonesProperties() {
+    return lazybonesProps;
   }
 
   /**
@@ -557,7 +599,7 @@ public class Config {
    * @param type
    *          - dynamic template type
    * @param name
-   *          - template name
+   *          - template name, can be null
    * @return dynamic configuration properties if props file exists
    */
   private Properties readDynamicProperties(final String type, final String name) {

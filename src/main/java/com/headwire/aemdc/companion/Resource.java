@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -473,52 +472,4 @@ public class Resource {
 
     return jcrPropAllSets;
   }
-
-  /**
-   * Argumets parameter
-   */
-  class Param {
-
-    String key;
-    String value;
-
-    Param(final String arg) {
-      // check for valid params like "paramName=paramValue"
-      final String message = "Parameter [" + arg + "] must be in form \"paramName=paramValue\"";
-      if (StringUtils.isBlank(arg)) {
-        throw new IllegalArgumentException(message);
-      }
-      final int splitPos = arg.indexOf("=");
-      if (splitPos < 1) {
-        throw new IllegalArgumentException(message);
-      }
-
-      // get param key and value
-      key = StringUtils.trim(arg.substring(0, splitPos));
-      if (StringUtils.isBlank(key)) {
-        throw new IllegalArgumentException(message);
-      }
-
-      if (arg.length() > (splitPos + 1)) {
-        value = StringUtils.trim(arg.substring(splitPos + 1));
-      } else {
-        value = "";
-      }
-    }
-
-    /**
-     * @return the key
-     */
-    String getKey() {
-      return key;
-    }
-
-    /**
-     * @return the value
-     */
-    String getValue() {
-      return value;
-    }
-  }
-
 }

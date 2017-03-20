@@ -1,10 +1,8 @@
 package com.headwire.aemdc.companion;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.headwire.aemdc.runner.ConfigPropsRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +18,6 @@ import ch.qos.logback.classic.Level;
  * @author Marat Saitov, 25.10.2016
  */
 public class RunnableCompanion {
-
-  public static final String PROJECT_ROOT = "projectroot";
 
   private static final Logger LOG = LoggerFactory.getLogger(RunnableCompanion.class);
   private static final ch.qos.logback.classic.Logger ROOT_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory
@@ -43,22 +39,7 @@ public class RunnableCompanion {
     ROOT_LOGGER.setLevel(Level.INFO);
 
     // Get Properties Config from config file
-    String projectRoot = null;
-    for(String arg: args) {
-      if(arg.startsWith(PROJECT_ROOT + "=")) {
-        projectRoot = arg.substring(PROJECT_ROOT.length() + 1);
-      }
-    }
-    config = null;
-    if(projectRoot != null) {
-      File root = new File(projectRoot);
-      if(root.exists()) {
-        config = new Config(root, ConfigPropsRunner.CONFIG_PROPS_FILENAME);
-      }
-    }
-    if(config == null) {
-      config = new Config();
-    }
+    config = new Config(args);
 
     // setup custom log level
     if (setupCustomLogLevel()) {
