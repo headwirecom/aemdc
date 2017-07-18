@@ -301,6 +301,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <tarLongFileMode>posix</tarLongFileMode>
                     <descriptors>
                         <descriptor>assembly/assembly-jar-with-dependencies.xml</descriptor>
                         <descriptor>assembly/assembly-distribution.xml</descriptor>
