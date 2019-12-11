@@ -28,7 +28,8 @@ public class Config {
 
   private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
-  private static final File PROJECT_ROOT_DIR = new File(".");
+  /* This cannot be final as the IntelliJ Plugin need to be able to set it after the launch **/
+  private static File PROJECT_ROOT_DIR = new File(".");
 
   private File baseFolder;
   private String configPropertiesFileName;
@@ -129,24 +130,25 @@ public class Config {
   }
 
   /**
-   * Get project root path
+   * Get project root path.
+   *
+   * Do not remove as this is required for the IntelliJ AEM Tooling Plugin
    *
    * @return project root directory path
    */
-  /*
   public static String getProjectRootPath() {
     return PROJECT_ROOT_DIR.getPath();
   }
-  */
 
   /**
    * Set project root path
+   *
+   * Do not remove as this is required for the IntelliJ AEM Tooling Plugin
    *
    * @param projectRootPath
    *          - project root path
    * @return true if project root path is Ok
    */
-  /*
   public static boolean setProjectRootPath(final String projectRootPath) {
     boolean answer = true;
     if (projectRootPath == null || projectRootPath.isEmpty()) {
@@ -166,7 +168,6 @@ public class Config {
     }
     return answer;
   }
-  */
 
   /**
    * Get Base Project Root Folder
